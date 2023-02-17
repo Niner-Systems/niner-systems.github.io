@@ -1,5 +1,5 @@
 - name: Order
-  link: "/#" #https://amazon.com/
+  link: "/#notifyme" #https://amazon.com/
   new_window: false
   highlight: false
 - name: About Us
