@@ -5,7 +5,7 @@ title: 9er Systems
 url: "https://9erSystems.com"
 baseurl: ""
 ordernowurl: "/#notifyme" #"https://amazon.com/"
-#google_analytics_key: "G-H9H1DLX2S9"
+google_analytics_key: "G-H9H1DLX2S9"
 google_maps_javascript_api_key: "AIzaSyDd7_Ts_LZT8eYMOHtpqrrXBjb18NVnEt0"
 disqus_shortname:
 
