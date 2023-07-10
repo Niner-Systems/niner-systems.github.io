@@ -1,7 +1,13 @@
-- name: Order
+- name: Where to Buy?
   link: "/#notifyme" #https://amazon.com/
   new_window: false
+  highlight: true
+- name: FAQ
+  link: /usb2ga/faq
   highlight: false
+#- name: Users Manual
+#  link: /usb2ga/info
+#  highlight: false
 - name: About Us
   link: /about/
   new_window: false
