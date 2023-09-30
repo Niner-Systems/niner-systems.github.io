@@ -2,6 +2,10 @@
   link: "/#notifyme" #https://amazon.com/
   new_window: false
   highlight: true
+#- name: Buy Now
+#  link: "https://buy.stripe.com/test_7sI9DxeZD4US4VidQR"
+#  new_window: true
+#  highlight: true
 - name: FAQ
   link: /usb2ga/faq
   highlight: false
