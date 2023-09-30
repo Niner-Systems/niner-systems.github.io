@@ -76,6 +76,9 @@ plugins:
   - jekyll-feed
   - jekyll-paginate
 
+include:
+  - .well-known
+
 exclude:
   - Gemfile
   - Gemfile.lock
