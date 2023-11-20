@@ -19,6 +19,17 @@ description: Connect your general aviation headset to your simulator
 		<div class="container flex">
 
 			<div class="image">
+				<script async
+						src="https://js.stripe.com/v3/buy-button.js">
+				</script>
+				<div style="text-align: center">
+					<stripe-buy-button
+							buy-button-id="buy_btn_1OEXoGK7x1W7S0JcArLdFLKU"
+							publishable-key="pk_live_51NvoDuK7x1W7S0Jc3ue92nCEegODxAFck2K1GBjUayCDwdg6KtXquJUxcC4lXLhsMCCjY0IDQlmScwF1Jfp5IrHn00T882Luij"
+					>
+					</stripe-buy-button>
+				</div>
+				<br/>
 				<!--				<img src="{{ site.baseurl}}/images/usb2ga/close_back.jpg">-->
 				<img src="{{ site.baseurl }}/images/usb2ga/close_angled_with_usb.jpg" alt="close up with with cables"/>
 			</div>
@@ -60,7 +71,7 @@ description: Connect your general aviation headset to your simulator
 		<div class="container flex">
 			<div class="image">
 				<!--				<img src="{{ site.baseurl}}/images/usb2ga/close_back.jpg">-->
-				<img src="{{ site.baseurl }}/images/usb2ga/close_with_headset.jpg" alt="close up with a headset nearby"/>
+				<img src="{{ site.baseurl }}/images/usb2ga/adapter_with_headset.jpg" alt="close up with a headset nearby"/>
 			</div>
 			<div class="text editable">
 				<h2><strong>Preflight</strong> Your Headset Configuration</h2>
@@ -152,4 +163,11 @@ description: Connect your general aviation headset to your simulator
 <!--		<h2 class="editable">Order Now</h2>-->
 <!--		<div class="button alt"><a href="https://amazon.com">Available on Amazon</a></div>-->
 <!--	</section>-->
+	<div style="text-align: center; padding-bottom: 50px">
+		<stripe-buy-button
+				buy-button-id="buy_btn_1OEXoGK7x1W7S0JcArLdFLKU"
+				publishable-key="pk_live_51NvoDuK7x1W7S0Jc3ue92nCEegODxAFck2K1GBjUayCDwdg6KtXquJUxcC4lXLhsMCCjY0IDQlmScwF1Jfp5IrHn00T882Luij"
+		>
+		</stripe-buy-button>
+	</div>
 </div>
