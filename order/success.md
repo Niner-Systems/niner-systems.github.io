@@ -14,6 +14,15 @@ layout: page
   gtag('config', 'AW-16462695713');
 </script>
 
+<!-- Event snippet for Purchase conversion page -->
+<script>
+  gtag('event', 'conversion', {
+      'send_to': 'AW-16462695713/x9qECPubnJQZEKGag6o9',
+      'transaction_id': ''
+  });
+</script>
+
+
 <p style="text-align: center">
 You should receive an email from Stripe (our payment processor) shortly with a confirmation.
 </p><p style="text-align: center">
