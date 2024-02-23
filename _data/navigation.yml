@@ -2,8 +2,12 @@
 #  link: "/#notifyme" #https://amazon.com/
 #  new_window: false
 #  highlight: true
-- name: Buy Now
+- name: Buy Direct
   link: "https://buy.stripe.com/00g6qwaYwf5r4ZafYY"
+  new_window: true
+  highlight: true
+- name: Buy On Amazon
+  link: "https://www.amazon.com/dp/B0CW3GLDM1/ref=sr_1_1?dib=eyJ2IjoiMSJ9.naARj6Mrs0v_T_clGyg5KQ.ujoRdBzLTwcrn_c6BQ4SbpGMZj_DsRFcGQv5sfWcaSY&dib_tag=se&m=A3D9VGCDLDQFU8&qid=1708634900&s=merchant-items&sr=1-1"
   new_window: true
   highlight: true
 - name: FAQ
