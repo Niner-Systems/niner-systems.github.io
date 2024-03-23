@@ -10,7 +10,7 @@ google_maps_javascript_api_key: "AIzaSyDd7_Ts_LZT8eYMOHtpqrrXBjb18NVnEt0"
 disqus_shortname:
 
 # Values for the jekyll-seo-tag gem (https://github.com/jekyll/jekyll-seo-tag)
-logo: /images/logo_v1_white.png
+logo: /images/logo-white.svg
 description: General Aviation headset to USB connector
 author:
   name: 9er Systems
