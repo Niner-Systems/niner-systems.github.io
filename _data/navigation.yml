@@ -2,10 +2,10 @@
 #  link: "/#notifyme" #https://amazon.com/
 #  new_window: false
 #  highlight: true
-- name: Buy Direct
-  link: "https://buy.stripe.com/5kA4ioaYw9L73V6145"
-  new_window: true
-  highlight: true
+#- name: Buy Direct
+#  link: "https://buy.stripe.com/5kA4ioaYw9L73V6145"
+#  new_window: true
+#  highlight: true
 - name: Buy On Amazon
   link: "https://www.amazon.com/9er-Systems-Aviation-Headset-Adapter/dp/B0CW3GLDM1?maas=maas_adg_C2F2C20A49350B35D21F0951076F8A4A_afap_abs&ref_=aa_maas&tag=maas"
   new_window: true
