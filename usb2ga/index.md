@@ -4,7 +4,7 @@ title: USB2GA Information
 layout: page
 ---
 
-## Getting Started
+# Getting Started & Troubleshooting
 
 
 The USB2GA Adapter allows you to easily connect your GA headset to any computer or mobile device via USB. 
@@ -14,6 +14,7 @@ The USB2GA Adapter allows you to easily connect your GA headset to any computer 
 1. [How to Connect the USB2GA Device](#how-to-connect-your-usb2ga-device)  
 1. [Troubleshooting](#troubleshooting)  
 1. [General Testing](#general-tests)  
+1. [Lower Cost Headset Audio Issues](#lower-cost-headsets)
 1. [Windows](#pcwindows)  
 1. [Mac / OSX](#macosx)
 
@@ -26,11 +27,11 @@ The USB2GA Adapter allows you to easily connect your GA headset to any computer 
 1. Connect your GA headset to the USB2GA Adapter.
 1. Use standard audio controls for your computer/mobile device to select "9er Systems USB2GA Adapter" as your output and input device
 
-# Troubleshooting
+### Troubleshooting
 
 Troubleshooting often involves trying to identify where the problem exists by systematically testing and verifying parts to identify where the problem may exist. This document is written as a way to try to allow you to test pieces and potentially identify where or why something is not working. Sometimes it is simple to find and correct, other times not so much. If at any point you would like additional help, please reach out to us at [info@9erSystems.com](email:info@9erSystems.com) We always appreciate it if you also let us know what type of computer you're using and what headset model you're using. While there have been very few issues told to us, we will keep track of them all in case there is ever a pattern that emerges. Feel free to reach out to us with comments, both good and bad, as it can always help us make it and other products better.
 
-# General Tests
+## General Tests
 
 - With your computer/mobile device on and the device plugged in, but without your headset connected, look inside the 
 jacks plugs and you should see a faint red glow from a led inside one of the plugs.
@@ -41,8 +42,24 @@ jacks plugs and you should see a faint red glow from a led inside one of the plu
 - X-Plane has an audio device selection within the application as well. It is worth the time to verify it is selected appropriately as well, or if you wish to go back to using another audio device for a moment and then switch back to your headset later. This can be found on this screen
   <img src="/images/usb2ga/troubleshooting/xplane_sound_settings.png" alt="xplane sound settings" style="width:1000px; border:1px solid black" />
 
+## Lower Cost Headset Audio Issues
+It has been discovered that some of the headsets are only using the left audio channel for the speakers (typically the lower cost headsets of $400 and under) and are ignoring any right channel audio. The plug being used is designed for audio - having a sleeve, ring, and tip. The ring is common and the tip provides left channel audio while the ring provides right channel audio. On some headsets the right channel (ring) is being completely unused. Since general aviation radios are operated as mono (not stereo) on AM frequencies, it is a reasonable cost cutting measure they have taken.
 
-# PC/Windows
+This can lead to no audio on your computer in certain situations or the lack of "surround sound" on your headset when using the simulator. These headsets are sending the left channel audio to both your left and right ear and ignore the right channel. 
+
+If you happen to have your computer's audio balance set to only be the right channel and no left channel, you will not hear anything on your headset. You must change your computer's output balance to fix this.   
+On Windows you can go into the `sound settings` and select `device properties` to find this window:  
+
+<img src="/images/usb2ga/troubleshooting/win_adjust_channel_balance.png" alt="adjusting channel balance on windows" style="width:500px; border:1px solid black" />
+
+On a Mac this can be found in your `sound settings` near the bottom.  
+
+<img src="/images/usb2ga/troubleshooting/mac_sound_balance.png" alt="mac sound balance adjustment" style="width:500px; border:1px solid black" />
+
+We are currently testing a short term ($3 fix from Amazon) using bridging adapter such as this [1/4" stereo to mono adapter](https://amzn.to/4cPtTff) while we engineer a more long term solution to handle the bridging within our adapter that would not take away the ability to still have a stereo headset those headsets that do support it. 
+
+
+## PC/Windows
 On a Windows PC you are able to click on the speaker icon in the bottom right of your screen and select from your audio output options. You should see `9er Systems USB2GA Device` as an option. If this is not visible there could potentially be an issue with the cable or adapter. If you happen to have another cable and/or adapter, give it a try.   
 
 If that does not work, right click on the speaker icon on in the bottom right and select `Open Sound Settings`  
@@ -78,7 +95,7 @@ Windows allows you to assign an output and input device specifically for each pr
 If you have Xplane or MSFS running when viewing this screen, you will see an option for that program like you do in the screenshot above. The top selection boxes are your default sound devices and the application specific selectors can either be set to that default or overrode to a specific device. Allowing for whatever configuration you may want/need.
 
 
-# Mac/OSX
+## Mac/OSX
 
 On a mac, you might be used to selecting your audio output devices using the speaker icon in the top right of the bar. You should see `9er Systems USB2GA Device` as an option. If this is not visible there could potentially be an issue with the cable or adapter. If you happen to have another cable and/or adapter, give it a try.   
 
