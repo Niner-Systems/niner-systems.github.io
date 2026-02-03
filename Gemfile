@@ -1,11 +1,17 @@
 source 'https://rubygems.org'
 
-gem 'jekyll', '~> 4.3.3'
+gem 'jekyll', '~> 3.10'
+gem 'webrick', '~> 1.8'
+gem 'kramdown-parser-gfm'
+gem 'logger'
+gem 'ostruct'
+gem 'base64'
+gem 'bigdecimal'
 
 group :jekyll_plugins do
-  gem 'jekyll-archives', '~> 2.2.1'
-  gem 'jekyll-feed', '~> 0.15.1'
-  gem 'jekyll-paginate', '~> 1.1.0'
-  gem 'jekyll-seo-tag', '~> 2.7.1'
-  gem 'jekyll-sitemap', '~> 1.4.0'
+  gem 'jekyll-archives'
+  gem 'jekyll-feed'
+  gem 'jekyll-paginate'
+  gem 'jekyll-seo-tag'
+  gem 'jekyll-sitemap'
 end
