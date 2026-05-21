@@ -9,6 +9,13 @@
   - name: Reseller Support
     link: /reseller_support
 - links:
+  - name: Privacy Policy
+    link: /privacy/
+  - name: Terms of Service
+    link: /tos/
+  - name: Data Deletion Requests
+    link: /data-deletion/
+- links:
   - name: Facebook
     link: https://facebook.com/9ersystems/
     new_window: true
