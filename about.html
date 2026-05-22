@@ -1,26 +1,50 @@
 ---
 title: About Us
-description: >-
-  We are two friends who have known each other since middle school. One took the career path as an Electrical Engineer
-  while the other took a path as a Software Engineer.
-
-postcontent: >-
-    When Pete decided to get his Private Pilot License at the age of 41 he naturally
-    wanted to use his general aviation headset with X-Plane and PilotEdge.net's Live ATC for practice. Looking at the
-    existing options on the market costing $90-$120 he thought - that's insane! So, instead of spending a $100, he
-    took his RadioShack soldering iron from high school and asked John to help with things like noise filtering and DC-DC
-    converters. The RadioShack tools were quickly hung up as the investment into tools for surface mounted PCB components
-    where needed. Needless to say, thousands of dollars and uncountable hours later - their wives are putting up with
-    pallets in the basement and numerous trips to the UPS store.
-
+description: 9er Systems is two engineers — one in software, one in electrical engineering — building the aviation audio products they wanted for themselves.
+layout: default
 ---
+<section class="about-hero">
+	<div class="about-hero-overlay"></div>
+	<div class="container about-hero-inner">
+		<h1>About <strong>9er Systems</strong></h1>
+		<p class="subtext">Aviation audio products &mdash; engineered, produced, and supported in the USA.</p>
+	</div>
+</section>
 
-<ul class="staff">
-	{% for person in site.staff_members %}
-		<li>
-			<div class="square-image"><img src="{% include relative-src.html src=person.image_path %}" alt="{{ person.name }}"/></div>
-			<div class="name">{{ person.name }}</div>
-			<div class="position">{{ person.position }}</div>
-		</li>
-	{% endfor %}
-</ul>
+<div class="content">
+	<section class="about-story">
+		<div class="container about-story-inner">
+			<h2>Engineers Who Fly</h2>
+			<p>9er Systems exists because Pete saw a couple of products on the market and felt every one of them fell short of his expectations and desired feature set &mdash; so he convinced his lifelong friend of thirty years, John, to help him create something better. Together they cover the engineering and business disciplines that go into a product like this &mdash; from circuit design and firmware to the desktop software that ties it together, all the way through supply chain, inventory, marketing, and the e-commerce that gets it into customers' hands.</p>
+			<p>They initially tested their designs on Pete's own headset and simulator, but have since built up a variety of test components and equipment that let them validate each revision against the wider range of headsets and configurations their customers actually use. They sign off on every revision, and personally assemble, test, and package every adapter that leaves Knoxville, TN. If you have a question or a problem with one of their products, the email you send goes directly to both of them.</p>
+		</div>
+	</section>
+
+	<section class="about-founders">
+		<div class="container">
+			<h2 class="center-text">The Founders</h2>
+
+			<ul class="founders">
+				{% for person in site.staff_members %}
+					<li class="founder-card">
+						<div class="founder-image">
+							<img src="{% include relative-src.html src=person.image_path %}" alt="{{ person.name }}" />
+						</div>
+						<div class="founder-body">
+							<h3 class="founder-name">{{ person.name }}</h3>
+							<p class="founder-position">{{ person.position }}</p>
+							{% if person.blurb %}
+								<div class="founder-blurb">{{ person.blurb | markdownify }}</div>
+							{% endif %}
+							{% if person.linkedin %}
+								<p class="founder-links">
+									<a href="{{ person.linkedin }}" target="_blank" rel="noopener noreferrer">LinkedIn &rarr;</a>
+								</p>
+							{% endif %}
+						</div>
+					</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</section>
+</div>

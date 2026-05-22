@@ -1,9 +1,15 @@
 - links:
-  - name: Order
-    link: "https://www.amazon.com/9er-Systems-Aviation-Headset-Adapter/dp/B0CW3GLDM1?maas=maas_adg_C2F2C20A49350B35D21F0951076F8A4A_afap_abs&ref_=aa_maas&tag=maas" #amazon.com/
+  - name: USB2GA
+    link: /usb2ga/
+  - name: USB2Lemo
+    link: /usb2lemo/
+  - name: Toolbar App (Free)
+    link: /downloads/toolbar/
+- links:
+  - name: Buy on Amazon
+    link: "https://www.amazon.com/9er-Systems-Aviation-Headset-Adapter/dp/B0CW3GLDM1?maas=maas_adg_C2F2C20A49350B35D21F0951076F8A4A_afap_abs&ref_=aa_maas&tag=maas"
   - name: About Us
     link: /about/
-- links:
   - name: Contact Us
     link: /contact/
   - name: Reseller Support
@@ -24,4 +30,3 @@
     link: https://youtube.com/plaurina/
     social_icon: YouTube
     new_window: true
-

@@ -1,0 +1,784 @@
+@use "sass:color";
+@use "variables" as *;
+
+// ----------------------------------------------------------------------------
+// Shared brand colors and CTAs introduced with the
+// "An Aviation Audio Company" rebrand (May 2026).
+// ----------------------------------------------------------------------------
+
+$brand-orange: #e97b35;        // matches the toolbar app accent + print insert
+$sky-deep:     #2a4a78;        // pulled from the banner sky
+$sky-mid:      #5a78a5;
+$ink:          #1a1a1a;
+$gray-mid:     #686868;
+$gray-light:   #ccc;
+
+// ----------------------------------------------------------------------------
+// Generic CTA button used across product pages and the homepage
+// ----------------------------------------------------------------------------
+
+.cta-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 14px;
+	margin-top: 28px;
+	align-items: center;
+	justify-content: center;
+
+	@media #{$desktop} {
+		justify-content: flex-start;
+	}
+}
+
+.cta-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 14px 26px;
+	font-size: 1rem;
+	font-weight: 600;
+	text-decoration: none;
+	border-radius: 6px;
+	transition: transform 0.1s ease-in-out, box-shadow 0.15s ease-in-out, background 0.15s;
+	line-height: 1;
+
+	&:hover { text-decoration: none; transform: translateY(-1px); }
+
+	&.primary {
+		background: $brand-orange;
+		color: #fff;
+		box-shadow: 0 2px 10px rgba($brand-orange, 0.35);
+		&:hover { background: color.adjust($brand-orange, $lightness: -6%); color: #fff; }
+	}
+
+	&.secondary {
+		background: rgba(255, 255, 255, 0.08);
+		color: #fff;
+		border: 1px solid rgba(255, 255, 255, 0.5);
+		&:hover { background: rgba(255, 255, 255, 0.18); color: #fff; }
+	}
+
+	// On light backgrounds (product pages, toolbar callouts on white)
+	.content &.secondary {
+		background: transparent;
+		color: $sky-deep;
+		border: 1px solid $sky-deep;
+		&:hover { background: $sky-deep; color: #fff; }
+	}
+
+}
+
+// ----------------------------------------------------------------------------
+// Buy buttons — image-based (Amazon) and text-based (other retailers)
+// ----------------------------------------------------------------------------
+
+// Image-based buy button (e.g. the Amazon "Available on Amazon" badge).
+// The image is already a button design, so we just size it and provide a
+// hover state — no surrounding box or color so it doesn't get a halo.
+.buy-button {
+	display: inline-block;
+	padding: 0;
+	background: transparent;
+	border: 0;
+	box-shadow: none;
+	text-decoration: none;
+	line-height: 0;
+	transition: transform 0.12s ease-in-out, filter 0.12s;
+
+	&:hover {
+		text-decoration: none;
+		transform: translateY(-2px);
+		filter: brightness(1.04);
+	}
+
+	img {
+		display: block;
+		width: 156px;
+		height: auto;
+	}
+}
+
+// Spacer paragraph that holds the "Also available at..." link under the
+// primary cta-row.
+.buy-alt-line {
+	margin: 14px 0 0 0;
+	text-align: center;
+	font-size: 0.95em;
+
+	@media #{$desktop} { text-align: left; }
+}
+
+// Bottom-of-page CTA block (used at the end of each product page).
+.bottom-buy {
+	text-align: center;
+	margin: 0 auto 3em auto;
+
+	.buy-button { margin-bottom: 12px; }
+	.buy-alt-line { text-align: center; }
+}
+
+// Text-based secondary retailer link, e.g. "Also available at Aircraft Spruce".
+// Reads as a quiet link, not a primary CTA.
+.buy-link-alt {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	font-size: 0.95em;
+	color: rgba(255, 255, 255, 0.92);
+	text-decoration: none;
+	border-bottom: 1px dashed rgba(255, 255, 255, 0.5);
+	padding-bottom: 2px;
+	transition: color 0.15s, border-color 0.15s;
+
+	&:hover {
+		text-decoration: none;
+		color: #fff;
+		border-bottom-color: #fff;
+	}
+
+	// Variant for light backgrounds (the bottom-of-page CTA block)
+	.content & {
+		color: $sky-deep;
+		border-bottom-color: rgba($sky-deep, 0.4);
+		&:hover { color: color.adjust($sky-deep, $lightness: -8%); border-bottom-color: $sky-deep; }
+	}
+}
+
+.product-eyebrow {
+	text-transform: uppercase;
+	letter-spacing: 0.15em;
+	font-size: 0.8em;
+	font-weight: 700;
+	color: $brand-orange;
+	margin: 0 0 10px 0;
+}
+
+// ----------------------------------------------------------------------------
+// Homepage brand hero (banner-inspired)
+// ----------------------------------------------------------------------------
+
+.brand-hero {
+	position: relative;
+	color: #fff;
+	background:
+		linear-gradient(135deg, rgba($sky-deep, 0.55) 0%, rgba($sky-deep, 0.35) 50%, rgba(0, 0, 0, 0.45) 100%),
+		url('/images/hero/smokies-mist.jpg') center center / cover no-repeat,
+		$sky-deep;
+	overflow: hidden;
+	padding: 50px 0;
+
+	.brand-hero-overlay {
+		position: absolute;
+		inset: 0;
+		background:
+			linear-gradient(180deg, rgba(0,0,0,0.18) 0%, transparent 35%, rgba(0,0,0,0.30) 100%);
+		pointer-events: none;
+	}
+
+	.brand-hero-inner {
+		position: relative;
+		z-index: 2;
+		padding: 50px 0 60px 0;
+		text-align: center;
+
+		@media #{$desktop} {
+			padding: 90px 0 100px 0;
+		}
+	}
+
+	.brand-hero-text {
+		max-width: 720px;
+		margin: 0 auto;
+	}
+
+	h1 {
+		font-size: 2.4em;
+		font-weight: 300;
+		margin-bottom: 16px;
+		color: #fff;
+		line-height: 1.15;
+		text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+		strong { font-weight: 700; }
+
+		@media #{$desktop} { font-size: 3.4em; }
+	}
+
+	.subtext {
+		font-size: 1.15em;
+		color: rgba(255, 255, 255, 0.92);
+		margin: 0 auto;
+		text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+	}
+
+	.cta-row {
+		justify-content: center;
+	}
+}
+
+// ----------------------------------------------------------------------------
+// Product card grid (homepage "Our Products" section)
+// ----------------------------------------------------------------------------
+
+.products-section {
+	padding: 80px 0 40px 0;
+
+	h2 { margin-bottom: 10px; }
+	.subtext { margin-bottom: 50px; color: $gray-mid; }
+}
+
+.product-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 30px;
+
+	@media #{$desktop} {
+		grid-template-columns: 1fr 1fr;
+	}
+}
+
+.product-card {
+	display: flex;
+	flex-direction: column;
+	background: #fff;
+	border: 1px solid #e6e6e6;
+	border-radius: 10px;
+	overflow: hidden;
+	color: $ink;
+	text-decoration: none;
+	transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out, border-color 0.15s;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+
+	&:hover {
+		text-decoration: none;
+		transform: translateY(-3px);
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+		border-color: $brand-orange;
+
+		.card-cta { color: color.adjust($brand-orange, $lightness: -8%); }
+	}
+
+	.product-card-image {
+		background: #f5f5f5;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		min-height: 240px;
+		padding: 20px;
+
+		img {
+			width: auto;
+			max-width: 100%;
+			max-height: 220px;
+			object-fit: contain;
+		}
+	}
+
+	.product-card-body {
+		padding: 24px 28px 28px 28px;
+
+		h3 {
+			margin: 0 0 6px 0;
+			font-size: 1.6em;
+			font-weight: 600;
+		}
+
+		.product-card-sub {
+			margin: 0 0 14px 0;
+			color: $brand-orange;
+			font-size: 0.9em;
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.06em;
+		}
+
+		p {
+			font-size: 1em;
+			color: $gray-mid;
+			line-height: 1.5;
+			margin-bottom: 14px;
+		}
+	}
+
+	.card-cta {
+		display: inline-block;
+		color: $sky-deep;
+		font-weight: 600;
+		transition: color 0.15s;
+	}
+}
+
+.badge {
+	display: inline-block;
+	font-size: 0.55em;
+	font-weight: 700;
+	padding: 4px 8px;
+	border-radius: 4px;
+	vertical-align: middle;
+	margin-left: 8px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+
+	&.new {
+		background: $brand-orange;
+		color: #fff;
+	}
+}
+
+// ----------------------------------------------------------------------------
+// Homepage toolbar callout + "Why us" grid
+// ----------------------------------------------------------------------------
+
+.toolbar-callout-section {
+	background: #f7f8fa;
+	padding: 70px 0;
+
+	.image img {
+		max-width: 360px;
+		margin: 0 auto;
+		display: block;
+		border-radius: 10px;
+		box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+	}
+
+	.text {
+		h2 { margin-bottom: 18px; }
+		.cta-button { margin-top: 14px; }
+	}
+}
+
+.why-us-section {
+	padding: 80px 0;
+	h2 { margin-bottom: 40px; }
+}
+
+.why-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 24px;
+
+	@media #{$tablet}  { grid-template-columns: 1fr 1fr; }
+	@media #{$desktop} { grid-template-columns: repeat(4, 1fr); }
+}
+
+.why-item {
+	background: #fff;
+	border: 1px solid #ececec;
+	border-radius: 8px;
+	padding: 24px;
+
+	h3 {
+		margin: 0 0 10px 0;
+		font-size: 1.15em;
+		color: $sky-deep;
+	}
+	p {
+		font-size: 0.95em;
+		color: $gray-mid;
+		line-height: 1.5;
+		margin: 0;
+	}
+}
+
+// ----------------------------------------------------------------------------
+// Product detail page hero (USB2GA, USB2Lemo)
+// ----------------------------------------------------------------------------
+
+.product-hero {
+	background: linear-gradient(180deg, $sky-deep 0%, color.adjust($sky-deep, $lightness: 8%) 100%);
+	color: #fff;
+	padding: 60px 0 70px 0;
+
+	h1 {
+		color: #fff;
+		font-size: 2.2em;
+		line-height: 1.15;
+		margin-bottom: 16px;
+		strong { font-weight: 700; }
+		@media #{$desktop} { font-size: 2.8em; }
+	}
+
+	.subtext {
+		color: rgba(255, 255, 255, 0.85);
+		font-size: 1.05em;
+	}
+
+	.product-eyebrow { color: color.adjust($brand-orange, $lightness: 5%); }
+}
+
+.product-hero-inner {
+	display: flex;
+	flex-direction: column;
+	gap: 30px;
+	align-items: center;
+
+	@media #{$desktop} {
+		flex-direction: row;
+		align-items: center;
+	}
+}
+
+.product-hero-text {
+	flex: 1;
+	text-align: center;
+	@media #{$desktop} { text-align: left; }
+}
+
+.product-hero-image {
+	flex: 1;
+	display: flex;
+	justify-content: center;
+
+	img {
+		max-width: 380px;
+		width: 100%;
+		height: auto;
+		border-radius: 10px;
+		background: rgba(255, 255, 255, 0.04);
+	}
+}
+
+// ----------------------------------------------------------------------------
+// Toolbar download page
+// ----------------------------------------------------------------------------
+
+.toolbar-hero {
+	background: linear-gradient(180deg, #2a2a3a 0%, #1a1a2a 100%);
+	color: #fff;
+	padding: 70px 0 60px 0;
+	text-align: center;
+
+	h1 {
+		color: #fff;
+		font-size: 2.6em;
+		line-height: 1.1;
+		margin-bottom: 18px;
+
+		strong { color: $brand-orange; font-weight: 700; }
+
+		@media #{$desktop} { font-size: 3.2em; }
+	}
+
+	.subtext {
+		color: rgba(255, 255, 255, 0.78);
+		max-width: 620px;
+		margin: 0 auto 30px auto;
+		font-size: 1.1em;
+	}
+
+	.product-eyebrow {
+		color: $brand-orange;
+		margin-bottom: 18px;
+	}
+
+	.compat-note {
+		color: rgba(255, 255, 255, 0.55);
+		font-size: 0.85em;
+		margin-top: 24px;
+		font-style: italic;
+	}
+}
+
+.toolbar-hero-inner {
+	text-align: center;
+}
+
+.download-row {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	align-items: center;
+	justify-content: center;
+	margin: 30px 0 0 0;
+
+	@media #{$tablet} { flex-direction: row; }
+}
+
+.download-button {
+	display: inline-flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 18px 32px;
+	min-width: 280px;
+	background: $brand-orange;
+	color: #fff;
+	border-radius: 8px;
+	text-decoration: none;
+	box-shadow: 0 4px 14px rgba($brand-orange, 0.35);
+	transition: transform 0.1s, background 0.15s, box-shadow 0.15s;
+
+	&:hover {
+		text-decoration: none;
+		color: #fff;
+		background: color.adjust($brand-orange, $lightness: -6%);
+		transform: translateY(-2px);
+		box-shadow: 0 6px 20px rgba($brand-orange, 0.45);
+	}
+
+	&.mac::before    { content: ""; }
+	&.windows        { background: #2b7bd8; box-shadow: 0 4px 14px rgba(43, 123, 216, 0.4); }
+	&.windows:hover  { background: color.adjust(#2b7bd8, $lightness: -6%); box-shadow: 0 6px 20px rgba(43, 123, 216, 0.5); }
+
+	.download-os {
+		font-size: 1.05em;
+		font-weight: 700;
+		margin-bottom: 4px;
+	}
+
+	.download-meta {
+		font-size: 0.78em;
+		opacity: 0.85;
+		font-weight: 400;
+	}
+}
+
+.compat-note {
+	color: $gray-mid;
+	font-size: 0.85em;
+	margin-top: 24px;
+	font-style: italic;
+	text-align: center;
+}
+
+.toolbar-screenshot {
+	max-width: 360px;
+	margin: 0 auto;
+	display: block;
+	border-radius: 10px;
+	box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+	background: #fff;
+}
+
+.feature-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 24px;
+
+	@media #{$tablet}  { grid-template-columns: 1fr 1fr; }
+
+	.feature {
+		background: #fff;
+		border-left: 4px solid $brand-orange;
+		padding: 20px 24px;
+		border-radius: 4px;
+		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+		h3 {
+			margin: 0 0 8px 0;
+			color: $ink;
+			font-size: 1.15em;
+		}
+
+		p {
+			margin: 0;
+			color: $gray-mid;
+			font-size: 0.95em;
+			line-height: 1.5;
+		}
+
+		.muted { color: $gray-light; font-style: italic; }
+	}
+}
+
+// ----------------------------------------------------------------------------
+// Changelog / release notes page
+// ----------------------------------------------------------------------------
+
+.changelog-section {
+	padding: 60px 0 80px 0;
+}
+
+.changelog-inner {
+	max-width: 760px;
+	margin: 0 auto;
+}
+
+.changelog-intro {
+	color: $gray-mid;
+	font-size: 1.05em;
+	line-height: 1.6;
+	margin: 0 0 24px 0;
+}
+
+.changelog-divider {
+	border: 0;
+	border-top: 1px solid #e6e6e6;
+	margin: 24px 0 40px 0;
+}
+
+.changelog-entry {
+	padding-bottom: 40px;
+	margin-bottom: 40px;
+	border-bottom: 1px solid #e6e6e6;
+
+	&:last-child {
+		padding-bottom: 0;
+		margin-bottom: 0;
+		border-bottom: 0;
+	}
+
+	p, ul {
+		color: $ink;
+		font-size: 1.1em;
+		line-height: 1.65;
+	}
+
+	ul { padding-left: 22px; }
+	li { margin-bottom: 8px; }
+
+	a {
+		color: $sky-deep;
+		font-weight: 600;
+		&:hover { color: color.adjust($sky-deep, $lightness: -8%); }
+	}
+}
+
+.changelog-version {
+	color: $sky-deep;
+	font-weight: 600;
+	margin: 0 0 6px 0;
+	font-size: 1.6em;
+
+	// Self-anchor: the version number itself links to its own ID so
+	// readers can copy a per-version URL out of the address bar.
+	a {
+		color: inherit;
+		text-decoration: none;
+		&:hover { text-decoration: underline; }
+	}
+}
+
+.changelog-date {
+	color: $gray-light;
+	font-weight: 400;
+	font-size: 0.6em;
+	margin-left: 10px;
+	letter-spacing: 0.02em;
+	vertical-align: middle;
+}
+
+.changelog-note {
+	color: $gray-mid;
+	font-style: italic;
+	margin: 0 0 14px 0 !important;
+}
+
+.changelog-downloads {
+	margin: 18px 0 0 0;
+	color: $gray-mid;
+	font-size: 0.95em;
+
+	.changelog-downloads-sep {
+		color: $gray-light;
+		margin: 0 2px;
+	}
+}
+
+.download-cta-section {
+	background: #f7f8fa;
+	padding: 70px 0;
+	text-align: center;
+
+	h2 { margin-bottom: 30px; }
+}
+
+.companion-app-callout {
+	background: #f7f8fa;
+
+	.image img {
+		max-width: 320px;
+		border-radius: 10px;
+		box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+		margin: 0 auto;
+		display: block;
+	}
+}
+
+// ----------------------------------------------------------------------------
+// Products dropdown in the top navigation
+// ----------------------------------------------------------------------------
+
+.nav-dropdown {
+	position: relative;
+	display: inline-block;
+
+	.nav-dropdown-toggle {
+		display: none;
+		cursor: pointer;
+
+		.caret {
+			font-size: 0.7em;
+			margin-left: 4px;
+			opacity: 0.7;
+		}
+
+		@media #{$mid-point} { display: inline; }
+	}
+
+	.nav-dropdown-menu {
+		display: block;          // mobile: always show children inline
+		padding-left: 12px;
+		border-left: 2px solid rgba(255, 255, 255, 0.15);
+		margin: 0 0 6px 12px;
+
+		@media #{$mid-point} {
+			display: none;        // desktop: hidden until hover
+			position: absolute;
+			top: 100%;
+			right: 0;
+			min-width: 280px;
+			background: #ffffff;
+			border: 1px solid #e6e6e6;
+			border-radius: 6px;
+			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+			padding: 6px 0;
+			margin: 0;
+			z-index: 100;
+		}
+	}
+
+	&:hover .nav-dropdown-menu,
+	&:focus-within .nav-dropdown-menu {
+		@media #{$mid-point} { display: block; }
+	}
+
+	.nav-dropdown-item {
+		display: block;
+		padding: 10px 16px;
+		text-align: left;
+		text-transform: none;
+		border: 0;
+		color: rgba(255, 255, 255, 0.85);
+
+		&:hover { color: #fff; border: 0; background: rgba(255, 255, 255, 0.04); }
+
+		@media #{$mid-point} {
+			color: $ink;
+			padding: 10px 18px;
+			border-bottom: 1px solid #f0f0f0;
+			margin: 0;
+
+			&:last-child { border-bottom: 0; }
+			&:hover      { background: #f7f8fa; color: $sky-deep; border-bottom: 1px solid #f0f0f0; }
+		}
+
+		.nav-dropdown-item-name {
+			display: block;
+			font-weight: 600;
+			font-size: 1em;
+		}
+
+		.nav-dropdown-item-sublabel {
+			display: block;
+			font-size: 0.78em;
+			opacity: 0.7;
+			margin-top: 2px;
+			font-weight: 400;
+		}
+	}
+}
+
+// Mobile nav: show the dropdown toggle as a plain link so children just stack
+@media (max-width: 619px) {
+	.nav-dropdown .nav-dropdown-toggle { display: block; }
+	.nav-dropdown .nav-dropdown-menu   { display: block; }
+}

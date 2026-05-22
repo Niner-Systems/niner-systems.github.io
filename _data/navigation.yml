@@ -1,21 +1,20 @@
-#- name: Where to Buy?
-#  link: "/#notifyme" #https://amazon.com/
-#  new_window: false
-#  highlight: true
-#- name: Buy Direct
-#  link: "https://buy.stripe.com/5kA4ioaYw9L73V6145"
-#  new_window: true
-#  highlight: true
+- name: Products
+  link: "#"
+  highlight: false
+  children:
+    - name: USB2GA
+      sublabel: For Standard GA Plugs (PJ-068 / PJ-055)
+      link: /usb2ga/
+    - name: USB2Lemo
+      sublabel: For 6-Pin Lemo Plugs
+      link: /usb2lemo/
+    - name: Toolbar App (Free)
+      sublabel: Sidetone &amp; VOX for Mac and Windows
+      link: /downloads/toolbar/
 - name: Buy On Amazon
   link: "https://www.amazon.com/9er-Systems-Aviation-Headset-Adapter/dp/B0CW3GLDM1?maas=maas_adg_C2F2C20A49350B35D21F0951076F8A4A_afap_abs&ref_=aa_maas&tag=maas"
   new_window: true
   highlight: true
-- name: FAQ
-  link: /usb2ga/faq
-  highlight: false
-#- name: Users Manual
-#  link: /usb2ga/info
-#  highlight: false
 - name: About Us
   link: /about/
   new_window: false

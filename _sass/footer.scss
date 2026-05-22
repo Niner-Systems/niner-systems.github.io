@@ -1,3 +1,6 @@
+@use "variables" as *;
+@use "mixins/flexbox" as *;
+
 .footer-links {
 	width: 100%;
 	margin: 10px;
@@ -6,6 +9,21 @@
 	@media #{$tablet} {
 		-webkit-flex: 1 0 180px;
 		flex: 1 0 180px;
+	}
+
+	// Social-icon column: lay icons out horizontally on tablet and wider,
+	// but keep them stacked on mobile/narrow widths. In both modes the items
+	// are centered within the column.
+	&.footer-social {
+		text-align: center;
+
+		li {
+			@media #{$tablet} {
+				display: inline-block;
+				max-width: none;
+				margin: 0 9px;
+			}
+		}
 	}
 
 	li {

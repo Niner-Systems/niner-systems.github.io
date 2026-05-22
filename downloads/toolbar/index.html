@@ -1,0 +1,122 @@
+---
+title: USB2x Toolbar — Free Download for Mac &amp; Windows
+description: Free desktop toolbar for the 9er Systems USB2GA and USB2Lemo adapters — sidetone, voice-activated VOX, and input/output level control for Mac and Windows.
+layout: default
+permalink: /downloads/toolbar/
+---
+<section class="toolbar-hero">
+	<div class="container toolbar-hero-inner">
+		<p class="product-eyebrow">FREE DOWNLOAD &middot; WINDOWS &amp; macOS</p>
+		<h1>Easily Enable <strong>Sidetone</strong>.</h1>
+		<p class="subtext">Hear your own voice clearly in your headset &mdash; and keep it silent until you speak.</p>
+
+		<div class="download-row">
+			<a class="download-button mac"
+			   href="{{ site.data.toolbar.mac.url }}"
+			   data-os="mac" data-version="{{ site.data.toolbar.version }}"
+			   onclick="trackDownload('mac', '{{ site.data.toolbar.version }}')">
+				<span class="download-os">Download for macOS</span>
+				<span class="download-meta">{{ site.data.toolbar.mac.filename }} &middot; {{ site.data.toolbar.mac.details }}</span>
+			</a>
+			<a class="download-button windows"
+			   href="{{ site.data.toolbar.windows.url }}"
+			   data-os="windows" data-version="{{ site.data.toolbar.version }}"
+			   onclick="trackDownload('windows', '{{ site.data.toolbar.version }}')">
+				<span class="download-os">Download for Windows</span>
+				<span class="download-meta">{{ site.data.toolbar.windows.filename }} &middot; {{ site.data.toolbar.windows.details }}</span>
+			</a>
+		</div>
+
+		<p class="compat-note">Products sold before May 1, 2026 may not be compatible with sidetone support.</p>
+	</div>
+</section>
+
+<div class="content">
+
+	<section>
+		<div class="container flex">
+			<div class="image">
+				<img src="{{ site.baseurl }}/images/toolbar/screenshot-mac.png" alt="USB2x Toolbar on macOS" class="toolbar-screenshot" />
+			</div>
+			<div class="text editable">
+				<h2>One panel. <strong>Everything you need</strong> for your sim headset.</h2>
+				<p>The USB2x Toolbar sits on your desktop and gives you one-click access to the features pilots ask for most: sidetone,
+					VOX, squelch, and independent input and output levels. Built for the 9er Systems USB2GA and USB2Lemo adapters.</p>
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="container feature-grid">
+			<div class="feature">
+				<h3>Enable sidetone in one tap</h3>
+				<p>Turn sidetone on or off in a single click.</p>
+			</div>
+			<div class="feature">
+				<h3>Smart VOX &mdash; voice activated</h3>
+				<p>Sidetone follows your voice, with adjustable squelch so the headset stays silent until you speak.</p>
+			</div>
+			<div class="feature">
+				<h3>Sidetone volume control</h3>
+				<p>Fine-tune how loud your own voice sounds. <span class="muted">(Windows)</span></p>
+			</div>
+			<div class="feature">
+				<h3>Separate mic &amp; speaker volume</h3>
+				<p>Adjust microphone and speaker levels independently &mdash; right from your computer's toolbar.</p>
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<div class="container flex">
+			<div class="text editable">
+				<h2>Same app on <strong>both platforms</strong></h2>
+				<p>The USB2x Toolbar runs natively on macOS (Apple Silicon and Intel) and Windows 10 / 11. Detects your 9er Systems
+					adapter automatically. Set it to load at startup and it will be waiting for you whenever you fire up the sim.</p>
+			</div>
+			<div class="image">
+				<img src="{{ site.baseurl }}/images/toolbar/screenshot-windows.png" alt="USB2x Toolbar on Windows" class="toolbar-screenshot" />
+			</div>
+		</div>
+	</section>
+
+	<section class="download-cta-section">
+		<div class="container">
+			<h2 class="center-text">Get the free toolbar</h2>
+			<div class="download-row">
+				<a class="download-button mac"
+				   href="{{ site.data.toolbar.mac.url }}"
+				   data-os="mac" data-version="{{ site.data.toolbar.version }}"
+				   onclick="trackDownload('mac', '{{ site.data.toolbar.version }}')">
+					<span class="download-os">Download for macOS</span>
+					<span class="download-meta">{{ site.data.toolbar.mac.filename }}</span>
+				</a>
+				<a class="download-button windows"
+				   href="{{ site.data.toolbar.windows.url }}"
+				   data-os="windows" data-version="{{ site.data.toolbar.version }}"
+				   onclick="trackDownload('windows', '{{ site.data.toolbar.version }}')">
+					<span class="download-os">Download for Windows</span>
+					<span class="download-meta">{{ site.data.toolbar.windows.filename }}</span>
+				</a>
+			</div>
+			<p class="compat-note">Products sold before May 1, 2026 may not be compatible with sidetone support.</p>
+		</div>
+	</section>
+
+</div>
+
+<script>
+	function trackDownload(os, version) {
+		if (typeof gtag === 'function') {
+			gtag('event', 'toolbar_download', {
+				event_category: 'download',
+				event_label: os + ' ' + version,
+				os: os,
+				app_version: version,
+				utm_source: new URLSearchParams(window.location.search).get('utm_source') || '',
+				utm_medium: new URLSearchParams(window.location.search).get('utm_medium') || '',
+				utm_campaign: new URLSearchParams(window.location.search).get('utm_campaign') || ''
+			});
+		}
+	}
+</script>

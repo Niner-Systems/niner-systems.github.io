@@ -6,12 +6,11 @@ url: "https://9erSystems.com"
 baseurl: ""
 ordernowurl: "/#notifyme" #"https://amazon.com/"
 google_analytics_key: "G-H9H1DLX2S9"
-google_maps_javascript_api_key: "REDACTED_GOOGLE_MAPS_KEY"
 disqus_shortname:
 
 # Values for the jekyll-seo-tag gem (https://github.com/jekyll/jekyll-seo-tag)
-logo: /images/logo-white.svg
-description: General Aviation headset to USB connector
+logo: /images/logo-aviation-audio-horizontal-white.svg
+description: An Aviation Audio Company — aviation headset to USB adapters (USB2GA, USB2Lemo) and the free USB2x Toolbar app for sidetone and VOX on Mac and Windows.
 author:
   name: 9er Systems
   email: info@9ersystems.com

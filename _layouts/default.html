@@ -34,7 +34,7 @@
 	<body>
 		<header>
 			<div class="container">
-				<div class="company-name"><a href="{{ site.baseurl }}/"><img src="{{ site.baseurl }}/images/logo-white.svg" alt="9er Systems Logo" width="95" height="70" /></a></div>
+				<div class="company-name"><a href="{{ site.baseurl }}/"><img src="{{ site.baseurl }}/images/logo-aviation-audio-horizontal-white.svg" alt="9er Systems — An Aviation Audio Company" width="580" height="60" /></a></div>
 				{% include navigation.html %}
 			</div>
 		</header>
@@ -44,11 +44,13 @@
 				<p class="editor-link"><a href="cloudcannon:collections/_data/footer.yml" class="btn"><strong>&#9998;</strong> Edit footer</a></p>
 				<div class="footer-columns">
 					<ul >
-						<div class="company-name"><a href="{{ site.baseurl }}/"><img src="{{ site.baseurl }}/images/logo-white.svg" alt="9er Systems Logo" width="95" height="70" /></a></div>
+						<div class="company-name"><a href="{{ site.baseurl }}/"><img src="{{ site.baseurl }}/images/logo-aviation-audio-horizontal-white.svg" alt="9er Systems — An Aviation Audio Company" width="480" height="50" /></a></div>
 					</ul>
 
 					{% for column in site.data.footer %}
-					<ul class="footer-links">
+					{% assign is_social = false %}
+					{% for link in column.links %}{% if link.social_icon %}{% assign is_social = true %}{% endif %}{% endfor %}
+					<ul class="footer-links{% if is_social %} footer-social{% endif %}">
 						{% for link in column.links %}
 							<li><a {% if link.new_window %}target="_blank"{% endif %} href="{% include relative-src.html src=link.link %}" {% if link.social_icon %}class="{{ link.social_icon }}-icon"{% endif %}>
 								{% if link.social_icon %}
