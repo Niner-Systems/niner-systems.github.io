@@ -1,32 +1,150 @@
-.map {
-	width: 100%;
-	margin: 100px 0;
-	height: 400px;
+@use "sass:color";
+@use "variables" as *;
+@use "mixins/flexbox" as *;
+
+// Brand color tokens duplicated locally to avoid cross-partial coupling.
+// Keep these in sync with brand-and-products.scss if the palette evolves.
+$brand-orange: #e97b35;
+$sky-deep:     #2a4a78;
+$ink:          #1a1a1a;
+$gray-mid:     #686868;
+$gray-light:   #aaa;
+
+// ----------------------------------------------------------------------------
+// Contact page hero — short banner with Smokies background
+// ----------------------------------------------------------------------------
+
+.contact-hero {
+	position: relative;
+	color: #fff;
+	background:
+		linear-gradient(135deg, rgba($sky-deep, 0.55) 0%, rgba($sky-deep, 0.35) 50%, rgba(0, 0, 0, 0.45) 100%),
+		url('/images/hero/smokies-mist.jpg') center center / cover no-repeat,
+		$sky-deep;
+	overflow: hidden;
+	padding: 60px 0 70px 0;
+	text-align: center;
+
+	@media #{$desktop} {
+		padding: 90px 0 100px 0;
+	}
+
+	.contact-hero-overlay {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(180deg, rgba(0,0,0,0.18) 0%, transparent 35%, rgba(0,0,0,0.30) 100%);
+		pointer-events: none;
+	}
+
+	.contact-hero-inner {
+		position: relative;
+		z-index: 2;
+		max-width: 720px;
+	}
+
+	h1 {
+		font-size: 2.4em;
+		font-weight: 300;
+		margin-bottom: 14px;
+		color: #fff;
+		line-height: 1.15;
+		text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+		strong { font-weight: 700; }
+
+		@media #{$desktop} { font-size: 3.2em; }
+	}
+
+	.subtext {
+		font-size: 1.1em;
+		color: rgba(255, 255, 255, 0.92);
+		text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+		margin: 0 auto;
+	}
 }
 
-.contact-box {
-	@extend %flexbox;
-	@include flex-flow(wrap);
-	max-width: 750px;
-	margin: 0 auto;
+// ----------------------------------------------------------------------------
+// Body — topic cards + address block
+// ----------------------------------------------------------------------------
 
-	form {
-		width: 100%
+.contact-section {
+	padding: 70px 0 80px 0;
+}
+
+.contact-topic-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 24px;
+	margin-bottom: 60px;
+
+	@media #{$tablet}  { grid-template-columns: 1fr 1fr; }
+	@media #{$desktop} { grid-template-columns: repeat(3, 1fr); }
+}
+
+.contact-topic-card {
+	display: flex;
+	flex-direction: column;
+	background: #fff;
+	border: 1px solid #e6e6e6;
+	border-radius: 10px;
+	padding: 28px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+	transition: transform 0.15s ease-in-out, box-shadow 0.15s ease-in-out, border-color 0.15s;
+
+	&:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+		border-color: $brand-orange;
+	}
+
+	h3 {
+		margin: 0 0 12px 0;
+		font-size: 1.25em;
+		color: $sky-deep;
+		font-weight: 600;
 	}
 
 	p {
-		margin: 0;
+		font-size: 1em;
+		color: $gray-mid;
+		line-height: 1.5;
+		margin: 0 0 24px 0;
+		flex: 1; // pushes the CTA button to the bottom of each card
 	}
 
-	.contact-form, .contact-details  {
-		@media #{$desktop} {
-			-webkit-flex: 1;
-			flex: 1;
-		}
-		margin: 0 30px;
+	.cta-button {
+		align-self: flex-start;
+	}
+}
+
+.contact-address {
+	max-width: 480px;
+	margin: 0 auto;
+	text-align: center;
+	color: $gray-mid;
+	font-size: 0.95em;
+	padding-top: 30px;
+	border-top: 1px solid #ececec;
+
+	.contact-address-label {
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		font-size: 0.78em;
+		font-weight: 700;
+		color: $gray-light;
+		margin: 0 0 12px 0;
 	}
 
-	.contact-details {
-		font-size: .9em;
+	address {
+		font-style: normal;
+		font-size: 1em;
+		color: $ink;
+		line-height: 1.55;
+		margin-bottom: 14px;
+	}
+
+	a {
+		color: $sky-deep;
+		font-weight: 600;
+		&:hover { color: color.adjust($sky-deep, $lightness: -8%); }
 	}
 }

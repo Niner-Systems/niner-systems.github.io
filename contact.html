@@ -1,164 +1,52 @@
 ---
 title: Contact
-heading: Have Questions or Comments?
-description: <strong>Proudly Supporting U.S. Manufacturing</strong>
-
-map:
-  latitude: 35.93435777305358
-  longitude: -84.00001880051717
-  address: "5923 Kingston Pike Ste #223, Knoxville TN 37919"
-  zoom: 6
+description: Get in touch with 9er Systems — product questions, support, or reseller inquiries. We're based in Knoxville, Tennessee.
+layout: default
 ---
-<div class="map" id="map"></div>
-
-
-<div class="contact-box">
-	 <a href="mailto:info@9ersystems.com">info@9ersystems.com</a>
-
-	<div class="contact-details">
-		<h3 class="editable">Address</h3>
-		<address><a target="_blank" href="https://www.google.com/maps/place/{{ page.map.address | url_encode }}">{{ page.map.address | replace: ", ", ", <br>" }}</a></address>
-
-		<h3 class="editable">Email</h3>
-		<p><a href="mailto:info@9ersystems.com">info@9ersystems.com</a></p>
+<section class="contact-hero">
+	<div class="contact-hero-overlay"></div>
+	<div class="container contact-hero-inner">
+		<h1>Contact <strong>Us</strong></h1>
+		<p class="subtext">We'd love to hear from you. Pick the topic below that fits and your message will land in the right inbox.</p>
 	</div>
+</section>
+
+<div class="content">
+	<section class="contact-section">
+		<div class="container">
+			<div class="contact-topic-grid">
+
+				<div class="contact-topic-card">
+					<h3>General Inquiries</h3>
+					<p>Questions about our products, compatibility, or anything else that doesn't fit the other categories.</p>
+					<a class="cta-button primary"
+					   href="mailto:info@9ersystems.com?subject=General%20Inquiry">Email Us</a>
+				</div>
+
+				<div class="contact-topic-card">
+					<h3>Product Support</h3>
+					<p>Help getting your USB2GA, USB2Lemo, or the USB2x Toolbar app working. Be sure to mention your headset model and operating system.</p>
+					<a class="cta-button primary"
+					   href="mailto:info@9ersystems.com?subject=Product%20Support">Get Support</a>
+				</div>
+
+				<div class="contact-topic-card">
+					<h3>Resellers &amp; Dealers</h3>
+					<p>Wholesale and reseller inquiries. New to working with us? Start with the <a href="{{ site.baseurl }}/reseller_support/">reseller support page</a>.</p>
+					<a class="cta-button primary"
+					   href="mailto:info@9ersystems.com?subject=Reseller%20Inquiry">Reseller Email</a>
+				</div>
+
+			</div>
+
+			<div class="contact-address">
+				<p class="contact-address-label">Mailing Address</p>
+				<address>
+					9er Systems<br>
+					5923 Kingston Pike, Ste #223<br>
+					Knoxville, TN 37919
+				</address>
+			</div>
+		</div>
+	</section>
 </div>
-
-<script type="text/javascript">
-	window.mapData = {{ page.map | jsonify }};
-
-	function initMap() {
-		var myOptions = {
-			scrollwheel: false,
-			draggable: false,
-			panControl: false,
-			disableDefaultUI: true,
-			styles: [{
-				"featureType": "all",
-				"elementType": "labels.text.fill",
-				"stylers": [{
-					"saturation": 36
-				}, {
-					"color": "#000000"
-				}, {
-					"lightness": 40
-				}]
-			}, {
-				"featureType": "all",
-				"elementType": "labels.text.stroke",
-				"stylers": [{
-					"visibility": "on"
-				}, {
-					"color": "#000000"
-				}, {
-					"lightness": 16
-				}]
-			}, {
-				"featureType": "all",
-				"elementType": "labels.icon",
-				"stylers": [{
-					"visibility": "off"
-				}]
-			}, {
-				"featureType": "administrative",
-				"elementType": "geometry.fill",
-				"stylers": [{
-					"color": "#000000"
-				}, {
-					"lightness": 20
-				}]
-			}, {
-				"featureType": "administrative",
-				"elementType": "geometry.stroke",
-				"stylers": [{
-					"color": "#000000"
-				}, {
-					"lightness": 17
-				}, {
-					"weight": 1.2
-				}]
-			}, {
-				"featureType": "landscape",
-				"elementType": "geometry",
-				"stylers": [{
-					"color": "#000000"
-				}, {
-					"lightness": 20
-				}]
-			}, {
-				"featureType": "poi",
-				"elementType": "geometry",
-				"stylers": [{
-					"color": "#000000"
-				}, {
-					"lightness": 21
-				}]
-			}, {
-				"featureType": "road.highway",
-				"elementType": "geometry.fill",
-				"stylers": [{
-					"color": "#000000"
-				}, {
-					"lightness": 17
-				}]
-			}, {
-				"featureType": "road.highway",
-				"elementType": "geometry.stroke",
-				"stylers": [{
-					"color": "#000000"
-				}, {
-					"lightness": 29
-				}, {
-					"weight": 0.2
-				}]
-			}, {
-				"featureType": "road.arterial",
-				"elementType": "geometry",
-				"stylers": [{
-					"color": "#000000"
-				}, {
-					"lightness": 18
-				}]
-			}, {
-				"featureType": "road.local",
-				"elementType": "geometry",
-				"stylers": [{
-					"color": "#000000"
-				}, {
-					"lightness": 16
-				}]
-			}, {
-				"featureType": "transit",
-				"elementType": "geometry",
-				"stylers": [{
-					"color": "#000000"
-				}, {
-					"lightness": 19
-				}]
-			}, {
-				"featureType": "water",
-				"elementType": "geometry",
-				"stylers": [{
-					"color": "#000000"
-				}, {
-					"lightness": 17
-				}]
-			}],
-			zoom: window.mapData.zoom,
-			maxZoom: window.mapData.zoom,
-			minZoom: window.mapData.zoom,
-			center: new google.maps.LatLng(window.mapData.latitude, window.mapData.longitude),
-			mapTypeId: google.maps.MapTypeId.ROADMAP
-		};
-		map = new google.maps.Map(document.getElementById("map"), myOptions);
-		marker = new google.maps.Marker({
-			map: map,
-			position: new google.maps.LatLng(window.mapData.latitude, window.mapData.longitude)
-		});
-
-		google.maps.event.addDomListener(window, "resize", function () {
-			map.setCenter(myOptions.center);
-		});
-	}
-</script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key={{ site.google_maps_javascript_api_key }}&amp;callback=initMap"></script>

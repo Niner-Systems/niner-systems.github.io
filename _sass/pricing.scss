@@ -1,3 +1,7 @@
+@use "variables" as *;
+@use "mixins/flexbox" as *;
+@use "mixins/columns" as *;
+
 .plans {
 	@extend %flexbox;
 	@include flex-flow(wrap);

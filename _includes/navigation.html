@@ -10,6 +10,21 @@
 		{% if link.link == page.url %}
 			{% assign class = class | append: " active" %}
 		{% endif %}
-		<a href="{% include relative-src.html src=link.link %}" class="{{ class }}" {% if link.new_window %}target="_blank"{% endif %}>{{ link.name }}</a>
+
+		{% if link.children %}
+			<span class="nav-dropdown{{ class }}">
+				<a href="{% include relative-src.html src=link.link %}" class="nav-dropdown-toggle">{{ link.name }} <span class="caret">&#9662;</span></a>
+				<span class="nav-dropdown-menu">
+					{% for child in link.children %}
+						<a href="{% include relative-src.html src=child.link %}" class="nav-dropdown-item">
+							<span class="nav-dropdown-item-name">{{ child.name }}</span>
+							{% if child.sublabel %}<span class="nav-dropdown-item-sublabel">{{ child.sublabel }}</span>{% endif %}
+						</a>
+					{% endfor %}
+				</span>
+			</span>
+		{% else %}
+			<a href="{% include relative-src.html src=link.link %}" class="{{ class }}" {% if link.new_window %}target="_blank"{% endif %}>{{ link.name }}</a>
+		{% endif %}
 	{% endfor %}
 </nav>
