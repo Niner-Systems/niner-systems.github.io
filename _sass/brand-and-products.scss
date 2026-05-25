@@ -777,8 +777,12 @@ $gray-light:   #ccc;
 	}
 }
 
-// Mobile nav: show the dropdown toggle as a plain link so children just stack
+// Mobile nav: hide the dropdown wrapper until the hamburger is open; then show
+// the toggle and its children stacked like the other nav links.
 @media (max-width: 619px) {
-	.nav-dropdown .nav-dropdown-toggle { display: block; }
-	.nav-dropdown .nav-dropdown-menu   { display: block; }
+	.nav-dropdown { display: none; }
+
+	.nav-open .nav-dropdown                      { display: block; }
+	.nav-open .nav-dropdown .nav-dropdown-toggle { display: block; }
+	.nav-open .nav-dropdown .nav-dropdown-menu   { display: block; }
 }
