@@ -2,14 +2,14 @@
 # Bump `version` on each release and the download page (and any other
 # Jekyll page that references this data) will update automatically.
 
-version: 1.0.14
+version: 1.0.15
 
 mac:
-  filename: NinerSystemsToolbar-1.0.14.dmg
-  url: https://downloads.9ersystems.com/toolbar/NinerSystemsToolbar-1.0.14.dmg
+  filename: NinerSystemsToolbar-1.0.15.dmg
+  url: https://downloads.9ersystems.com/toolbar/NinerSystemsToolbar-1.0.15.dmg
   details: Universal (Apple Silicon &amp; Intel)
 
 windows:
-  filename: NinerSystemsToolbar-1.0.14.msi
-  url: https://downloads.9ersystems.com/toolbar/NinerSystemsToolbar-1.0.14.msi
+  filename: NinerSystemsToolbar-1.0.15.msi
+  url: https://downloads.9ersystems.com/toolbar/NinerSystemsToolbar-1.0.15.msi
   details: Windows 10 &amp; 11 (64-bit)
