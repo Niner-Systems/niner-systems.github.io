@@ -539,6 +539,22 @@ $gray-light:   #ccc;
 	text-align: center;
 }
 
+// Shown beneath the download-row when a Microsoft Store URL is configured.
+// Explains the direct .msi fallback + the SmartScreen warning users will see
+// if they go that route. Sized smaller than .compat-note since most users
+// should use the Store; this is for the minority who don't.
+.direct-download-note {
+	color: $gray-mid;
+	font-size: 0.85em;
+	line-height: 1.5;
+	margin: 18px auto 0 auto;
+	max-width: 640px;
+	text-align: center;
+
+	a { color: $gray-mid; text-decoration: underline; }
+	a:hover { color: $brand-orange; }
+}
+
 .toolbar-screenshot {
 	max-width: 360px;
 	margin: 0 auto;

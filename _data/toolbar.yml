@@ -13,3 +13,8 @@ windows:
   filename: NinerSystemsToolbar-1.0.15.msi
   url: https://downloads.9ersystems.com/toolbar/NinerSystemsToolbar-1.0.15.msi
   details: Windows 10 &amp; 11 (64-bit)
+  # Fill in after Microsoft Store submission is approved. Until this is set,
+  # the download page shows the direct .msi link only (page reads as today).
+  # Once set, the page promotes the Store as the recommended Windows path
+  # and reframes the .msi as the secondary "advanced users" option.
+  store_url:

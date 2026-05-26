@@ -18,6 +18,15 @@ permalink: /downloads/toolbar/
 				<span class="download-os">Download for macOS</span>
 				<span class="download-meta">{{ site.data.toolbar.mac.filename }} &middot; {{ site.data.toolbar.mac.details }}</span>
 			</a>
+			{% if site.data.toolbar.windows.store_url %}
+			<a class="download-button windows store"
+			   href="{{ site.data.toolbar.windows.store_url }}"
+			   data-os="windows-store" data-version="{{ site.data.toolbar.version }}"
+			   onclick="trackDownload('windows-store', '{{ site.data.toolbar.version }}')">
+				<span class="download-os">Get it from Microsoft Store</span>
+				<span class="download-meta">Recommended &middot; signed &amp; verified by Microsoft</span>
+			</a>
+			{% else %}
 			<a class="download-button windows"
 			   href="{{ site.data.toolbar.windows.url }}"
 			   data-os="windows" data-version="{{ site.data.toolbar.version }}"
@@ -25,7 +34,21 @@ permalink: /downloads/toolbar/
 				<span class="download-os">Download for Windows</span>
 				<span class="download-meta">{{ site.data.toolbar.windows.filename }} &middot; {{ site.data.toolbar.windows.details }}</span>
 			</a>
+			{% endif %}
 		</div>
+
+		{% if site.data.toolbar.windows.store_url %}
+		<p class="direct-download-note">
+			Windows users without a Microsoft account can also
+			<a href="{{ site.data.toolbar.windows.url }}"
+			   data-os="windows-direct" data-version="{{ site.data.toolbar.version }}"
+			   onclick="trackDownload('windows-direct', '{{ site.data.toolbar.version }}')">download
+			the installer directly</a>.
+			Windows will warn you with &ldquo;Microsoft Defender SmartScreen prevented&hellip;&rdquo; &mdash;
+			click <strong>More info</strong> then <strong>Run anyway</strong>. This is normal
+			for new publishers; the Microsoft Store version above installs without that warning.
+		</p>
+		{% endif %}
 
 		<p class="compat-note">Products sold before May 1, 2026 may not be compatible with sidetone support.</p>
 	</div>
@@ -91,6 +114,15 @@ permalink: /downloads/toolbar/
 					<span class="download-os">Download for macOS</span>
 					<span class="download-meta">{{ site.data.toolbar.mac.filename }}</span>
 				</a>
+				{% if site.data.toolbar.windows.store_url %}
+				<a class="download-button windows store"
+				   href="{{ site.data.toolbar.windows.store_url }}"
+				   data-os="windows-store" data-version="{{ site.data.toolbar.version }}"
+				   onclick="trackDownload('windows-store', '{{ site.data.toolbar.version }}')">
+					<span class="download-os">Get it from Microsoft Store</span>
+					<span class="download-meta">Recommended &middot; signed &amp; verified by Microsoft</span>
+				</a>
+				{% else %}
 				<a class="download-button windows"
 				   href="{{ site.data.toolbar.windows.url }}"
 				   data-os="windows" data-version="{{ site.data.toolbar.version }}"
@@ -98,7 +130,19 @@ permalink: /downloads/toolbar/
 					<span class="download-os">Download for Windows</span>
 					<span class="download-meta">{{ site.data.toolbar.windows.filename }}</span>
 				</a>
+				{% endif %}
 			</div>
+			{% if site.data.toolbar.windows.store_url %}
+			<p class="direct-download-note">
+				Windows users without a Microsoft account can also
+				<a href="{{ site.data.toolbar.windows.url }}"
+				   data-os="windows-direct" data-version="{{ site.data.toolbar.version }}"
+				   onclick="trackDownload('windows-direct', '{{ site.data.toolbar.version }}')">download
+				the installer directly</a>. Windows will warn you with &ldquo;Microsoft Defender
+				SmartScreen prevented&hellip;&rdquo; &mdash; click <strong>More info</strong> then
+				<strong>Run anyway</strong>. This is normal for new publishers.
+			</p>
+			{% endif %}
 			<p class="compat-note">Products sold before May 1, 2026 may not be compatible with sidetone support.</p>
 		</div>
 	</section>
