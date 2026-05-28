@@ -15,40 +15,42 @@ permalink: /downloads/toolbar/
 			   href="{{ site.data.toolbar.mac.url }}"
 			   data-os="mac" data-version="{{ site.data.toolbar.version }}"
 			   onclick="trackDownload('mac', '{{ site.data.toolbar.version }}')">
-				<span class="download-os">Download for macOS</span>
-				<span class="download-meta">{{ site.data.toolbar.mac.filename }} &middot; {{ site.data.toolbar.mac.details }}</span>
+				<span class="download-button-icon" aria-hidden="true">{% include svg-icon-apple.html %}</span>
+				<span class="download-button-text">
+					<span class="download-os">Download for macOS</span>
+					<span class="download-meta">{{ site.data.toolbar.mac.filename }}</span>
+				</span>
 			</a>
 			{% if site.data.toolbar.windows.store_url %}
-			<a class="download-button windows store"
-			   href="{{ site.data.toolbar.windows.store_url }}"
-			   data-os="windows-store" data-version="{{ site.data.toolbar.version }}"
-			   onclick="trackDownload('windows-store', '{{ site.data.toolbar.version }}')">
-				<span class="download-os">Get it from Microsoft Store</span>
-				<span class="download-meta">Recommended &middot; signed &amp; verified by Microsoft</span>
-			</a>
+			<div class="download-stack">
+				<a class="download-badge"
+				   href="{{ site.data.toolbar.windows.store_url }}"
+				   target="_blank"
+				   rel="noopener"
+				   data-os="windows-store" data-version="{{ site.data.toolbar.version }}"
+				   onclick="trackDownload('windows-store', '{{ site.data.toolbar.version }}')">
+					<img src="{{ site.data.toolbar.windows.store_badge_image }}" alt="Get it from Microsoft Store" width="200"/>
+				</a>
+				<p class="direct-download-note">
+					<a href="{{ site.data.toolbar.windows.url }}"
+					   class="direct-download-link"
+					   data-os="windows-direct"
+					   data-version="{{ site.data.toolbar.version }}">Download the msi installer <span class="link-underline">here</span></a>
+				</p>
+			</div>
 			{% else %}
 			<a class="download-button windows"
 			   href="{{ site.data.toolbar.windows.url }}"
 			   data-os="windows" data-version="{{ site.data.toolbar.version }}"
 			   onclick="trackDownload('windows', '{{ site.data.toolbar.version }}')">
-				<span class="download-os">Download for Windows</span>
-				<span class="download-meta">{{ site.data.toolbar.windows.filename }} &middot; {{ site.data.toolbar.windows.details }}</span>
+				<span class="download-button-icon" aria-hidden="true">{% include svg-icon-windows.html %}</span>
+				<span class="download-button-text">
+					<span class="download-os">Download for Windows</span>
+					<span class="download-meta">{{ site.data.toolbar.windows.filename }} &middot; {{ site.data.toolbar.windows.details }}</span>
+				</span>
 			</a>
 			{% endif %}
 		</div>
-
-		{% if site.data.toolbar.windows.store_url %}
-		<p class="direct-download-note">
-			Windows users without a Microsoft account can also
-			<a href="{{ site.data.toolbar.windows.url }}"
-			   data-os="windows-direct" data-version="{{ site.data.toolbar.version }}"
-			   onclick="trackDownload('windows-direct', '{{ site.data.toolbar.version }}')">download
-			the installer directly</a>.
-			Windows will warn you with &ldquo;Microsoft Defender SmartScreen prevented&hellip;&rdquo; &mdash;
-			click <strong>More info</strong> then <strong>Run anyway</strong>. This is normal
-			for new publishers; the Microsoft Store version above installs without that warning.
-		</p>
-		{% endif %}
 
 		<p class="compat-note">Products sold before May 1, 2026 may not be compatible with sidetone support.</p>
 	</div>
@@ -111,43 +113,71 @@ permalink: /downloads/toolbar/
 				   href="{{ site.data.toolbar.mac.url }}"
 				   data-os="mac" data-version="{{ site.data.toolbar.version }}"
 				   onclick="trackDownload('mac', '{{ site.data.toolbar.version }}')">
-					<span class="download-os">Download for macOS</span>
-					<span class="download-meta">{{ site.data.toolbar.mac.filename }}</span>
+					<span class="download-button-icon" aria-hidden="true">{% include svg-icon-apple.html %}</span>
+					<span class="download-button-text">
+						<span class="download-os">Download for macOS</span>
+						<span class="download-meta">{{ site.data.toolbar.mac.filename }}</span>
+					</span>
 				</a>
 				{% if site.data.toolbar.windows.store_url %}
-				<a class="download-button windows store"
-				   href="{{ site.data.toolbar.windows.store_url }}"
-				   data-os="windows-store" data-version="{{ site.data.toolbar.version }}"
-				   onclick="trackDownload('windows-store', '{{ site.data.toolbar.version }}')">
-					<span class="download-os">Get it from Microsoft Store</span>
-					<span class="download-meta">Recommended &middot; signed &amp; verified by Microsoft</span>
-				</a>
+				<div class="download-stack">
+					<a class="download-badge"
+					   href="{{ site.data.toolbar.windows.store_url }}"
+					   target="_blank"
+					   rel="noopener"
+					   data-os="windows-store" data-version="{{ site.data.toolbar.version }}"
+					   onclick="trackDownload('windows-store', '{{ site.data.toolbar.version }}')">
+						<img src="{{ site.data.toolbar.windows.store_badge_image }}" alt="Get it from Microsoft Store" width="200"/>
+					</a>
+					<p class="direct-download-note">
+						<a href="{{ site.data.toolbar.windows.url }}"
+						   class="direct-download-link"
+						   data-os="windows-direct"
+						   data-version="{{ site.data.toolbar.version }}">Download the msi installer <span class="link-underline">here</span></a>
+					</p>
+				</div>
 				{% else %}
 				<a class="download-button windows"
 				   href="{{ site.data.toolbar.windows.url }}"
 				   data-os="windows" data-version="{{ site.data.toolbar.version }}"
 				   onclick="trackDownload('windows', '{{ site.data.toolbar.version }}')">
-					<span class="download-os">Download for Windows</span>
-					<span class="download-meta">{{ site.data.toolbar.windows.filename }}</span>
+					<span class="download-button-icon" aria-hidden="true">{% include svg-icon-windows.html %}</span>
+					<span class="download-button-text">
+						<span class="download-os">Download for Windows</span>
+						<span class="download-meta">{{ site.data.toolbar.windows.filename }}</span>
+					</span>
 				</a>
 				{% endif %}
 			</div>
-			{% if site.data.toolbar.windows.store_url %}
-			<p class="direct-download-note">
-				Windows users without a Microsoft account can also
-				<a href="{{ site.data.toolbar.windows.url }}"
-				   data-os="windows-direct" data-version="{{ site.data.toolbar.version }}"
-				   onclick="trackDownload('windows-direct', '{{ site.data.toolbar.version }}')">download
-				the installer directly</a>. Windows will warn you with &ldquo;Microsoft Defender
-				SmartScreen prevented&hellip;&rdquo; &mdash; click <strong>More info</strong> then
-				<strong>Run anyway</strong>. This is normal for new publishers.
-			</p>
-			{% endif %}
 			<p class="compat-note">Products sold before May 1, 2026 may not be compatible with sidetone support.</p>
 		</div>
 	</section>
 
 </div>
+
+{% if site.data.toolbar.windows.store_url %}
+<div class="smartscreen-modal" id="smartscreen-modal" role="dialog" aria-modal="true" aria-labelledby="smartscreen-modal-title" hidden>
+	<div class="smartscreen-modal-backdrop" data-modal-close></div>
+	<div class="smartscreen-modal-content" role="document">
+		<button class="smartscreen-modal-close" type="button" aria-label="Close" data-modal-close>&times;</button>
+		<h3 id="smartscreen-modal-title">Your download has started</h3>
+		<p class="modal-lead">
+			Check your browser's Downloads folder for
+			<strong>{{ site.data.toolbar.windows.filename }}</strong>.
+		</p>
+		<div class="modal-section modal-warning">
+			<h4>What to expect when you run it</h4>
+			<p>Windows will show this warning:</p>
+			<blockquote>Microsoft Defender SmartScreen prevented an unrecognized app from starting&hellip;</blockquote>
+			<p>To continue, click <strong>More info</strong>, then click <strong>Run anyway</strong>.</p>
+		</div>
+		<p class="modal-aside">
+			This is normal for new publishers. The Microsoft Store version installs without that warning.
+		</p>
+		<button class="modal-ok" type="button" data-modal-close>Got it</button>
+	</div>
+</div>
+{% endif %}
 
 <script>
 	function trackDownload(os, version) {
@@ -163,4 +193,33 @@ permalink: /downloads/toolbar/
 			});
 		}
 	}
+
+	(function () {
+		var modal = document.getElementById('smartscreen-modal');
+		if (!modal) return;
+
+		function openModal() {
+			modal.removeAttribute('hidden');
+			document.body.classList.add('smartscreen-modal-open');
+		}
+		function closeModal() {
+			modal.setAttribute('hidden', '');
+			document.body.classList.remove('smartscreen-modal-open');
+		}
+
+		document.querySelectorAll('.direct-download-link').forEach(function (link) {
+			link.addEventListener('click', function () {
+				trackDownload(link.getAttribute('data-os'), link.getAttribute('data-version'));
+				openModal();
+				// Default click handles the download (.msi triggers a save in the browser).
+			});
+		});
+
+		modal.querySelectorAll('[data-modal-close]').forEach(function (el) {
+			el.addEventListener('click', closeModal);
+		});
+		document.addEventListener('keydown', function (e) {
+			if (e.key === 'Escape' && !modal.hasAttribute('hidden')) closeModal();
+		});
+	})();
 </script>

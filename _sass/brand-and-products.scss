@@ -490,15 +490,34 @@ $gray-light:   #ccc;
 	justify-content: center;
 	margin: 30px 0 0 0;
 
-	@media #{$tablet} { flex-direction: row; }
+	@media #{$tablet} {
+		flex-direction: row;
+		// Top-align so the macOS button sits at the same baseline as the
+		// MS Store badge; the .download-stack underneath the badge holds
+		// the secondary "Download the msi installer here" link.
+		align-items: flex-start;
+	}
+}
+
+// Vertical group: Microsoft Store badge stacked with its secondary
+// "Download the msi installer here" link. Sits in .download-row as a single
+// flex child so the link aligns under the badge only, not under both buttons.
+.download-stack {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 8px;
 }
 
 .download-button {
 	display: inline-flex;
-	flex-direction: column;
+	flex-direction: row;
 	align-items: center;
-	padding: 18px 32px;
-	min-width: 280px;
+	gap: 14px;
+	padding: 12px 22px;
+	min-width: 260px;
+	min-height: 64px;
+	box-sizing: border-box;
 	background: $brand-orange;
 	color: #fff;
 	border-radius: 8px;
@@ -514,20 +533,67 @@ $gray-light:   #ccc;
 		box-shadow: 0 6px 20px rgba($brand-orange, 0.45);
 	}
 
-	&.mac::before    { content: ""; }
 	&.windows        { background: #2b7bd8; box-shadow: 0 4px 14px rgba(43, 123, 216, 0.4); }
 	&.windows:hover  { background: color.adjust(#2b7bd8, $lightness: -6%); box-shadow: 0 6px 20px rgba(43, 123, 216, 0.5); }
 
+	.download-button-icon {
+		flex: 0 0 auto;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		// Sized to visually match the Windows logo inside the adjacent
+		// Microsoft Store badge (~36px glyph within the 64px badge).
+		width: 36px;
+		height: 36px;
+		color: #fff;
+
+		svg { width: 100%; height: 100%; display: block; }
+	}
+
+	.download-button-text {
+		display: inline-flex;
+		flex-direction: column;
+		align-items: flex-start;
+		line-height: 1.2;
+	}
+
 	.download-os {
-		font-size: 1.05em;
+		font-size: 1.0em;
 		font-weight: 700;
-		margin-bottom: 4px;
+		margin-bottom: 2px;
 	}
 
 	.download-meta {
-		font-size: 0.78em;
+		font-size: 0.75em;
 		opacity: 0.85;
 		font-weight: 400;
+	}
+}
+
+// Microsoft-provided "Get it from Microsoft Store" badge. We render the image
+// at its native ratio; the anchor only handles spacing + lift on hover so the
+// badge sits next to .download-button without distortion.
+.download-badge {
+	display: inline-flex;
+	align-items: center;
+	text-decoration: none;
+	border-radius: 6px;
+	transition: transform 0.1s, box-shadow 0.15s;
+
+	img {
+		display: block;
+		// Scale the Microsoft-provided badge so its height matches the
+		// .download-button next to it (min-height: 64px). Width auto-scales
+		// to preserve the badge's native aspect ratio.
+		height: 64px;
+		width: auto;
+		border-radius: 6px;
+	}
+
+	&:hover {
+		text-decoration: none;
+		transform: translateY(-2px);
+		box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
 	}
 }
 
@@ -539,20 +605,151 @@ $gray-light:   #ccc;
 	text-align: center;
 }
 
-// Shown beneath the download-row when a Microsoft Store URL is configured.
-// Explains the direct .msi fallback + the SmartScreen warning users will see
-// if they go that route. Sized smaller than .compat-note since most users
-// should use the Store; this is for the minority who don't.
+// Sits inside .download-stack directly under the Microsoft Store badge.
+// Hosts the secondary "Download the msi installer here" link that pops the
+// SmartScreen warning modal. Compact, low-emphasis -- most users should use
+// the Store path; this exists for the minority who don't.
 .direct-download-note {
-	color: $gray-mid;
-	font-size: 0.85em;
-	line-height: 1.5;
-	margin: 18px auto 0 auto;
-	max-width: 640px;
+	margin: 0;
+	font-size: 0.8em;
+	line-height: 1.4;
 	text-align: center;
 
-	a { color: $gray-mid; text-decoration: underline; }
+	a, a:visited {
+		color: rgba(255, 255, 255, 0.7);
+		text-decoration: none;
+	}
+	a:hover { color: #fff; }
+	// Only the trailing word ("here") wears the underline so the whole
+	// phrase still reads as clickable but the affordance stays restrained.
+	.link-underline {
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+}
+
+// On the lighter bottom-CTA section the note sits on white, so tone the
+// link down to match the surrounding muted text instead of the hero's
+// translucent white.
+.download-cta-section .direct-download-note {
+	a, a:visited { color: $gray-mid; }
 	a:hover { color: $brand-orange; }
+}
+
+// ----------------------------------------------------------------------------
+// SmartScreen warning modal
+// Triggered when a Windows user picks the direct .msi link instead of the
+// Microsoft Store. Explains what they're about to see so they don't bail on
+// the install when SmartScreen blocks the unsigned installer.
+// ----------------------------------------------------------------------------
+
+body.smartscreen-modal-open { overflow: hidden; }
+
+.smartscreen-modal {
+	position: fixed;
+	inset: 0;
+	z-index: 1000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 20px;
+
+	&[hidden] { display: none; }
+}
+
+.smartscreen-modal-backdrop {
+	position: absolute;
+	inset: 0;
+	background: rgba(15, 18, 28, 0.65);
+	backdrop-filter: blur(2px);
+}
+
+.smartscreen-modal-content {
+	position: relative;
+	background: #fff;
+	color: $ink;
+	border-radius: 10px;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+	padding: 30px 30px 26px 30px;
+	max-width: 520px;
+	width: 100%;
+	text-align: left;
+
+	h3 {
+		margin: 0 0 12px 0;
+		font-size: 1.35em;
+		color: $ink;
+	}
+
+	h4 {
+		margin: 0 0 8px 0;
+		font-size: 1em;
+		color: $ink;
+	}
+
+	p { margin: 0 0 12px 0; line-height: 1.5; color: $gray-mid; }
+	p:last-child { margin-bottom: 0; }
+
+	.modal-lead { color: $ink; }
+
+	.modal-section {
+		margin: 18px 0;
+		padding: 14px 16px;
+		border-radius: 6px;
+		background: #f7f7f9;
+		border-left: 3px solid $brand-orange;
+
+		blockquote {
+			margin: 8px 0;
+			padding: 10px 12px;
+			background: #fff;
+			border: 1px solid #e3e3e8;
+			border-radius: 4px;
+			font-style: italic;
+			color: $ink;
+			font-size: 0.95em;
+		}
+
+		strong { color: $ink; }
+	}
+
+	.modal-aside {
+		font-size: 0.85em;
+		font-style: italic;
+		color: $gray-mid;
+	}
+}
+
+.smartscreen-modal-close {
+	position: absolute;
+	top: 10px;
+	right: 12px;
+	width: 32px;
+	height: 32px;
+	background: transparent;
+	border: 0;
+	font-size: 1.6em;
+	line-height: 1;
+	color: $gray-mid;
+	cursor: pointer;
+	border-radius: 4px;
+
+	&:hover { color: $ink; background: rgba(0, 0, 0, 0.06); }
+}
+
+.modal-ok {
+	margin-top: 18px;
+	padding: 10px 22px;
+	background: $brand-orange;
+	color: #fff;
+	border: 0;
+	border-radius: 6px;
+	font-size: 0.95em;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background 0.15s;
+
+	&:hover { background: color.adjust($brand-orange, $lightness: -6%); }
 }
 
 .toolbar-screenshot {

@@ -17,4 +17,9 @@ windows:
   # the download page shows the direct .msi link only (page reads as today).
   # Once set, the page promotes the Store as the recommended Windows path
   # and reframes the .msi as the secondary "advanced users" option.
-  store_url:
+  store_url: https://apps.microsoft.com/detail/9NWH3S3FKVDS
+  # Direct install/launch URL used by the "Get it from Microsoft Store" badge.
+  # Distinct from store_url, which is the human-browsable product page.
+  app_url: https://get.microsoft.com/installer/download/9NWH3S3FKVDS?referrer=appbadge
+  # Microsoft-hosted badge image paired with app_url above.
+  store_badge_image: https://get.microsoft.com/images/en-us%20light.svg
