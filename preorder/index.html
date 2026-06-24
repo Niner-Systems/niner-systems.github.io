@@ -1,0 +1,116 @@
+---
+title: Pre-order — GA2DSub & GA2Pigtail
+description: Be among the first to own 9er Systems' new GA dual-plug-to-DSub and GA dual-plug-to-pigtail adapters for experimental aircraft builds.
+layout: default
+---
+<section class="preorder-hero">
+	<div class="preorder-hero-overlay"></div>
+	<div class="container preorder-hero-inner">
+		<p class="product-eyebrow">Coming Soon — Reserve Yours</p>
+		<h1>Pre-order <strong>GA2DSub</strong> &amp; <strong>GA2Pigtail</strong></h1>
+		<p class="subtext">Two new adapters for experimental and homebuilt aircraft — a GA dual-plug to DSub PCB converter, and a GA dual-plug to bare pigtail wire. Tell us what you'd like and reserve your spot before production begins.</p>
+	</div>
+</section>
+
+<div class="content">
+	<section class="preorder-section">
+		<div class="container">
+
+			<h2 class="preorder-section-title">1. Pick your products</h2>
+			<p class="preorder-section-sub">Tap the + and &minus; to adjust quantity. Multi-packs save per-unit.</p>
+
+			<div class="sku-grid" id="sku-grid">
+				<!-- tiles populated by app.js -->
+			</div>
+
+			<div class="cart-summary" id="cart-summary" hidden>
+				<div class="cart-summary-line"><span>Subtotal</span><span id="cart-subtotal">$0.00</span></div>
+				<div class="cart-summary-line cart-summary-deposit"><span>20% deposit (today)</span><span id="cart-deposit">$0.00</span></div>
+			</div>
+
+			<h2 class="preorder-section-title">2. Pick your commitment level</h2>
+			<p class="preorder-section-sub">Three options, no obligation beyond the one you pick.</p>
+
+			<div class="tier-grid" id="tier-grid">
+				<button type="button" class="tier-card" data-tier="interest">
+					<div class="tier-card-label">Just interested</div>
+					<div class="tier-card-desc">Leave your contact info. We'll email when these are ready to ship.</div>
+					<div class="tier-card-cost">Free</div>
+				</button>
+				<button type="button" class="tier-card" data-tier="invoice">
+					<div class="tier-card-label">Pre-order invoice</div>
+					<div class="tier-card-desc">We email a Square invoice with a 20% deposit due now. Balance due before shipping.</div>
+					<div class="tier-card-cost">Pay later</div>
+				</button>
+				<button type="button" class="tier-card" data-tier="pay_now">
+					<div class="tier-card-label">Pay deposit now</div>
+					<div class="tier-card-desc">Tap your card on our Square Terminal for the 20% deposit. We'll invoice the balance later.</div>
+					<div class="tier-card-cost">Tap to pay</div>
+				</button>
+			</div>
+
+			<h2 class="preorder-section-title">3. Your info</h2>
+
+			<form id="preorder-form" class="preorder-form" novalidate>
+				<div class="form-row">
+					<label for="customerName">Name *</label>
+					<input type="text" id="customerName" name="customerName" autocomplete="name" required>
+				</div>
+				<div class="form-row">
+					<label for="email">Email *</label>
+					<input type="email" id="email" name="email" autocomplete="email" required inputmode="email">
+				</div>
+				<div class="form-row">
+					<label for="phone">Phone</label>
+					<input type="tel" id="phone" name="phone" autocomplete="tel" inputmode="tel">
+				</div>
+
+				<fieldset class="ship-fieldset" id="ship-fieldset" hidden>
+					<legend>Shipping address</legend>
+					<div class="form-row">
+						<label for="ship-line1">Street address *</label>
+						<input type="text" id="ship-line1" name="ship-line1" autocomplete="address-line1">
+					</div>
+					<div class="form-row">
+						<label for="ship-line2">Apt / suite</label>
+						<input type="text" id="ship-line2" name="ship-line2" autocomplete="address-line2">
+					</div>
+					<div class="form-row-grid">
+						<div class="form-row">
+							<label for="ship-city">City *</label>
+							<input type="text" id="ship-city" name="ship-city" autocomplete="address-level2">
+						</div>
+						<div class="form-row">
+							<label for="ship-state">State *</label>
+							<input type="text" id="ship-state" name="ship-state" autocomplete="address-level1" maxlength="2">
+						</div>
+						<div class="form-row">
+							<label for="ship-zip">ZIP *</label>
+							<input type="text" id="ship-zip" name="ship-zip" autocomplete="postal-code" inputmode="numeric">
+						</div>
+					</div>
+				</fieldset>
+
+				<div class="form-row">
+					<label for="notes">Anything else? (aircraft type, mounting plans, questions)</label>
+					<textarea id="notes" name="notes" rows="3"></textarea>
+				</div>
+
+				<div class="preorder-submit-row">
+					<button type="submit" class="cta-button primary" id="submit-btn" disabled>Submit pre-order</button>
+					<p class="preorder-form-hint" id="form-hint">Pick at least one product and a commitment level above.</p>
+				</div>
+			</form>
+
+			<div class="preorder-toast" id="toast" hidden></div>
+
+		</div>
+	</section>
+</div>
+
+<div class="sync-badge" id="sync-badge" data-state="synced" hidden>
+	<span class="sync-dot"></span>
+	<span class="sync-label">Synced</span>
+</div>
+
+<script src="{{ site.baseurl }}/preorder/app.js" defer></script>

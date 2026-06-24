@@ -1,0 +1,426 @@
+@use "sass:color";
+@use "variables" as *;
+
+// Pull rebrand palette into scope.
+$brand-orange: #e97b35;
+$sky-deep:     #2a4a78;
+$sky-mid:      #5a78a5;
+$ink:          #1a1a1a;
+$gray-mid:     #686868;
+$gray-light:   #ccc;
+
+// ----------------------------------------------------------------------------
+// Preorder hero — mirrors the .product-hero/.brand-hero conventions
+// ----------------------------------------------------------------------------
+
+.preorder-hero {
+	position: relative;
+	color: #fff;
+	background: linear-gradient(180deg, $sky-deep 0%, color.adjust($sky-deep, $lightness: 8%) 100%);
+	padding: 60px 0 70px 0;
+	overflow: hidden;
+	text-align: center;
+
+	.preorder-hero-overlay {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(180deg, rgba(0,0,0,0.10) 0%, transparent 40%, rgba(0,0,0,0.20) 100%);
+		pointer-events: none;
+	}
+
+	.preorder-hero-inner {
+		position: relative;
+		z-index: 2;
+		max-width: 760px;
+	}
+
+	.product-eyebrow {
+		color: color.adjust($brand-orange, $lightness: 5%);
+		margin-bottom: 12px;
+	}
+
+	h1 {
+		color: #fff;
+		font-size: 2.2em;
+		line-height: 1.15;
+		margin-bottom: 16px;
+		strong { font-weight: 700; color: $brand-orange; }
+		@media #{$desktop} { font-size: 2.8em; }
+	}
+
+	.subtext {
+		color: rgba(255, 255, 255, 0.88);
+		font-size: 1.05em;
+		max-width: 640px;
+		margin: 0 auto;
+	}
+}
+
+// ----------------------------------------------------------------------------
+// Preorder section + headings
+// ----------------------------------------------------------------------------
+
+.preorder-section {
+	padding: 60px 0 100px 0;
+}
+
+.preorder-section-title {
+	color: $sky-deep;
+	font-weight: 700;
+	font-size: 1.4em;
+	margin: 50px 0 6px 0;
+
+	&:first-of-type { margin-top: 0; }
+}
+
+.preorder-section-sub {
+	color: $gray-mid;
+	margin: 0 0 24px 0;
+	font-size: 0.95em;
+}
+
+// ----------------------------------------------------------------------------
+// SKU grid
+// ----------------------------------------------------------------------------
+
+.sku-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 14px;
+
+	@media #{$tablet}  { grid-template-columns: 1fr 1fr; }
+	@media #{$desktop} { grid-template-columns: repeat(3, 1fr); }
+}
+
+.sku-tile {
+	background: #fff;
+	border: 2px solid #e6e6e6;
+	border-radius: 10px;
+	padding: 18px 18px 14px 18px;
+	transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+
+	&.selected {
+		border-color: $brand-orange;
+		box-shadow: 0 4px 14px rgba($brand-orange, 0.18);
+	}
+
+	.sku-tile-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+	}
+
+	.sku-tile-label {
+		font-size: 1.05em;
+		font-weight: 700;
+		color: $ink;
+	}
+
+	.sku-tile-pack {
+		font-size: 0.78em;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-weight: 600;
+		color: $brand-orange;
+	}
+
+	.sku-tile-price {
+		font-size: 1.5em;
+		font-weight: 700;
+		color: $sky-deep;
+		line-height: 1;
+	}
+
+	.sku-tile-qty {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-top: 4px;
+		background: #f6f7fa;
+		border-radius: 8px;
+		padding: 4px;
+	}
+}
+
+.qty-btn {
+	width: 56px;
+	height: 56px;
+	border: 0;
+	border-radius: 6px;
+	background: #fff;
+	color: $sky-deep;
+	font-size: 1.6em;
+	font-weight: 600;
+	line-height: 1;
+	cursor: pointer;
+	transition: background 0.1s, transform 0.05s;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+	&:hover { background: color.adjust(#f6f7fa, $lightness: -2%); }
+	&:active { transform: scale(0.96); }
+}
+
+.qty-value {
+	font-size: 1.6em;
+	font-weight: 700;
+	color: $ink;
+	min-width: 2ch;
+	text-align: center;
+}
+
+// ----------------------------------------------------------------------------
+// Cart summary
+// ----------------------------------------------------------------------------
+
+.cart-summary {
+	margin: 24px 0 0 0;
+	padding: 18px 22px;
+	background: #f7f8fa;
+	border-left: 4px solid $sky-deep;
+	border-radius: 4px;
+}
+
+.cart-summary-line {
+	display: flex;
+	justify-content: space-between;
+	font-size: 1.05em;
+	color: $ink;
+
+	& + .cart-summary-line { margin-top: 6px; }
+
+	&.cart-summary-deposit {
+		color: $brand-orange;
+		font-weight: 700;
+		font-size: 1.15em;
+		padding-top: 8px;
+		border-top: 1px solid #e6e6e6;
+		margin-top: 10px;
+	}
+}
+
+// ----------------------------------------------------------------------------
+// Tier selection
+// ----------------------------------------------------------------------------
+
+.tier-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 14px;
+
+	@media #{$tablet} { grid-template-columns: repeat(3, 1fr); }
+}
+
+.tier-card {
+	text-align: left;
+	background: #fff;
+	border: 2px solid #e6e6e6;
+	border-radius: 10px;
+	padding: 22px 22px 18px 22px;
+	cursor: pointer;
+	transition: border-color 0.15s, transform 0.1s, box-shadow 0.15s;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	font: inherit;
+	color: $ink;
+
+	&:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+		border-color: $sky-mid;
+	}
+
+	&.selected {
+		border-color: $brand-orange;
+		box-shadow: 0 6px 18px rgba($brand-orange, 0.20);
+	}
+
+	.tier-card-label {
+		font-size: 1.15em;
+		font-weight: 700;
+		color: $sky-deep;
+	}
+
+	.tier-card-desc {
+		font-size: 0.92em;
+		color: $gray-mid;
+		line-height: 1.45;
+		flex: 1;
+	}
+
+	.tier-card-cost {
+		font-size: 0.85em;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: $brand-orange;
+		margin-top: 4px;
+	}
+}
+
+// ----------------------------------------------------------------------------
+// Form
+// ----------------------------------------------------------------------------
+
+.preorder-form {
+	max-width: 720px;
+
+	.form-row { margin-bottom: 14px; }
+	.form-row label {
+		display: block;
+		font-weight: 600;
+		font-size: 0.9em;
+		color: $sky-deep;
+		margin-bottom: 4px;
+	}
+
+	.form-row input,
+	.form-row textarea {
+		width: 100%;
+		padding: 12px 14px;
+		font-size: 1em;
+		border: 1px solid #DDD;
+		border-radius: 6px;
+		background: #fff;
+		color: $ink;
+		box-sizing: border-box;
+
+		&:focus {
+			outline: 0;
+			border-color: $brand-orange;
+			box-shadow: 0 0 0 3px rgba($brand-orange, 0.15);
+		}
+	}
+
+	.form-row textarea { min-height: 90px; resize: vertical; }
+
+	.form-row-grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 10px;
+
+		@media #{$tablet} { grid-template-columns: 2fr 1fr 1fr; }
+	}
+}
+
+.ship-fieldset {
+	border: 1px solid #e6e6e6;
+	border-radius: 8px;
+	padding: 18px 20px 6px 20px;
+	margin: 6px 0 18px 0;
+	background: #fafbfc;
+
+	legend {
+		padding: 0 8px;
+		font-weight: 700;
+		color: $sky-deep;
+		font-size: 0.95em;
+	}
+}
+
+.preorder-submit-row {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 8px;
+	margin-top: 14px;
+
+	@media #{$tablet} {
+		flex-direction: row;
+		align-items: center;
+		gap: 18px;
+	}
+
+	.cta-button { min-width: 220px; }
+	.cta-button[disabled] {
+		opacity: 0.45;
+		cursor: not-allowed;
+		transform: none;
+		box-shadow: none;
+	}
+}
+
+.preorder-form-hint {
+	color: $gray-mid;
+	font-size: 0.92em;
+	margin: 0;
+}
+
+// ----------------------------------------------------------------------------
+// Toast
+// ----------------------------------------------------------------------------
+
+.preorder-toast {
+	position: fixed;
+	left: 50%;
+	bottom: 70px;
+	transform: translateX(-50%);
+	z-index: 1100;
+	max-width: calc(100vw - 40px);
+	padding: 14px 22px;
+	border-radius: 8px;
+	font-weight: 600;
+	box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+
+	&[data-kind="success"] {
+		background: $sky-deep;
+		color: #fff;
+	}
+	&[data-kind="error"] {
+		background: #c63a3a;
+		color: #fff;
+	}
+}
+
+// ----------------------------------------------------------------------------
+// Sync badge (bottom-right floating chip)
+// ----------------------------------------------------------------------------
+
+.sync-badge {
+	position: fixed;
+	right: 18px;
+	bottom: 18px;
+	z-index: 900;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 8px 14px;
+	border-radius: 999px;
+	background: #fff;
+	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+	font-size: 0.85em;
+	font-weight: 600;
+	color: $ink;
+
+	.sync-dot {
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		background: $gray-light;
+	}
+
+	&[data-state="synced"] .sync-dot { background: #2ec27e; }
+	&[data-state="pending"] .sync-dot {
+		background: #f5a623;
+		animation: pulseDot 1.4s ease-in-out infinite;
+	}
+	&[data-state="offline"] .sync-dot { background: $gray-mid; }
+}
+
+@keyframes pulseDot {
+	0%, 100% { opacity: 1; }
+	50%      { opacity: 0.35; }
+}
+
+// ----------------------------------------------------------------------------
+// Kiosk mode — hide nav + footer for booth self-serve use
+// ----------------------------------------------------------------------------
+
+body.kiosk-mode {
+	header, footer { display: none; }
+	.preorder-section { padding-top: 30px; }
+	overscroll-behavior: contain;
+}
