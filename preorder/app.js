@@ -210,7 +210,7 @@
 							<div class="sku-tile-price">${formatUSD(v.priceCents)}${v.pricingTbd ? '<small> TBD</small>' : ''}</div>
 							<div class="sku-tile-qty">
 								<button type="button" class="qty-btn" data-act="dec" aria-label="Decrease quantity">−</button>
-								<span class="qty-value" data-sku="${v.sku}">0</span>
+								<input type="number" class="qty-value" data-sku="${v.sku}" value="0" min="0" max="9999" step="1" inputmode="numeric" pattern="[0-9]*" aria-label="Quantity for ${escapeHtml(v.label)}">
 								<button type="button" class="qty-btn" data-act="inc" aria-label="Increase quantity">+</button>
 							</div>
 						</div>
@@ -220,26 +220,67 @@
 			container.appendChild(row);
 		});
 
+		// +/- buttons: read the input value, increment/decrement, sync.
 		container.addEventListener('click', (e) => {
 			const btn = e.target.closest('.qty-btn');
 			if (!btn) return;
 			const tile = btn.closest('.sku-tile');
-			const sku = tile.dataset.sku;
-			const current = cart.get(sku) || 0;
+			const input = tile.querySelector('.qty-value');
+			const current = parseInt(input.value, 10) || 0;
 			const delta = btn.dataset.act === 'inc' ? 1 : -1;
-			const next = Math.max(0, Math.min(99, current + delta));
-			if (next === 0) cart.delete(sku); else cart.set(sku, next);
-			updatePreOrderCart();
+			const next = clampQty(current + delta);
+			input.value = String(next);
+			syncFromInput(tile.dataset.sku, next);
+		});
+
+		// Direct keypad input: every keystroke updates the cart.
+		container.addEventListener('input', (e) => {
+			const input = e.target.closest('.qty-value');
+			if (!input) return;
+			// Strip non-digits and cap at 4 characters before parsing.
+			const cleaned = input.value.replace(/\D/g, '').slice(0, 4);
+			if (cleaned !== input.value) input.value = cleaned;
+			const value = clampQty(parseInt(cleaned, 10) || 0);
+			if (cleaned !== '' && String(value) !== cleaned) input.value = String(value);
+			syncFromInput(input.dataset.sku, value);
+		});
+
+		// Tap-to-edit: select-all on focus so typing replaces the existing value
+		// instead of appending to it.
+		container.addEventListener('focusin', (e) => {
+			const input = e.target.closest('.qty-value');
+			if (input) input.select();
+		});
+
+		// Blur on a blank or zero field normalizes back to "0" for display.
+		container.addEventListener('focusout', (e) => {
+			const input = e.target.closest('.qty-value');
+			if (!input) return;
+			if (input.value === '' || isNaN(parseInt(input.value, 10))) {
+				input.value = '0';
+				syncFromInput(input.dataset.sku, 0);
+			}
 		});
 	}
 
-	function updatePreOrderCart() {
+	function clampQty(n) {
+		if (!Number.isFinite(n)) return 0;
+		return Math.max(0, Math.min(9999, Math.floor(n)));
+	}
+
+	// Single SKU's input changed (via +/-, typing, or paste). Update cart Map
+	// and re-compute totals/badges, but DO NOT re-write other input values —
+	// they are their own source of truth so typing isn't interrupted.
+	function syncFromInput(sku, qty) {
+		if (qty <= 0) cart.delete(sku); else cart.set(sku, qty);
+		recalcCartTotals();
+	}
+
+	function recalcCartTotals() {
 		let subtotalCents = 0;
 		catalog.items.forEach((v) => {
 			const qty = cart.get(v.sku) || 0;
 			subtotalCents += qty * v.priceCents;
-			const valueEl = document.querySelector(`.qty-value[data-sku="${v.sku}"]`);
-			if (valueEl) valueEl.textContent = String(qty);
 			const tile = document.querySelector(`.sku-tile[data-sku="${v.sku}"]`);
 			if (tile) tile.classList.toggle('selected', qty > 0);
 		});
@@ -247,6 +288,17 @@
 		$('cart-deposit').textContent = formatUSD(Math.round(subtotalCents * 0.2));
 		$('cart-summary').hidden = subtotalCents === 0;
 		updatePreOrderSubmitState();
+	}
+
+	// Full re-sync from cart Map → inputs. Only used by resetAll() since
+	// during normal interaction the inputs are the source of truth.
+	function updatePreOrderCart() {
+		catalog.items.forEach((v) => {
+			const qty = cart.get(v.sku) || 0;
+			const input = document.querySelector(`.qty-value[data-sku="${v.sku}"]`);
+			if (input) input.value = String(qty);
+		});
+		recalcCartTotals();
 	}
 
 	// ---- Submit gating ----

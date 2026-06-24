@@ -278,12 +278,48 @@ $gray-light:   #ccc;
 	&:hover { background: #f0f2f5; }
 	&:active { transform: scale(0.96); }
 }
-.qty-value {
+
+// Editable quantity field — looks like a centered number, opens numeric
+// keypad on iPad/iOS via inputmode="numeric". Tap-to-edit; +/- buttons still
+// increment as before. Min width grows with the digit count so 4-digit
+// retailer quantities don't get clipped.
+input.qty-value {
+	-moz-appearance: textfield;
+	appearance: textfield;
+	font: inherit;
 	font-size: 1.5em;
 	font-weight: 700;
 	color: $ink;
-	min-width: 2ch;
+	min-width: 3ch;
+	max-width: 5ch;
+	height: 52px;
 	text-align: center;
+	border: 1px solid transparent;
+	background: transparent;
+	padding: 0 6px;
+	margin: 0 4px;
+	border-radius: 6px;
+	outline: none;
+	transition: background 0.12s, border-color 0.12s, box-shadow 0.12s;
+	cursor: text;
+	box-sizing: border-box;
+
+	&:hover {
+		background: #fff;
+		border-color: #e6e6e6;
+	}
+	&:focus {
+		background: #fff;
+		border-color: $brand-orange;
+		box-shadow: 0 0 0 3px rgba($brand-orange, 0.18);
+	}
+
+	// Hide native number-input spinners — we have our own +/- buttons.
+	&::-webkit-outer-spin-button,
+	&::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
 }
 
 // ----------------------------------------------------------------------------
