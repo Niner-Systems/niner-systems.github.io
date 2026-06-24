@@ -199,9 +199,12 @@
 			row.dataset.productLine = p.productLine;
 			row.innerHTML = `
 				<div class="product-row-header">
-					<h3 class="product-row-name">${escapeHtml(p.displayName)}</h3>
-					<p class="product-row-blurb">${escapeHtml(p.blurb)}</p>
-					${p.pricingTbd ? '<span class="badge tbd">Pricing provisional</span>' : ''}
+					${p.imageUrl ? `<img class="product-row-image" src="${escapeHtml(p.imageUrl)}" alt="${escapeHtml(p.displayName)}" loading="lazy">` : ''}
+					<div class="product-row-header-text">
+						<h3 class="product-row-name">${escapeHtml(p.displayName)}</h3>
+						<p class="product-row-blurb">${escapeHtml(p.blurb)}</p>
+						${p.pricingTbd ? '<span class="badge tbd">Pricing provisional</span>' : ''}
+					</div>
 				</div>
 				<div class="product-row-variants">
 					${variants.map(v => `
