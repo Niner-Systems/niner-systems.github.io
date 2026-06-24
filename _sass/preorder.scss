@@ -88,8 +88,87 @@ $gray-light:   #ccc;
 		box-shadow: 0 6px 18px rgba($brand-orange, 0.20);
 	}
 	.tier-card-label   { font-size: 1.15em; font-weight: 700; color: $sky-deep; }
-	.tier-card-desc    { font-size: 0.92em; color: $gray-mid; line-height: 1.45; flex: 1; }
+	.tier-card-desc    {
+		font-size: 0.92em;
+		color: $gray-mid;
+		line-height: 1.45;
+		flex: 1;
+		.highlight-discount {
+			color: $brand-orange;
+			font-weight: 700;
+			font-size: 1.1em;
+			letter-spacing: 0.01em;
+		}
+	}
 	.tier-card-cost    { font-size: 0.85em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: $brand-orange; margin-top: 4px; }
+}
+
+// Jumbo variant — used for the top-level Customer / Retailer choice. Big and
+// bold, no description, larger touch target.
+.tier-card-jumbo {
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+	min-height: 160px;
+	padding: 40px 22px;
+	gap: 0;
+
+	.tier-card-label {
+		font-size: 2.2em;
+		font-weight: 700;
+		color: $sky-deep;
+		line-height: 1;
+		@media #{$tablet} { font-size: 2.8em; }
+	}
+
+	&:hover {
+		transform: translateY(-3px);
+		box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+		border-color: $brand-orange;
+	}
+	&.selected {
+		background: rgba($brand-orange, 0.05);
+		border-color: $brand-orange;
+		box-shadow: 0 10px 24px rgba($brand-orange, 0.22);
+		.tier-card-label { color: $brand-orange; }
+	}
+}
+
+.tier-grid-primary {
+	margin-bottom: 16px;
+}
+
+.tier-grid-lead {
+	text-align: center;
+	color: $sky-deep;
+	font-weight: 700;
+	font-size: 1.4em;
+	margin: 0 0 14px 0;
+	letter-spacing: 0.01em;
+}
+
+// ----------------------------------------------------------------------------
+// MSRP banner shown above the retailer cart
+// ----------------------------------------------------------------------------
+
+.retailer-msrp-banner {
+	background: rgba($sky-deep, 0.06);
+	border-left: 4px solid $sky-deep;
+	border-radius: 4px;
+	padding: 14px 18px;
+	margin: 28px 0 24px 0;
+	color: $ink;
+	font-size: 0.98em;
+	line-height: 1.5;
+	strong { color: $sky-deep; }
+}
+
+// ----------------------------------------------------------------------------
+// Sub-branch container
+// ----------------------------------------------------------------------------
+
+.sub-branch {
+	margin-top: 18px;
 }
 
 // ----------------------------------------------------------------------------
@@ -188,6 +267,27 @@ $gray-light:   #ccc;
 	border-radius: 12px;
 	padding: 22px 22px 18px 22px;
 	box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+
+	// Single-variant rows (USB2GA, USB2Lemo, etc) lay the header and the lone
+	// variant tile out side-by-side on tablet+ so the row reads as one unit
+	// rather than two stacked sections. Mobile keeps the stacked layout.
+	&:has(.product-row-variants > .sku-tile:only-child) {
+		@media #{$tablet} {
+			display: flex;
+			align-items: center;
+			gap: 24px;
+
+			.product-row-header {
+				flex: 1 1 auto;
+				min-width: 0;
+				margin-bottom: 0;
+			}
+			.product-row-variants {
+				flex: 0 0 auto;
+				margin: 0;
+			}
+		}
+	}
 }
 
 .product-row-header {
@@ -233,6 +333,16 @@ $gray-light:   #ccc;
 	grid-template-columns: 1fr;
 	gap: 12px;
 	@media #{$tablet} { grid-template-columns: 1fr 1fr 1fr; }
+
+	// Single-variant rows (e.g. USB2GA, sold only as 1-pack) get a
+	// constrained max-width so the lone tile doesn't stretch across the
+	// full row width.
+	&:has(> .sku-tile:only-child) {
+		@media #{$tablet} {
+			grid-template-columns: minmax(180px, 280px);
+			justify-content: start;
+		}
+	}
 }
 
 .sku-tile {
@@ -267,6 +377,30 @@ $gray-light:   #ccc;
 		font-weight: 700;
 		color: $sky-deep;
 		line-height: 1;
+
+		// When a customer pre-pay discount is applied, the MSRP renders with
+		// a strike-through next to the discounted price (which gets the
+		// brand-orange highlight). MSRP is large enough to be unmistakably
+		// readable so the strike conveys real savings.
+		&.has-discount {
+			display: flex;
+			align-items: baseline;
+			gap: 10px;
+			flex-wrap: wrap;
+
+			.msrp {
+				font-size: 1em;
+				font-weight: 600;
+				color: $gray-mid;
+				text-decoration: line-through;
+				text-decoration-thickness: 2px;
+				text-decoration-color: rgba($brand-orange, 0.85);
+			}
+			.discounted {
+				font-size: 1.15em;
+				color: $brand-orange;
+			}
+		}
 	}
 	.sku-tile-qty {
 		display: flex;
@@ -372,13 +506,27 @@ input.qty-value {
 	font-size: 1.05em;
 	color: $ink;
 	& + .cart-summary-line { margin-top: 6px; }
-	&.cart-summary-deposit {
+	&.cart-summary-total {
 		color: $brand-orange;
 		font-weight: 700;
+		font-size: 1.25em;
+	}
+	&.cart-summary-msrp {
+		color: $sky-deep;
+		font-weight: 700;
 		font-size: 1.15em;
-		padding-top: 8px;
-		border-top: 1px solid #e6e6e6;
-		margin-top: 10px;
+		span:last-child { color: $sky-deep; }
+		// On the Customer cart summary the MSRP line shows the un-discounted
+		// total with a strike-through, contrasting with the orange "You pay
+		// today" line below it. Sized to roughly match the "You pay today"
+		// line so the savings are obvious at a glance.
+		.msrp-amount {
+			color: $gray-mid;
+			font-weight: 600;
+			text-decoration: line-through;
+			text-decoration-thickness: 2px;
+			text-decoration-color: rgba($brand-orange, 0.85);
+		}
 	}
 }
 

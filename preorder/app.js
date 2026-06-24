@@ -1,10 +1,11 @@
 /*
  * 9er Systems pre-order / contact form — booth-friendly PWA.
  *
- * Three submission flows, decided by the top tier choice:
- *   contact_me      → product checkboxes + name/email/notes
- *   retailer_quote  → cart + company + ship address → admin gets magic-link email
- *   direct_pay_now  → cart + ship address → Square Terminal Checkout
+ * Top-level tier: Customer vs Retailer.
+ *   Customer:
+ *     - "Pre-Order Now"            → tier='direct_pay_now' (Terminal, FULL amount)
+ *     - "Notify Me When Available" → tier='contact_me'     (product checkboxes)
+ *   Retailer:                       → tier='retailer_quote' (cart at MSRP, no order)
  *
  * Catalog is fetched live from /v1/preorders/catalog with a hardcoded
  * fallback. Submissions always go to IndexedDB first, then drain to the
@@ -28,9 +29,9 @@
 		products: [
 			{ productLine: 'GA2DSub',          displayName: 'GA2DSub',           blurb: 'GA dual-plug to DSub PCB converter', preorderable: true },
 			{ productLine: 'GA2Pigtail',       displayName: 'GA2Pigtail',        blurb: 'GA dual-plug to bare pigtail wires', preorderable: true },
-			{ productLine: 'JackSolderHolder', displayName: 'Jack Solder Holder',blurb: 'Solder holder for aviation jack assembly', preorderable: true, pricingTbd: true },
-			{ productLine: 'USB2GA',           displayName: 'USB2GA',            blurb: 'USB-A to GA dual-plug headset adapter', preorderable: false },
-			{ productLine: 'USB2Lemo',         displayName: 'USB2Lemo',          blurb: 'USB-A to Lemo headset adapter', preorderable: false },
+			{ productLine: 'JackSolderHolder', displayName: 'Jack Solder Holder',blurb: 'Solder holder for aviation jack assembly', preorderable: true },
+			{ productLine: 'USB2GA',           displayName: 'USB2GA',            blurb: 'USB-A to GA dual-plug headset adapter', preorderable: true, retailerOnly: true },
+			{ productLine: 'USB2Lemo',         displayName: 'USB2Lemo',          blurb: 'USB-A to 6-pin Lemo (panel-powered) headset adapter', preorderable: true, retailerOnly: true },
 			{ productLine: 'SoftwareToolbar',  displayName: 'Software Toolbar',  blurb: 'USB2x Toolbar app for desktop', preorderable: false },
 		],
 		items: [
@@ -40,18 +41,23 @@
 			{ sku: 'GA2PIG-1',  productLine: 'GA2Pigtail',       packSize: 1, label: 'GA2Pigtail (1-pack)',        priceCents: 6995,  pricingTbd: false },
 			{ sku: 'GA2PIG-2',  productLine: 'GA2Pigtail',       packSize: 2, label: 'GA2Pigtail (2-pack)',        priceCents: 12995, pricingTbd: false },
 			{ sku: 'GA2PIG-4',  productLine: 'GA2Pigtail',       packSize: 4, label: 'GA2Pigtail (4-pack)',        priceCents: 23995, pricingTbd: false },
-			{ sku: 'JSH-1',     productLine: 'JackSolderHolder', packSize: 1, label: 'Jack Solder Holder (1-pack)',priceCents: 1995,  pricingTbd: true },
-			{ sku: 'JSH-2',     productLine: 'JackSolderHolder', packSize: 2, label: 'Jack Solder Holder (2-pack)',priceCents: 3495,  pricingTbd: true },
-			{ sku: 'JSH-4',     productLine: 'JackSolderHolder', packSize: 4, label: 'Jack Solder Holder (4-pack)',priceCents: 5995,  pricingTbd: true },
+			{ sku: 'JSH-1',     productLine: 'JackSolderHolder', packSize: 1, label: 'Jack Solder Holder (1-pack)',priceCents: 1495,  pricingTbd: false },
+			{ sku: 'JSH-2',     productLine: 'JackSolderHolder', packSize: 2, label: 'Jack Solder Holder (2-pack)',priceCents: 2495,  pricingTbd: false },
+			{ sku: 'JSH-4',     productLine: 'JackSolderHolder', packSize: 4, label: 'Jack Solder Holder (4-pack)',priceCents: 3995,  pricingTbd: false },
+			{ sku: '216591J',   productLine: 'USB2GA',           packSize: 1, label: 'USB2GA',                     priceCents: 8999,  pricingTbd: false, retailerOnly: true },
+			{ sku: 'USB2LEMO-1',productLine: 'USB2Lemo',         packSize: 1, label: 'USB2Lemo',                   priceCents: 12999, pricingTbd: false, retailerOnly: true },
 		],
 	};
 
 	// ---- State ----
 	let catalog = FALLBACK_CATALOG;
-	const cart = new Map();           // sku -> qty
-	const interestedIn = new Set();   // productLine codes
-	let tierGroup = null;             // 'contact_me' | 'pre_order'
-	let subtier = null;               // 'retailer_quote' | 'direct_pay_now'
+	// Separate carts for Customer Pre-Order vs Retailer so switching between
+	// the top-level tiers doesn't accidentally carry quantities across.
+	const customerCart = new Map();
+	const retailerCart = new Map();
+	const interestedIn = new Set();
+	let tierGroup = null;        // 'customer' | 'retailer'
+	let customerIntent = null;   // 'pre_order_now' | 'notify_me'
 	const isKiosk = new URLSearchParams(location.search).get('kiosk') === '1';
 
 	// ---- Utility ----
@@ -120,9 +126,7 @@
 			const resp = await fetch(CATALOG_URL, { cache: 'no-store' });
 			if (resp.ok) {
 				const body = await resp.json();
-				if (body?.data?.items?.length) {
-					catalog = body.data;
-				}
+				if (body?.data?.items?.length) catalog = body.data;
 			}
 		} catch (err) {
 			console.warn('Catalog fetch failed, using fallback', err);
@@ -138,25 +142,32 @@
 			Array.from(document.querySelectorAll('#tier-grid .tier-card')).forEach((c) => {
 				c.classList.toggle('selected', c === card);
 			});
-			$('branch-contact-me').hidden = tierGroup !== 'contact_me';
-			$('branch-pre-order').hidden = tierGroup !== 'pre_order';
+			$('branch-customer').hidden = tierGroup !== 'customer';
+			$('branch-retailer').hidden = tierGroup !== 'retailer';
+			// Reset customer intent when switching tiers.
+			if (tierGroup !== 'customer') {
+				customerIntent = null;
+				$('sub-branch-pre-order').hidden = true;
+				$('sub-branch-notify').hidden = true;
+				Array.from(document.querySelectorAll('#customer-subtier-grid .tier-card')).forEach((c) => c.classList.remove('selected'));
+			}
 			updateAllSubmitStates();
 		});
 
-		$('subtier-grid').addEventListener('click', (e) => {
+		$('customer-subtier-grid').addEventListener('click', (e) => {
 			const card = e.target.closest('.tier-card');
 			if (!card) return;
-			subtier = card.dataset.subtier;
-			Array.from(document.querySelectorAll('#subtier-grid .tier-card')).forEach((c) => {
+			customerIntent = card.dataset.customerIntent;
+			Array.from(document.querySelectorAll('#customer-subtier-grid .tier-card')).forEach((c) => {
 				c.classList.toggle('selected', c === card);
 			});
-			$('pre-order-after-subtier').hidden = false;
-			$('form-row-company').hidden = subtier !== 'retailer_quote';
+			$('sub-branch-pre-order').hidden = customerIntent !== 'pre_order_now';
+			$('sub-branch-notify').hidden = customerIntent !== 'notify_me';
 			updateAllSubmitStates();
 		});
 	}
 
-	// ---- Render product checkboxes (contact_me branch) ----
+	// ---- Render product checkboxes (Notify Me) ----
 	function renderProductCheckboxes() {
 		const container = $('product-checkbox-list');
 		container.innerHTML = '';
@@ -180,18 +191,24 @@
 			if (target.type !== 'checkbox') return;
 			if (target.checked) interestedIn.add(target.value); else interestedIn.delete(target.value);
 			target.closest('.product-checkbox').classList.toggle('selected', target.checked);
-			updateContactMeSubmitState();
+			updateNotifyMeSubmitState();
 		});
 	}
 
 	// ---- Render pre-order product rows (one row per product) ----
-	function renderProductRows() {
-		const container = $('product-rows');
+	// applyDiscount=true → render MSRP strike-through + discounted price.
+	// Used for Customer "Pre-Order Now" only; Retailer view shows MSRP only.
+	// includeRetailerOnly=true → also include products/SKUs flagged retailerOnly
+	// (e.g. USB2GA, which retailers can quote-request but customers buy
+	// elsewhere). False (default) hides them from the Customer cart.
+	function renderProductRows(containerId, cart, applyDiscount, includeRetailerOnly) {
+		const container = $(containerId);
 		container.innerHTML = '';
-		const preorderableProducts = catalog.products.filter(p => p.preorderable);
+		const discountPct = (applyDiscount && catalog.customerDiscountPct) ? catalog.customerDiscountPct : 0;
+		const preorderableProducts = catalog.products.filter(p => p.preorderable && (includeRetailerOnly || !p.retailerOnly));
 		preorderableProducts.forEach((p) => {
 			const variants = catalog.items
-				.filter(i => i.productLine === p.productLine)
+				.filter(i => i.productLine === p.productLine && (includeRetailerOnly || !i.retailerOnly))
 				.sort((a, b) => a.packSize - b.packSize);
 
 			const row = document.createElement('div');
@@ -207,23 +224,12 @@
 					</div>
 				</div>
 				<div class="product-row-variants">
-					${variants.map(v => `
-						<div class="sku-tile ${v.pricingTbd ? 'pricing-tbd' : ''}" data-sku="${v.sku}">
-							<div class="sku-tile-pack">${v.packSize}-pack</div>
-							<div class="sku-tile-price">${formatUSD(v.priceCents)}${v.pricingTbd ? '<small> TBD</small>' : ''}</div>
-							<div class="sku-tile-qty">
-								<button type="button" class="qty-btn" data-act="dec" aria-label="Decrease quantity">−</button>
-								<input type="number" class="qty-value" data-sku="${v.sku}" value="0" min="0" max="9999" step="1" inputmode="numeric" pattern="[0-9]*" aria-label="Quantity for ${escapeHtml(v.label)}">
-								<button type="button" class="qty-btn" data-act="inc" aria-label="Increase quantity">+</button>
-							</div>
-						</div>
-					`).join('')}
+					${variants.map(v => renderSkuTile(v, discountPct)).join('')}
 				</div>
 			`;
 			container.appendChild(row);
 		});
 
-		// +/- buttons: read the input value, increment/decrement, sync.
 		container.addEventListener('click', (e) => {
 			const btn = e.target.closest('.qty-btn');
 			if (!btn) return;
@@ -233,37 +239,59 @@
 			const delta = btn.dataset.act === 'inc' ? 1 : -1;
 			const next = clampQty(current + delta);
 			input.value = String(next);
-			syncFromInput(tile.dataset.sku, next);
+			syncFromInput(cart, tile.dataset.sku, next, containerId);
 		});
 
-		// Direct keypad input: every keystroke updates the cart.
 		container.addEventListener('input', (e) => {
 			const input = e.target.closest('.qty-value');
 			if (!input) return;
-			// Strip non-digits and cap at 4 characters before parsing.
 			const cleaned = input.value.replace(/\D/g, '').slice(0, 4);
 			if (cleaned !== input.value) input.value = cleaned;
 			const value = clampQty(parseInt(cleaned, 10) || 0);
 			if (cleaned !== '' && String(value) !== cleaned) input.value = String(value);
-			syncFromInput(input.dataset.sku, value);
+			syncFromInput(cart, input.dataset.sku, value, containerId);
 		});
 
-		// Tap-to-edit: select-all on focus so typing replaces the existing value
-		// instead of appending to it.
 		container.addEventListener('focusin', (e) => {
 			const input = e.target.closest('.qty-value');
 			if (input) input.select();
 		});
 
-		// Blur on a blank or zero field normalizes back to "0" for display.
 		container.addEventListener('focusout', (e) => {
 			const input = e.target.closest('.qty-value');
 			if (!input) return;
 			if (input.value === '' || isNaN(parseInt(input.value, 10))) {
 				input.value = '0';
-				syncFromInput(input.dataset.sku, 0);
+				syncFromInput(cart, input.dataset.sku, 0, containerId);
 			}
 		});
+	}
+
+	function renderSkuTile(v, discountPct) {
+		const tbdMark = v.pricingTbd ? '<small> TBD</small>' : '';
+		let priceMarkup;
+		if (discountPct > 0 && !v.pricingTbd) {
+			const discounted = Math.round(v.priceCents * (1 - discountPct));
+			priceMarkup = `
+				<div class="sku-tile-price has-discount">
+					<span class="msrp">${formatUSD(v.priceCents)}</span>
+					<span class="discounted">${formatUSD(discounted)}</span>
+				</div>
+			`;
+		} else {
+			priceMarkup = `<div class="sku-tile-price">${formatUSD(v.priceCents)}${tbdMark}</div>`;
+		}
+		return `
+			<div class="sku-tile ${v.pricingTbd ? 'pricing-tbd' : ''}" data-sku="${v.sku}">
+				<div class="sku-tile-pack">${v.packSize}-pack</div>
+				${priceMarkup}
+				<div class="sku-tile-qty">
+					<button type="button" class="qty-btn" data-act="dec" aria-label="Decrease quantity">−</button>
+					<input type="number" class="qty-value" data-sku="${v.sku}" value="0" min="0" max="9999" step="1" inputmode="numeric" pattern="[0-9]*" aria-label="Quantity for ${escapeHtml(v.label)}">
+					<button type="button" class="qty-btn" data-act="inc" aria-label="Increase quantity">+</button>
+				</div>
+			</div>
+		`;
 	}
 
 	function clampQty(n) {
@@ -271,123 +299,157 @@
 		return Math.max(0, Math.min(9999, Math.floor(n)));
 	}
 
-	// Single SKU's input changed (via +/-, typing, or paste). Update cart Map
-	// and re-compute totals/badges, but DO NOT re-write other input values —
-	// they are their own source of truth so typing isn't interrupted.
-	function syncFromInput(sku, qty) {
+	function syncFromInput(cart, sku, qty, containerId) {
 		if (qty <= 0) cart.delete(sku); else cart.set(sku, qty);
-		recalcCartTotals();
+		recalcCartTotals(cart, containerId);
 	}
 
-	function recalcCartTotals() {
+	function recalcCartTotals(cart, containerId) {
 		let subtotalCents = 0;
 		catalog.items.forEach((v) => {
 			const qty = cart.get(v.sku) || 0;
 			subtotalCents += qty * v.priceCents;
-			const tile = document.querySelector(`.sku-tile[data-sku="${v.sku}"]`);
+			// Update tile selected styling — scope to the matching container.
+			const tile = document.querySelector(`#${containerId} .sku-tile[data-sku="${v.sku}"]`);
 			if (tile) tile.classList.toggle('selected', qty > 0);
 		});
-		$('cart-subtotal').textContent = formatUSD(subtotalCents);
-		$('cart-deposit').textContent = formatUSD(Math.round(subtotalCents * 0.2));
-		$('cart-summary').hidden = subtotalCents === 0;
-		updatePreOrderSubmitState();
-	}
 
-	// Full re-sync from cart Map → inputs. Only used by resetAll() since
-	// during normal interaction the inputs are the source of truth.
-	function updatePreOrderCart() {
-		catalog.items.forEach((v) => {
-			const qty = cart.get(v.sku) || 0;
-			const input = document.querySelector(`.qty-value[data-sku="${v.sku}"]`);
-			if (input) input.value = String(qty);
-		});
-		recalcCartTotals();
+		if (containerId === 'product-rows-customer') {
+			const discountPct = catalog.customerDiscountPct ?? 0;
+			const chargeCents = discountPct > 0 ? Math.round(subtotalCents * (1 - discountPct)) : subtotalCents;
+			$('cart-total-customer').textContent = formatUSD(chargeCents);
+			$('cart-summary-customer').hidden = subtotalCents === 0;
+			// Optional: show MSRP-then-strike on cart summary when discount applies.
+			const msrpEl = $('cart-msrp-customer');
+			const msrpAmt = $('cart-msrp-amount');
+			if (msrpEl && msrpAmt) {
+				if (discountPct > 0 && subtotalCents > 0) {
+					msrpAmt.textContent = formatUSD(subtotalCents);
+					msrpEl.hidden = false;
+				} else {
+					msrpEl.hidden = true;
+				}
+			}
+			updatePreOrderSubmitState();
+		} else if (containerId === 'product-rows-retailer') {
+			$('cart-total-retailer').textContent = formatUSD(subtotalCents);
+			$('cart-summary-retailer').hidden = subtotalCents === 0;
+			updateRetailerSubmitState();
+		}
 	}
 
 	// ---- Submit gating ----
-	function updateContactMeSubmitState() {
-		const hasInterest = interestedIn.size > 0;
-		const btn = $('cm-submit');
-		const hint = $('cm-hint');
-		btn.disabled = !hasInterest;
-		hint.textContent = hasInterest
+	function updateNotifyMeSubmitState() {
+		const has = interestedIn.size > 0;
+		$('nm-submit').disabled = !has;
+		$('nm-hint').textContent = has
 			? 'We\'ll respond from Pete@9erSystems.com.'
 			: 'Pick at least one product above.';
 	}
 
 	function updatePreOrderSubmitState() {
-		const hasItems = Array.from(cart.values()).some((q) => q > 0);
-		const hasSubtier = subtier !== null;
-		const btn = $('po-submit');
-		const hint = $('po-hint');
-		btn.disabled = !(hasItems && hasSubtier);
-		if (!hasSubtier) {
-			hint.textContent = 'Pick retailer or direct customer above.';
-		} else if (!hasItems) {
-			hint.textContent = 'Pick at least one product above.';
-		} else if (subtier === 'retailer_quote') {
-			hint.textContent = 'Submit — Pete will email a quote, then follow up with terms.';
-		} else {
-			hint.textContent = 'Submit — then tap card on the Square Terminal for the 20% deposit.';
-		}
+		const has = Array.from(customerCart.values()).some((q) => q > 0);
+		$('cu-submit').disabled = !has;
+		$('cu-hint').textContent = has
+			? 'Submit — then tap your card on the Square Terminal.'
+			: 'Pick at least one product above.';
+	}
+
+	function updateRetailerSubmitState() {
+		const has = Array.from(retailerCart.values()).some((q) => q > 0);
+		$('re-submit').disabled = !has;
+		$('re-hint').textContent = has
+			? 'Submit — Pete will email a retailer quote.'
+			: 'Pick at least one product above.';
 	}
 
 	function updateAllSubmitStates() {
-		updateContactMeSubmitState();
+		updateNotifyMeSubmitState();
 		updatePreOrderSubmitState();
+		updateRetailerSubmitState();
 	}
 
 	// ---- Build submissions ----
-	function buildContactMeSubmission() {
+	function buildNotifyMeSubmission() {
 		return {
 			clientSubmissionId: uuid(),
 			tier: 'contact_me',
 			interestedIn: Array.from(interestedIn),
-			customerName: $('cm-name').value.trim(),
-			email: $('cm-email').value.trim(),
-			company: $('cm-company').value.trim() || undefined,
-			notes: $('cm-notes').value.trim() || undefined,
+			customerName: $('nm-name').value.trim(),
+			email: $('nm-email').value.trim(),
+			company: $('nm-company').value.trim() || undefined,
+			notes: $('nm-notes').value.trim() || undefined,
 			source: isKiosk ? 'kiosk' : 'web',
 		};
 	}
 
-	function buildPreOrderSubmission() {
+	function buildCustomerPreOrderSubmission() {
 		const items = [];
 		catalog.items.forEach((v) => {
-			const qty = cart.get(v.sku) || 0;
+			const qty = customerCart.get(v.sku) || 0;
 			if (qty > 0) items.push({ sku: v.sku, qty });
 		});
-		const submission = {
+		return {
 			clientSubmissionId: uuid(),
-			tier: subtier,
+			tier: 'direct_pay_now',
 			items,
-			customerName: $('po-name').value.trim(),
-			email: $('po-email').value.trim(),
-			notes: $('po-notes').value.trim() || undefined,
+			customerName: $('cu-name').value.trim(),
+			email: $('cu-email').value.trim(),
+			notes: $('cu-notes').value.trim() || undefined,
 			source: isKiosk ? 'kiosk' : 'web',
 			shipAddress: {
-				line1: $('ship-line1').value.trim(),
-				line2: $('ship-line2').value.trim() || undefined,
-				city: $('ship-city').value.trim(),
-				state: $('ship-state').value.trim().toUpperCase(),
-				zip: $('ship-zip').value.trim(),
+				line1: $('cu-ship-line1').value.trim(),
+				line2: $('cu-ship-line2').value.trim() || undefined,
+				city: $('cu-ship-city').value.trim(),
+				state: $('cu-ship-state').value.trim().toUpperCase(),
+				zip: $('cu-ship-zip').value.trim(),
 			},
 		};
-		if (subtier === 'retailer_quote') {
-			submission.company = $('po-company').value.trim() || undefined;
-		}
-		return submission;
 	}
 
-	function validateContactMe(sub) {
+	function buildRetailerSubmission() {
+		const items = [];
+		catalog.items.forEach((v) => {
+			const qty = retailerCart.get(v.sku) || 0;
+			if (qty > 0) items.push({ sku: v.sku, qty });
+		});
+		return {
+			clientSubmissionId: uuid(),
+			tier: 'retailer_quote',
+			items,
+			customerName: $('re-name').value.trim(),
+			email: $('re-email').value.trim(),
+			company: $('re-company').value.trim(),
+			notes: $('re-notes').value.trim() || undefined,
+			source: isKiosk ? 'kiosk' : 'web',
+			shipAddress: {
+				line1: $('re-ship-line1').value.trim(),
+				line2: $('re-ship-line2').value.trim() || undefined,
+				city: $('re-ship-city').value.trim(),
+				state: $('re-ship-state').value.trim().toUpperCase(),
+				zip: $('re-ship-zip').value.trim(),
+			},
+		};
+	}
+
+	function validateNotifyMe(sub) {
 		if (!sub.customerName) return 'Name is required';
 		if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sub.email)) return 'Valid email is required';
 		if (!sub.interestedIn || sub.interestedIn.length === 0) return 'Pick at least one product';
 		return null;
 	}
 
-	function validatePreOrder(sub) {
-		if (subtier === 'retailer_quote' && !sub.company) return 'Company name is required for retailer quotes';
+	function validateCustomerPreOrder(sub) {
+		if (!sub.customerName) return 'Name is required';
+		if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sub.email)) return 'Valid email is required';
+		const s = sub.shipAddress;
+		if (!s.line1 || !s.city || !s.state || !s.zip) return 'Complete shipping address is required';
+		if (s.state.length !== 2) return 'State must be the 2-letter code';
+		return null;
+	}
+
+	function validateRetailer(sub) {
+		if (!sub.company) return 'Company is required';
 		if (!sub.customerName) return 'Name is required';
 		if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sub.email)) return 'Valid email is required';
 		const s = sub.shipAddress;
@@ -408,42 +470,51 @@
 	}
 
 	function resetAll() {
-		cart.clear();
+		customerCart.clear();
+		retailerCart.clear();
 		interestedIn.clear();
 		tierGroup = null;
-		subtier = null;
+		customerIntent = null;
 		document.querySelectorAll('.tier-card.selected').forEach((c) => c.classList.remove('selected'));
 		document.querySelectorAll('.product-checkbox.selected').forEach((c) => c.classList.remove('selected'));
 		document.querySelectorAll('.product-checkbox input[type=checkbox]').forEach((cb) => { cb.checked = false; });
 		document.querySelectorAll('.sku-tile.selected').forEach((c) => c.classList.remove('selected'));
-		$('contact-form').reset();
-		$('preorder-form').reset();
-		$('branch-contact-me').hidden = true;
-		$('branch-pre-order').hidden = true;
-		$('pre-order-after-subtier').hidden = true;
-		$('form-row-company').hidden = true;
-		updatePreOrderCart();
+		document.querySelectorAll('.qty-value').forEach((input) => { input.value = '0'; });
+		$('notify-form').reset();
+		$('customer-form').reset();
+		$('retailer-form').reset();
+		$('branch-customer').hidden = true;
+		$('branch-retailer').hidden = true;
+		$('sub-branch-pre-order').hidden = true;
+		$('sub-branch-notify').hidden = true;
+		$('cart-summary-customer').hidden = true;
+		$('cart-summary-retailer').hidden = true;
 		updateAllSubmitStates();
 	}
 
 	// ---- Submit handlers ----
-	async function onContactMeSubmit(e) {
+	async function onNotifyMeSubmit(e) {
 		e.preventDefault();
-		const submission = buildContactMeSubmission();
-		const err = validateContactMe(submission);
+		const submission = buildNotifyMeSubmission();
+		const err = validateNotifyMe(submission);
 		if (err) { showToast(err, 'error'); return; }
-		await submitWithQueue(submission, 'Thanks — we\'ll be in touch.');
+		await submitWithQueue(submission, 'Thanks — we\'ll let you know.');
 	}
 
-	async function onPreOrderSubmit(e) {
+	async function onCustomerPreOrderSubmit(e) {
 		e.preventDefault();
-		const submission = buildPreOrderSubmission();
-		const err = validatePreOrder(submission);
+		const submission = buildCustomerPreOrderSubmission();
+		const err = validateCustomerPreOrder(submission);
 		if (err) { showToast(err, 'error'); return; }
-		const successMsg = subtier === 'retailer_quote'
-			? 'Quote received — Pete will follow up shortly.'
-			: 'Submitted — tap your card on the Square Terminal.';
-		await submitWithQueue(submission, successMsg);
+		await submitWithQueue(submission, 'Submitted — tap your card on the Square Terminal.');
+	}
+
+	async function onRetailerSubmit(e) {
+		e.preventDefault();
+		const submission = buildRetailerSubmission();
+		const err = validateRetailer(submission);
+		if (err) { showToast(err, 'error'); return; }
+		await submitWithQueue(submission, 'Got it — Pete will follow up with a quote.');
 	}
 
 	async function submitWithQueue(submission, successMessage) {
@@ -457,9 +528,7 @@
 		showToast(successMessage + (navigator.onLine ? '' : ' (will sync when online)'), 'success');
 		resetAll();
 		drainQueue();
-		if (isKiosk) {
-			setTimeout(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, 200);
-		}
+		if (isKiosk) setTimeout(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, 200);
 	}
 
 	// ---- Sync queue ----
@@ -514,9 +583,7 @@
 	// ---- Service worker ----
 	function registerSw() {
 		if (!('serviceWorker' in navigator)) return;
-		navigator.serviceWorker.register('/sw.js').catch((err) => {
-			console.warn('SW registration failed', err);
-		});
+		navigator.serviceWorker.register('/sw.js').catch((err) => console.warn('SW registration failed', err));
 	}
 
 	function applyKiosk() {
@@ -537,10 +604,12 @@
 		applyKiosk();
 		await loadCatalog();
 		renderProductCheckboxes();
-		renderProductRows();
+		renderProductRows('product-rows-customer', customerCart, true,  false);
+		renderProductRows('product-rows-retailer', retailerCart, false, true);
 		bindTierSelectors();
-		$('contact-form').addEventListener('submit', onContactMeSubmit);
-		$('preorder-form').addEventListener('submit', onPreOrderSubmit);
+		$('notify-form').addEventListener('submit', onNotifyMeSubmit);
+		$('customer-form').addEventListener('submit', onCustomerPreOrderSubmit);
+		$('retailer-form').addEventListener('submit', onRetailerSubmit);
 		registerSw();
 		updateBadge();
 		drainQueue();

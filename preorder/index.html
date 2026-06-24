@@ -1,14 +1,14 @@
 ---
 title: Pre-order — GA2DSub & GA2Pigtail
-description: Reserve a GA2DSub or GA2Pigtail before production, or tell us which 9er Systems products you'd like to hear more about.
+description: Buy now, request a retailer quote, or be notified when GA2DSub, GA2Pigtail, and Jack Solder Holder are ready to ship.
 layout: default
 ---
 <section class="preorder-hero">
 	<div class="preorder-hero-overlay"></div>
 	<div class="container preorder-hero-inner">
-		<p class="product-eyebrow">9er Systems &middot; Coming Soon</p>
-		<h1>Pre-order &amp; <strong>Contact</strong></h1>
-		<p class="subtext">Reserve a GA2DSub, GA2Pigtail, or Jack Solder Holder before production starts, or just let us know which of our products you'd like to hear more about.</p>
+		<p class="product-eyebrow">9er Systems</p>
+		<h1>Pre-order &amp; <strong>Retailer Inquiry</strong></h1>
+		<p class="subtext">Buy GA2DSub, GA2Pigtail, or Jack Solder Holder direct, request a retailer quote, or be notified when each is ready to ship.</p>
 	</div>
 </section>
 
@@ -17,140 +17,205 @@ layout: default
 		<div class="container">
 
 			<!-- ============================================================
-				 STEP 1: Pick what you came here to do.
+				 STEP 1: Customer or Retailer? (top-level, no title)
 				 ============================================================ -->
-			<h2 class="preorder-section-title">1. What can we help with?</h2>
-			<div class="tier-grid" id="tier-grid">
-				<button type="button" class="tier-card" data-tier-group="contact_me">
-					<div class="tier-card-label">Contact me</div>
-					<div class="tier-card-desc">Get more info, get notified when products launch, or just say hi. No commitment.</div>
-					<div class="tier-card-cost">Free</div>
+			<p class="tier-grid-lead">I'm a&hellip;</p>
+			<div class="tier-grid tier-grid-primary" id="tier-grid">
+				<button type="button" class="tier-card tier-card-jumbo" data-tier-group="customer">
+					<div class="tier-card-label">Customer</div>
 				</button>
-				<button type="button" class="tier-card" data-tier-group="pre_order">
-					<div class="tier-card-label">Pre-order</div>
-					<div class="tier-card-desc">Reserve product for production. Retailers and direct customers get different terms below.</div>
-					<div class="tier-card-cost">Commit</div>
+				<button type="button" class="tier-card tier-card-jumbo" data-tier-group="retailer">
+					<div class="tier-card-label">Retailer</div>
 				</button>
 			</div>
 
 			<!-- ============================================================
-				 CONTACT_ME BRANCH
+				 CUSTOMER BRANCH — secondary choice: pay now or notify me
 				 ============================================================ -->
-			<div class="branch branch-contact-me" id="branch-contact-me" hidden>
-				<h2 class="preorder-section-title">2. Which products are you interested in?</h2>
-				<p class="preorder-section-sub">Tap as many as you'd like.</p>
-				<div class="product-checkbox-list" id="product-checkbox-list">
-					<!-- populated by app.js -->
-				</div>
-
-				<h2 class="preorder-section-title">3. Your contact info</h2>
-				<form id="contact-form" class="preorder-form" novalidate>
-					<div class="form-row">
-						<label for="cm-name">Name *</label>
-						<input type="text" id="cm-name" autocomplete="name" required>
-					</div>
-					<div class="form-row">
-						<label for="cm-email">Email *</label>
-						<input type="email" id="cm-email" autocomplete="email" inputmode="email" required>
-					</div>
-					<div class="form-row">
-						<label for="cm-company">Company <span class="optional-label">(optional)</span></label>
-						<input type="text" id="cm-company" autocomplete="organization">
-					</div>
-					<div class="form-row">
-						<label for="cm-notes">Anything you'd like to share?</label>
-						<textarea id="cm-notes" rows="4" placeholder="Tell us about your project, ask a question, or just say hi"></textarea>
-					</div>
-					<div class="preorder-submit-row">
-						<button type="submit" class="cta-button primary" id="cm-submit" disabled>Send</button>
-						<p class="preorder-form-hint" id="cm-hint">Pick at least one product above.</p>
-					</div>
-				</form>
-			</div>
-
-			<!-- ============================================================
-				 PRE-ORDER BRANCH
-				 ============================================================ -->
-			<div class="branch branch-pre-order" id="branch-pre-order" hidden>
-				<h2 class="preorder-section-title">2. Are you a customer or retailer?</h2>
-				<div class="subtier-grid" id="subtier-grid">
-					<button type="button" class="tier-card" data-subtier="direct_pay_now">
-						<div class="tier-card-label">Customer</div>
-						<div class="tier-card-desc">Pay a 20% deposit on the Square Terminal now. We'll invoice the balance before shipping.</div>
-						<div class="tier-card-cost">Tap to pay</div>
+			<div class="branch branch-customer" id="branch-customer" hidden>
+				<h2 class="preorder-section-title">What works best?</h2>
+				<div class="subtier-grid" id="customer-subtier-grid">
+					<button type="button" class="tier-card" data-customer-intent="pre_order_now">
+						<div class="tier-card-label">Pre-Order Now</div>
+						<div class="tier-card-desc">Secure a <strong class="highlight-discount">20% discount</strong> and pay now. We'll ship it when the product reaches our warehouse.</div>
+						<div class="tier-card-cost">Select Products and Pay</div>
 					</button>
-					<button type="button" class="tier-card" data-subtier="retailer_quote">
-						<div class="tier-card-label">Retailer</div>
-						<div class="tier-card-desc">We'll email a quote. Pete will follow up with deposit terms or Net-45 invoicing based on your account.</div>
-						<div class="tier-card-cost">Quote</div>
+					<button type="button" class="tier-card" data-customer-intent="notify_me">
+						<div class="tier-card-label">Notify Me When Available</div>
+						<div class="tier-card-desc">Tell us which products you're interested in. We'll email when each is ready.</div>
+						<div class="tier-card-cost">Free</div>
 					</button>
 				</div>
 
-				<div class="pre-order-after-subtier" id="pre-order-after-subtier" hidden>
-					<h2 class="preorder-section-title">3. Pick your products</h2>
-					<p class="preorder-section-sub">Tap + or &minus; to adjust quantity. Multi-packs save per-unit.</p>
+				<!-- ----- Sub-branch: Pre-Order Now (cart + Terminal) ----- -->
+				<div class="sub-branch sub-branch-pre-order" id="sub-branch-pre-order" hidden>
+					<h2 class="preorder-section-title">Pick your products</h2>
+					<p class="preorder-section-sub">Tap + or &minus; to adjust quantity. Tap the number to type directly.</p>
 
-					<div class="product-rows" id="product-rows">
+					<div class="product-rows" id="product-rows-customer">
 						<!-- populated by app.js -->
 					</div>
 
-					<div class="cart-summary" id="cart-summary" hidden>
-						<div class="cart-summary-line"><span>Subtotal</span><span id="cart-subtotal">$0.00</span></div>
-						<div class="cart-summary-line cart-summary-deposit"><span>20% deposit (today)</span><span id="cart-deposit">$0.00</span></div>
+					<div class="cart-summary" id="cart-summary-customer" hidden>
+						<div class="cart-summary-line cart-summary-msrp" id="cart-msrp-customer" hidden>
+							<span>MSRP</span><span class="msrp-amount" id="cart-msrp-amount"></span>
+						</div>
+						<div class="cart-summary-line cart-summary-total"><span>You pay today</span><span id="cart-total-customer">$0.00</span></div>
 					</div>
 
-					<h2 class="preorder-section-title">4. Your info</h2>
-					<form id="preorder-form" class="preorder-form" novalidate>
-						<div class="form-row form-row-company" id="form-row-company" hidden>
-							<label for="po-company">Company *</label>
-							<input type="text" id="po-company" autocomplete="organization">
+					<h2 class="preorder-section-title">Your info</h2>
+					<form id="customer-form" class="preorder-form" novalidate>
+						<div class="form-row">
+							<label for="cu-name">Your name *</label>
+							<input type="text" id="cu-name" autocomplete="name" required>
 						</div>
 						<div class="form-row">
-							<label for="po-name">Your name *</label>
-							<input type="text" id="po-name" autocomplete="name" required>
-						</div>
-						<div class="form-row">
-							<label for="po-email">Email *</label>
-							<input type="email" id="po-email" autocomplete="email" inputmode="email" required>
+							<label for="cu-email">Email *</label>
+							<input type="email" id="cu-email" autocomplete="email" inputmode="email" required>
 						</div>
 
 						<fieldset class="ship-fieldset">
 							<legend>Shipping address</legend>
 							<div class="form-row">
-								<label for="ship-line1">Street address *</label>
-								<input type="text" id="ship-line1" autocomplete="address-line1">
+								<label for="cu-ship-line1">Street address *</label>
+								<input type="text" id="cu-ship-line1" autocomplete="address-line1">
 							</div>
 							<div class="form-row">
-								<label for="ship-line2">Apt / suite</label>
-								<input type="text" id="ship-line2" autocomplete="address-line2">
+								<label for="cu-ship-line2">Apt / suite</label>
+								<input type="text" id="cu-ship-line2" autocomplete="address-line2">
 							</div>
 							<div class="form-row-grid">
 								<div class="form-row">
-									<label for="ship-city">City *</label>
-									<input type="text" id="ship-city" autocomplete="address-level2">
+									<label for="cu-ship-city">City *</label>
+									<input type="text" id="cu-ship-city" autocomplete="address-level2">
 								</div>
 								<div class="form-row">
-									<label for="ship-state">State *</label>
-									<input type="text" id="ship-state" autocomplete="address-level1" maxlength="2">
+									<label for="cu-ship-state">State *</label>
+									<input type="text" id="cu-ship-state" autocomplete="address-level1" maxlength="2">
 								</div>
 								<div class="form-row">
-									<label for="ship-zip">ZIP *</label>
-									<input type="text" id="ship-zip" autocomplete="postal-code" inputmode="numeric">
+									<label for="cu-ship-zip">ZIP *</label>
+									<input type="text" id="cu-ship-zip" autocomplete="postal-code" inputmode="numeric">
 								</div>
 							</div>
 						</fieldset>
 
 						<div class="form-row">
-							<label for="po-notes">Notes (aircraft type, mounting plans, questions)</label>
-							<textarea id="po-notes" rows="3"></textarea>
+							<label for="cu-notes">Notes <span class="optional-label">(optional)</span></label>
+							<textarea id="cu-notes" rows="3" placeholder="Aircraft type, mounting plans, questions"></textarea>
 						</div>
 
 						<div class="preorder-submit-row">
-							<button type="submit" class="cta-button primary" id="po-submit" disabled>Submit pre-order</button>
-							<p class="preorder-form-hint" id="po-hint">Pick at least one product above.</p>
+							<button type="submit" class="cta-button primary" id="cu-submit" disabled>Buy now</button>
+							<p class="preorder-form-hint" id="cu-hint">Pick at least one product above.</p>
 						</div>
 					</form>
 				</div>
+
+				<!-- ----- Sub-branch: Notify Me (interest checkboxes) ----- -->
+				<div class="sub-branch sub-branch-notify" id="sub-branch-notify" hidden>
+					<h2 class="preorder-section-title">Which products should we notify you about?</h2>
+					<p class="preorder-section-sub">Tap as many as you'd like.</p>
+					<div class="product-checkbox-list" id="product-checkbox-list">
+						<!-- populated by app.js -->
+					</div>
+
+					<h2 class="preorder-section-title">Your contact info</h2>
+					<form id="notify-form" class="preorder-form" novalidate>
+						<div class="form-row">
+							<label for="nm-name">Name *</label>
+							<input type="text" id="nm-name" autocomplete="name" required>
+						</div>
+						<div class="form-row">
+							<label for="nm-email">Email *</label>
+							<input type="email" id="nm-email" autocomplete="email" inputmode="email" required>
+						</div>
+						<div class="form-row">
+							<label for="nm-company">Company <span class="optional-label">(optional)</span></label>
+							<input type="text" id="nm-company" autocomplete="organization">
+						</div>
+						<div class="form-row">
+							<label for="nm-notes">Anything you'd like to share?</label>
+							<textarea id="nm-notes" rows="4" placeholder="Tell us about your project, ask a question, or just say hi"></textarea>
+						</div>
+						<div class="preorder-submit-row">
+							<button type="submit" class="cta-button primary" id="nm-submit" disabled>Send</button>
+							<p class="preorder-form-hint" id="nm-hint">Pick at least one product above.</p>
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<!-- ============================================================
+				 RETAILER BRANCH — MSRP shown, quote follows by email
+				 ============================================================ -->
+			<div class="branch branch-retailer" id="branch-retailer" hidden>
+				<div class="retailer-msrp-banner">
+					<strong>Pricing below is MSRP.</strong> Tell us which quantities you're interested in and we'll contact you with a quote and pricing information.
+				</div>
+
+				<h2 class="preorder-section-title">Quantities you'd like quoted</h2>
+				<p class="preorder-section-sub">No order is created — this just tells us what volume, products, and packaging you are interested in potentially carrying.</p>
+
+				<div class="product-rows" id="product-rows-retailer">
+					<!-- populated by app.js -->
+				</div>
+
+				<div class="cart-summary" id="cart-summary-retailer" hidden>
+					<div class="cart-summary-line cart-summary-msrp"><span>MSRP total (your quote may differ)</span><span id="cart-total-retailer">$0.00</span></div>
+				</div>
+
+				<h2 class="preorder-section-title">Your info</h2>
+				<form id="retailer-form" class="preorder-form" novalidate>
+					<div class="form-row">
+						<label for="re-company">Company *</label>
+						<input type="text" id="re-company" autocomplete="organization" required>
+					</div>
+					<div class="form-row">
+						<label for="re-name">Your name *</label>
+						<input type="text" id="re-name" autocomplete="name" required>
+					</div>
+					<div class="form-row">
+						<label for="re-email">Email *</label>
+						<input type="email" id="re-email" autocomplete="email" inputmode="email" required>
+					</div>
+
+					<fieldset class="ship-fieldset">
+						<legend>Shipping address</legend>
+						<div class="form-row">
+							<label for="re-ship-line1">Street address *</label>
+							<input type="text" id="re-ship-line1" autocomplete="address-line1">
+						</div>
+						<div class="form-row">
+							<label for="re-ship-line2">Suite</label>
+							<input type="text" id="re-ship-line2" autocomplete="address-line2">
+						</div>
+						<div class="form-row-grid">
+							<div class="form-row">
+								<label for="re-ship-city">City *</label>
+								<input type="text" id="re-ship-city" autocomplete="address-level2">
+							</div>
+							<div class="form-row">
+								<label for="re-ship-state">State *</label>
+								<input type="text" id="re-ship-state" autocomplete="address-level1" maxlength="2">
+							</div>
+							<div class="form-row">
+								<label for="re-ship-zip">ZIP *</label>
+								<input type="text" id="re-ship-zip" autocomplete="postal-code" inputmode="numeric">
+							</div>
+						</div>
+					</fieldset>
+
+					<div class="form-row">
+						<label for="re-notes">Notes <span class="optional-label">(optional)</span></label>
+						<textarea id="re-notes" rows="3" placeholder="Account number, preferred terms, anything we should know"></textarea>
+					</div>
+
+					<div class="preorder-submit-row">
+						<button type="submit" class="cta-button primary" id="re-submit" disabled>Request quote</button>
+						<p class="preorder-form-hint" id="re-hint">Pick at least one product above.</p>
+					</div>
+				</form>
 			</div>
 
 			<div class="preorder-toast" id="toast" hidden></div>
