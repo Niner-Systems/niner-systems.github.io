@@ -342,6 +342,7 @@
 			interestedIn: Array.from(interestedIn),
 			customerName: $('cm-name').value.trim(),
 			email: $('cm-email').value.trim(),
+			company: $('cm-company').value.trim() || undefined,
 			notes: $('cm-notes').value.trim() || undefined,
 			source: isKiosk ? 'kiosk' : 'web',
 		};
@@ -370,7 +371,7 @@
 			},
 		};
 		if (subtier === 'retailer_quote') {
-			submission.retailerCompany = $('po-company').value.trim() || undefined;
+			submission.company = $('po-company').value.trim() || undefined;
 		}
 		return submission;
 	}
@@ -383,7 +384,7 @@
 	}
 
 	function validatePreOrder(sub) {
-		if (subtier === 'retailer_quote' && !sub.retailerCompany) return 'Company name is required for retailer quotes';
+		if (subtier === 'retailer_quote' && !sub.company) return 'Company name is required for retailer quotes';
 		if (!sub.customerName) return 'Name is required';
 		if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sub.email)) return 'Valid email is required';
 		const s = sub.shipAddress;

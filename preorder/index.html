@@ -54,6 +54,10 @@ layout: default
 						<input type="email" id="cm-email" autocomplete="email" inputmode="email" required>
 					</div>
 					<div class="form-row">
+						<label for="cm-company">Company <span class="optional-label">(optional)</span></label>
+						<input type="text" id="cm-company" autocomplete="organization">
+					</div>
+					<div class="form-row">
 						<label for="cm-notes">Anything you'd like to share?</label>
 						<textarea id="cm-notes" rows="4" placeholder="Tell us about your project, ask a question, or just say hi"></textarea>
 					</div>
@@ -68,17 +72,17 @@ layout: default
 				 PRE-ORDER BRANCH
 				 ============================================================ -->
 			<div class="branch branch-pre-order" id="branch-pre-order" hidden>
-				<h2 class="preorder-section-title">2. Are you a retailer or direct customer?</h2>
+				<h2 class="preorder-section-title">2. Are you a customer or retailer?</h2>
 				<div class="subtier-grid" id="subtier-grid">
-					<button type="button" class="tier-card" data-subtier="retailer_quote">
-						<div class="tier-card-label">Retailer / Dealer</div>
-						<div class="tier-card-desc">We'll email a quote. Pete will follow up with deposit terms or Net-45 invoicing based on your account.</div>
-						<div class="tier-card-cost">Quote</div>
-					</button>
 					<button type="button" class="tier-card" data-subtier="direct_pay_now">
-						<div class="tier-card-label">Direct Customer</div>
+						<div class="tier-card-label">Customer</div>
 						<div class="tier-card-desc">Pay a 20% deposit on the Square Terminal now. We'll invoice the balance before shipping.</div>
 						<div class="tier-card-cost">Tap to pay</div>
+					</button>
+					<button type="button" class="tier-card" data-subtier="retailer_quote">
+						<div class="tier-card-label">Retailer</div>
+						<div class="tier-card-desc">We'll email a quote. Pete will follow up with deposit terms or Net-45 invoicing based on your account.</div>
+						<div class="tier-card-cost">Quote</div>
 					</button>
 				</div>
 
