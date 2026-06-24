@@ -1,7 +1,6 @@
 @use "sass:color";
 @use "variables" as *;
 
-// Pull rebrand palette into scope.
 $brand-orange: #e97b35;
 $sky-deep:     #2a4a78;
 $sky-mid:      #5a78a5;
@@ -10,7 +9,7 @@ $gray-mid:     #686868;
 $gray-light:   #ccc;
 
 // ----------------------------------------------------------------------------
-// Preorder hero — mirrors the .product-hero/.brand-hero conventions
+// Hero
 // ----------------------------------------------------------------------------
 
 .preorder-hero {
@@ -22,23 +21,12 @@ $gray-light:   #ccc;
 	text-align: center;
 
 	.preorder-hero-overlay {
-		position: absolute;
-		inset: 0;
+		position: absolute; inset: 0;
 		background: linear-gradient(180deg, rgba(0,0,0,0.10) 0%, transparent 40%, rgba(0,0,0,0.20) 100%);
 		pointer-events: none;
 	}
-
-	.preorder-hero-inner {
-		position: relative;
-		z-index: 2;
-		max-width: 760px;
-	}
-
-	.product-eyebrow {
-		color: color.adjust($brand-orange, $lightness: 5%);
-		margin-bottom: 12px;
-	}
-
+	.preorder-hero-inner { position: relative; z-index: 2; max-width: 760px; }
+	.product-eyebrow { color: color.adjust($brand-orange, $lightness: 5%); margin-bottom: 12px; }
 	h1 {
 		color: #fff;
 		font-size: 2.2em;
@@ -47,170 +35,34 @@ $gray-light:   #ccc;
 		strong { font-weight: 700; color: $brand-orange; }
 		@media #{$desktop} { font-size: 2.8em; }
 	}
-
-	.subtext {
-		color: rgba(255, 255, 255, 0.88);
-		font-size: 1.05em;
-		max-width: 640px;
-		margin: 0 auto;
-	}
+	.subtext { color: rgba(255,255,255,0.88); font-size: 1.05em; max-width: 640px; margin: 0 auto; }
 }
 
 // ----------------------------------------------------------------------------
-// Preorder section + headings
+// Sections
 // ----------------------------------------------------------------------------
 
-.preorder-section {
-	padding: 60px 0 100px 0;
-}
+.preorder-section { padding: 60px 0 100px 0; }
 
 .preorder-section-title {
 	color: $sky-deep;
 	font-weight: 700;
 	font-size: 1.4em;
-	margin: 50px 0 6px 0;
-
+	margin: 44px 0 6px 0;
 	&:first-of-type { margin-top: 0; }
 }
-
-.preorder-section-sub {
-	color: $gray-mid;
-	margin: 0 0 24px 0;
-	font-size: 0.95em;
-}
+.preorder-section-sub { color: $gray-mid; margin: 0 0 24px 0; font-size: 0.95em; }
 
 // ----------------------------------------------------------------------------
-// SKU grid
+// Tier cards (top-level + subtier — both use the same styling)
 // ----------------------------------------------------------------------------
 
-.sku-grid {
+.tier-grid,
+.subtier-grid {
 	display: grid;
 	grid-template-columns: 1fr;
 	gap: 14px;
-
-	@media #{$tablet}  { grid-template-columns: 1fr 1fr; }
-	@media #{$desktop} { grid-template-columns: repeat(3, 1fr); }
-}
-
-.sku-tile {
-	background: #fff;
-	border: 2px solid #e6e6e6;
-	border-radius: 10px;
-	padding: 18px 18px 14px 18px;
-	transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-
-	&.selected {
-		border-color: $brand-orange;
-		box-shadow: 0 4px 14px rgba($brand-orange, 0.18);
-	}
-
-	.sku-tile-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: baseline;
-	}
-
-	.sku-tile-label {
-		font-size: 1.05em;
-		font-weight: 700;
-		color: $ink;
-	}
-
-	.sku-tile-pack {
-		font-size: 0.78em;
-		text-transform: uppercase;
-		letter-spacing: 0.08em;
-		font-weight: 600;
-		color: $brand-orange;
-	}
-
-	.sku-tile-price {
-		font-size: 1.5em;
-		font-weight: 700;
-		color: $sky-deep;
-		line-height: 1;
-	}
-
-	.sku-tile-qty {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		margin-top: 4px;
-		background: #f6f7fa;
-		border-radius: 8px;
-		padding: 4px;
-	}
-}
-
-.qty-btn {
-	width: 56px;
-	height: 56px;
-	border: 0;
-	border-radius: 6px;
-	background: #fff;
-	color: $sky-deep;
-	font-size: 1.6em;
-	font-weight: 600;
-	line-height: 1;
-	cursor: pointer;
-	transition: background 0.1s, transform 0.05s;
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-
-	&:hover { background: color.adjust(#f6f7fa, $lightness: -2%); }
-	&:active { transform: scale(0.96); }
-}
-
-.qty-value {
-	font-size: 1.6em;
-	font-weight: 700;
-	color: $ink;
-	min-width: 2ch;
-	text-align: center;
-}
-
-// ----------------------------------------------------------------------------
-// Cart summary
-// ----------------------------------------------------------------------------
-
-.cart-summary {
-	margin: 24px 0 0 0;
-	padding: 18px 22px;
-	background: #f7f8fa;
-	border-left: 4px solid $sky-deep;
-	border-radius: 4px;
-}
-
-.cart-summary-line {
-	display: flex;
-	justify-content: space-between;
-	font-size: 1.05em;
-	color: $ink;
-
-	& + .cart-summary-line { margin-top: 6px; }
-
-	&.cart-summary-deposit {
-		color: $brand-orange;
-		font-weight: 700;
-		font-size: 1.15em;
-		padding-top: 8px;
-		border-top: 1px solid #e6e6e6;
-		margin-top: 10px;
-	}
-}
-
-// ----------------------------------------------------------------------------
-// Tier selection
-// ----------------------------------------------------------------------------
-
-.tier-grid {
-	display: grid;
-	grid-template-columns: 1fr;
-	gap: 14px;
-
-	@media #{$tablet} { grid-template-columns: repeat(3, 1fr); }
+	@media #{$tablet} { grid-template-columns: 1fr 1fr; }
 }
 
 .tier-card {
@@ -226,48 +78,263 @@ $gray-light:   #ccc;
 	gap: 10px;
 	font: inherit;
 	color: $ink;
-
 	&:hover {
 		transform: translateY(-2px);
-		box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+		box-shadow: 0 6px 16px rgba(0,0,0,0.06);
 		border-color: $sky-mid;
 	}
-
 	&.selected {
 		border-color: $brand-orange;
 		box-shadow: 0 6px 18px rgba($brand-orange, 0.20);
 	}
+	.tier-card-label   { font-size: 1.15em; font-weight: 700; color: $sky-deep; }
+	.tier-card-desc    { font-size: 0.92em; color: $gray-mid; line-height: 1.45; flex: 1; }
+	.tier-card-cost    { font-size: 0.85em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: $brand-orange; margin-top: 4px; }
+}
 
-	.tier-card-label {
-		font-size: 1.15em;
+// ----------------------------------------------------------------------------
+// Branch visibility
+// ----------------------------------------------------------------------------
+
+.branch { margin-top: 30px; }
+
+// ----------------------------------------------------------------------------
+// Product checkbox list (contact_me branch)
+// ----------------------------------------------------------------------------
+
+.product-checkbox-list {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 12px;
+	@media #{$tablet}  { grid-template-columns: 1fr 1fr; }
+	@media #{$desktop} { grid-template-columns: 1fr 1fr 1fr; }
+}
+
+.product-checkbox {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	background: #fff;
+	border: 2px solid #e6e6e6;
+	border-radius: 10px;
+	padding: 18px 20px;
+	cursor: pointer;
+	min-height: 76px;       // touch-friendly target
+	transition: border-color 0.15s, box-shadow 0.15s;
+	&:hover { border-color: $sky-mid; }
+	&.selected {
+		border-color: $brand-orange;
+		background: rgba($brand-orange, 0.04);
+		box-shadow: 0 4px 12px rgba($brand-orange, 0.15);
+	}
+
+	input[type=checkbox] {
+		position: absolute;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.product-checkbox-text { flex: 1; }
+	.product-checkbox-name {
 		font-weight: 700;
-		color: $sky-deep;
+		color: $ink;
+		font-size: 1.05em;
+		margin-bottom: 2px;
 	}
-
-	.tier-card-desc {
-		font-size: 0.92em;
-		color: $gray-mid;
-		line-height: 1.45;
-		flex: 1;
-	}
-
-	.tier-card-cost {
+	.product-checkbox-blurb {
 		font-size: 0.85em;
-		font-weight: 700;
-		text-transform: uppercase;
-		letter-spacing: 0.08em;
-		color: $brand-orange;
-		margin-top: 4px;
+		color: $gray-mid;
+		line-height: 1.4;
+	}
+
+	.product-checkbox-mark {
+		flex: 0 0 auto;
+		width: 28px;
+		height: 28px;
+		border: 2px solid $gray-light;
+		border-radius: 6px;
+		background: #fff;
+		position: relative;
+		transition: background 0.1s, border-color 0.1s;
+	}
+	&.selected .product-checkbox-mark {
+		background: $brand-orange;
+		border-color: $brand-orange;
+		&::after {
+			content: '';
+			position: absolute;
+			top: 4px; left: 8px;
+			width: 8px; height: 14px;
+			border: solid #fff;
+			border-width: 0 3px 3px 0;
+			transform: rotate(45deg);
+		}
 	}
 }
 
 // ----------------------------------------------------------------------------
-// Form
+// Pre-order product rows (one row per product, three pack-size tiles per row)
+// ----------------------------------------------------------------------------
+
+.product-rows {
+	display: flex;
+	flex-direction: column;
+	gap: 28px;
+}
+
+.product-row {
+	background: #fff;
+	border: 1px solid #e6e6e6;
+	border-radius: 12px;
+	padding: 22px 22px 18px 22px;
+	box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+
+.product-row-header {
+	margin-bottom: 14px;
+	display: flex;
+	align-items: baseline;
+	flex-wrap: wrap;
+	gap: 10px;
+
+	.product-row-name {
+		margin: 0;
+		font-size: 1.4em;
+		font-weight: 700;
+		color: $sky-deep;
+	}
+	.product-row-blurb {
+		margin: 0;
+		color: $gray-mid;
+		font-size: 0.92em;
+		flex-basis: 100%;
+	}
+}
+
+.product-row-variants {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 12px;
+	@media #{$tablet} { grid-template-columns: 1fr 1fr 1fr; }
+}
+
+.sku-tile {
+	background: #fafbfc;
+	border: 2px solid #e6e6e6;
+	border-radius: 10px;
+	padding: 14px 14px 12px 14px;
+	transition: border-color 0.15s, box-shadow 0.15s, transform 0.05s;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+
+	&.selected {
+		border-color: $brand-orange;
+		background: #fff;
+		box-shadow: 0 4px 14px rgba($brand-orange, 0.18);
+	}
+
+	&.pricing-tbd {
+		.sku-tile-price small { color: $brand-orange; font-weight: 700; margin-left: 6px; font-size: 0.65em; vertical-align: middle; }
+	}
+
+	.sku-tile-pack {
+		font-size: 0.78em;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		font-weight: 600;
+		color: $brand-orange;
+	}
+	.sku-tile-price {
+		font-size: 1.3em;
+		font-weight: 700;
+		color: $sky-deep;
+		line-height: 1;
+	}
+	.sku-tile-qty {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-top: 6px;
+		background: #fff;
+		border-radius: 8px;
+		padding: 4px;
+		border: 1px solid #e6e6e6;
+	}
+}
+
+.qty-btn {
+	width: 52px;
+	height: 52px;
+	border: 0;
+	border-radius: 6px;
+	background: #fff;
+	color: $sky-deep;
+	font-size: 1.5em;
+	font-weight: 600;
+	line-height: 1;
+	cursor: pointer;
+	transition: background 0.1s, transform 0.05s;
+	&:hover { background: #f0f2f5; }
+	&:active { transform: scale(0.96); }
+}
+.qty-value {
+	font-size: 1.5em;
+	font-weight: 700;
+	color: $ink;
+	min-width: 2ch;
+	text-align: center;
+}
+
+// ----------------------------------------------------------------------------
+// "Pricing provisional" badge on the JackSolderHolder row header
+// ----------------------------------------------------------------------------
+
+.badge.tbd {
+	display: inline-block;
+	background: $brand-orange;
+	color: #fff;
+	font-size: 0.7em;
+	font-weight: 700;
+	padding: 3px 9px;
+	border-radius: 4px;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+}
+
+// ----------------------------------------------------------------------------
+// Cart summary
+// ----------------------------------------------------------------------------
+
+.cart-summary {
+	margin: 24px 0 0 0;
+	padding: 18px 22px;
+	background: #f7f8fa;
+	border-left: 4px solid $sky-deep;
+	border-radius: 4px;
+}
+.cart-summary-line {
+	display: flex;
+	justify-content: space-between;
+	font-size: 1.05em;
+	color: $ink;
+	& + .cart-summary-line { margin-top: 6px; }
+	&.cart-summary-deposit {
+		color: $brand-orange;
+		font-weight: 700;
+		font-size: 1.15em;
+		padding-top: 8px;
+		border-top: 1px solid #e6e6e6;
+		margin-top: 10px;
+	}
+}
+
+// ----------------------------------------------------------------------------
+// Forms
 // ----------------------------------------------------------------------------
 
 .preorder-form {
 	max-width: 720px;
-
 	.form-row { margin-bottom: 14px; }
 	.form-row label {
 		display: block;
@@ -276,7 +343,6 @@ $gray-light:   #ccc;
 		color: $sky-deep;
 		margin-bottom: 4px;
 	}
-
 	.form-row input,
 	.form-row textarea {
 		width: 100%;
@@ -287,23 +353,20 @@ $gray-light:   #ccc;
 		background: #fff;
 		color: $ink;
 		box-sizing: border-box;
-
 		&:focus {
 			outline: 0;
 			border-color: $brand-orange;
 			box-shadow: 0 0 0 3px rgba($brand-orange, 0.15);
 		}
 	}
-
 	.form-row textarea { min-height: 90px; resize: vertical; }
-
 	.form-row-grid {
 		display: grid;
 		grid-template-columns: 1fr;
 		gap: 10px;
-
 		@media #{$tablet} { grid-template-columns: 2fr 1fr 1fr; }
 	}
+	.form-row-company { background: rgba($sky-deep, 0.05); padding: 14px 16px; border-radius: 6px; }
 }
 
 .ship-fieldset {
@@ -312,13 +375,7 @@ $gray-light:   #ccc;
 	padding: 18px 20px 6px 20px;
 	margin: 6px 0 18px 0;
 	background: #fafbfc;
-
-	legend {
-		padding: 0 8px;
-		font-weight: 700;
-		color: $sky-deep;
-		font-size: 0.95em;
-	}
+	legend { padding: 0 8px; font-weight: 700; color: $sky-deep; font-size: 0.95em; }
 }
 
 .preorder-submit-row {
@@ -327,13 +384,11 @@ $gray-light:   #ccc;
 	align-items: stretch;
 	gap: 8px;
 	margin-top: 14px;
-
 	@media #{$tablet} {
 		flex-direction: row;
 		align-items: center;
 		gap: 18px;
 	}
-
 	.cta-button { min-width: 220px; }
 	.cta-button[disabled] {
 		opacity: 0.45;
@@ -342,12 +397,7 @@ $gray-light:   #ccc;
 		box-shadow: none;
 	}
 }
-
-.preorder-form-hint {
-	color: $gray-mid;
-	font-size: 0.92em;
-	margin: 0;
-}
+.preorder-form-hint { color: $gray-mid; font-size: 0.92em; margin: 0; }
 
 // ----------------------------------------------------------------------------
 // Toast
@@ -363,20 +413,13 @@ $gray-light:   #ccc;
 	padding: 14px 22px;
 	border-radius: 8px;
 	font-weight: 600;
-	box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
-
-	&[data-kind="success"] {
-		background: $sky-deep;
-		color: #fff;
-	}
-	&[data-kind="error"] {
-		background: #c63a3a;
-		color: #fff;
-	}
+	box-shadow: 0 6px 24px rgba(0,0,0,0.18);
+	&[data-kind="success"] { background: $sky-deep; color: #fff; }
+	&[data-kind="error"]   { background: #c63a3a; color: #fff; }
 }
 
 // ----------------------------------------------------------------------------
-// Sync badge (bottom-right floating chip)
+// Sync badge
 // ----------------------------------------------------------------------------
 
 .sync-badge {
@@ -390,23 +433,13 @@ $gray-light:   #ccc;
 	padding: 8px 14px;
 	border-radius: 999px;
 	background: #fff;
-	box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+	box-shadow: 0 4px 14px rgba(0,0,0,0.12);
 	font-size: 0.85em;
 	font-weight: 600;
 	color: $ink;
-
-	.sync-dot {
-		width: 10px;
-		height: 10px;
-		border-radius: 50%;
-		background: $gray-light;
-	}
-
-	&[data-state="synced"] .sync-dot { background: #2ec27e; }
-	&[data-state="pending"] .sync-dot {
-		background: #f5a623;
-		animation: pulseDot 1.4s ease-in-out infinite;
-	}
+	.sync-dot { width: 10px; height: 10px; border-radius: 50%; background: $gray-light; }
+	&[data-state="synced"]  .sync-dot { background: #2ec27e; }
+	&[data-state="pending"] .sync-dot { background: #f5a623; animation: pulseDot 1.4s ease-in-out infinite; }
 	&[data-state="offline"] .sync-dot { background: $gray-mid; }
 }
 
@@ -416,7 +449,7 @@ $gray-light:   #ccc;
 }
 
 // ----------------------------------------------------------------------------
-// Kiosk mode — hide nav + footer for booth self-serve use
+// Kiosk mode
 // ----------------------------------------------------------------------------
 
 body.kiosk-mode {

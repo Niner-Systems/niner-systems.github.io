@@ -1,57 +1,70 @@
 /*
- * 9er Systems pre-order form — booth-friendly PWA.
+ * 9er Systems pre-order / contact form — booth-friendly PWA.
  *
- * Architecture:
- *   1. User picks SKUs and a tier, fills out contact info, submits.
- *   2. The submission is written to IndexedDB FIRST with a UUID
- *      (`clientSubmissionId`) as the idempotency key — so we never lose data
- *      to flaky booth wifi.
- *   3. A drain loop tries to POST each queued submission to the backend.
- *      The backend dedupes by clientSubmissionId, so retries are safe.
- *   4. The sync badge shows pending count; turns green when queue is empty.
+ * Three submission flows, decided by the top tier choice:
+ *   contact_me      → product checkboxes + name/email/notes
+ *   retailer_quote  → cart + company + ship address → admin gets magic-link email
+ *   direct_pay_now  → cart + ship address → Square Terminal Checkout
  *
- * Kiosk mode: append ?kiosk=1 to the URL. Hides nav, auto-resets after submit.
+ * Catalog is fetched live from /v1/preorders/catalog with a hardcoded
+ * fallback. Submissions always go to IndexedDB first, then drain to the
+ * backend — so flaky booth wifi never loses data.
  */
 (function () {
 	'use strict';
 
 	const API_BASE = 'https://api.9ersystems.com';
+	const SUBMIT_URL = API_BASE + '/v1/preorders';
+	const CATALOG_URL = API_BASE + '/v1/preorders/catalog';
 	const DB_NAME = '9er-preorder';
 	const DB_VERSION = 1;
 	const STORE = 'pending_submissions';
-	const SUBMIT_URL = API_BASE + '/v1/preorders';
 
-	// Keep in sync with backend/lambda/preorders/catalog.ts
-	const CATALOG = [
-		{ sku: 'GA2DSUB-1', productLine: 'GA2DSub',    packSize: 1, label: 'GA2DSub',    sub: '1-pack', unitPriceCents: 4995 },
-		{ sku: 'GA2DSUB-2', productLine: 'GA2DSub',    packSize: 2, label: 'GA2DSub',    sub: '2-pack', unitPriceCents: 8995 },
-		{ sku: 'GA2DSUB-4', productLine: 'GA2DSub',    packSize: 4, label: 'GA2DSub',    sub: '4-pack', unitPriceCents: 16995 },
-		{ sku: 'GA2PIG-1',  productLine: 'GA2Pigtail', packSize: 1, label: 'GA2Pigtail', sub: '1-pack', unitPriceCents: 6995 },
-		{ sku: 'GA2PIG-2',  productLine: 'GA2Pigtail', packSize: 2, label: 'GA2Pigtail', sub: '2-pack', unitPriceCents: 12995 },
-		{ sku: 'GA2PIG-4',  productLine: 'GA2Pigtail', packSize: 4, label: 'GA2Pigtail', sub: '4-pack', unitPriceCents: 23995 },
-	];
+	// ---------------------------------------------------------------------
+	// Hardcoded fallback catalog. Mirrors backend/lambda/preorders/catalog.ts
+	// so the page works on first load if the API is unreachable.
+	// ---------------------------------------------------------------------
+	const FALLBACK_CATALOG = {
+		products: [
+			{ productLine: 'GA2DSub',          displayName: 'GA2DSub',           blurb: 'GA dual-plug to DSub PCB converter', preorderable: true },
+			{ productLine: 'GA2Pigtail',       displayName: 'GA2Pigtail',        blurb: 'GA dual-plug to bare pigtail wires', preorderable: true },
+			{ productLine: 'JackSolderHolder', displayName: 'Jack Solder Holder',blurb: 'Solder holder for aviation jack assembly', preorderable: true, pricingTbd: true },
+			{ productLine: 'USB2GA',           displayName: 'USB2GA',            blurb: 'USB-A to GA dual-plug headset adapter', preorderable: false },
+			{ productLine: 'USB2Lemo',         displayName: 'USB2Lemo',          blurb: 'USB-A to Lemo headset adapter', preorderable: false },
+			{ productLine: 'SoftwareToolbar',  displayName: 'Software Toolbar',  blurb: 'USB2x Toolbar app for desktop', preorderable: false },
+		],
+		items: [
+			{ sku: 'GA2DSUB-1', productLine: 'GA2DSub',          packSize: 1, label: 'GA2DSub (1-pack)',           priceCents: 4995,  pricingTbd: false },
+			{ sku: 'GA2DSUB-2', productLine: 'GA2DSub',          packSize: 2, label: 'GA2DSub (2-pack)',           priceCents: 8995,  pricingTbd: false },
+			{ sku: 'GA2DSUB-4', productLine: 'GA2DSub',          packSize: 4, label: 'GA2DSub (4-pack)',           priceCents: 16995, pricingTbd: false },
+			{ sku: 'GA2PIG-1',  productLine: 'GA2Pigtail',       packSize: 1, label: 'GA2Pigtail (1-pack)',        priceCents: 6995,  pricingTbd: false },
+			{ sku: 'GA2PIG-2',  productLine: 'GA2Pigtail',       packSize: 2, label: 'GA2Pigtail (2-pack)',        priceCents: 12995, pricingTbd: false },
+			{ sku: 'GA2PIG-4',  productLine: 'GA2Pigtail',       packSize: 4, label: 'GA2Pigtail (4-pack)',        priceCents: 23995, pricingTbd: false },
+			{ sku: 'JSH-1',     productLine: 'JackSolderHolder', packSize: 1, label: 'Jack Solder Holder (1-pack)',priceCents: 1995,  pricingTbd: true },
+			{ sku: 'JSH-2',     productLine: 'JackSolderHolder', packSize: 2, label: 'Jack Solder Holder (2-pack)',priceCents: 3495,  pricingTbd: true },
+			{ sku: 'JSH-4',     productLine: 'JackSolderHolder', packSize: 4, label: 'Jack Solder Holder (4-pack)',priceCents: 5995,  pricingTbd: true },
+		],
+	};
 
 	// ---- State ----
-	const cart = new Map(); // sku -> qty
-	let selectedTier = null;
+	let catalog = FALLBACK_CATALOG;
+	const cart = new Map();           // sku -> qty
+	const interestedIn = new Set();   // productLine codes
+	let tierGroup = null;             // 'contact_me' | 'pre_order'
+	let subtier = null;               // 'retailer_quote' | 'direct_pay_now'
 	const isKiosk = new URLSearchParams(location.search).get('kiosk') === '1';
 
 	// ---- Utility ----
-	function formatUSD(cents) {
-		return '$' + (cents / 100).toFixed(2);
-	}
-
+	function $(id) { return document.getElementById(id); }
+	function formatUSD(cents) { return '$' + (cents / 100).toFixed(2); }
 	function uuid() {
 		if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
-		// Fallback (RFC4122 v4)
 		return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
 			const r = (Math.random() * 16) | 0;
 			const v = c === 'x' ? r : (r & 0x3) | 0x8;
 			return v.toString(16);
 		});
 	}
-
-	function $(id) { return document.getElementById(id); }
 
 	// ---- IndexedDB queue ----
 	let dbPromise = null;
@@ -91,40 +104,123 @@
 		});
 	}
 
-	async function removeFromQueue(clientSubmissionId) {
+	async function removeFromQueue(id) {
 		const db = await openDb();
 		return new Promise((resolve, reject) => {
 			const tx = db.transaction(STORE, 'readwrite');
-			tx.objectStore(STORE).delete(clientSubmissionId);
+			tx.objectStore(STORE).delete(id);
 			tx.oncomplete = () => resolve();
 			tx.onerror = () => reject(tx.error);
 		});
 	}
 
-	// ---- Rendering: SKU tiles ----
-	function renderTiles() {
-		const grid = $('sku-grid');
-		grid.innerHTML = '';
-		CATALOG.forEach((item) => {
-			const tile = document.createElement('div');
-			tile.className = 'sku-tile';
-			tile.dataset.sku = item.sku;
-			tile.innerHTML = `
-				<div class="sku-tile-header">
-					<div class="sku-tile-label">${item.label}</div>
-					<div class="sku-tile-pack">${item.sub}</div>
-				</div>
-				<div class="sku-tile-price">${formatUSD(item.unitPriceCents)}</div>
-				<div class="sku-tile-qty">
-					<button type="button" class="qty-btn" data-act="dec" aria-label="Decrease quantity">−</button>
-					<span class="qty-value" data-sku="${item.sku}">0</span>
-					<button type="button" class="qty-btn" data-act="inc" aria-label="Increase quantity">+</button>
-				</div>
-			`;
-			grid.appendChild(tile);
+	// ---- Catalog loading ----
+	async function loadCatalog() {
+		try {
+			const resp = await fetch(CATALOG_URL, { cache: 'no-store' });
+			if (resp.ok) {
+				const body = await resp.json();
+				if (body?.data?.items?.length) {
+					catalog = body.data;
+				}
+			}
+		} catch (err) {
+			console.warn('Catalog fetch failed, using fallback', err);
+		}
+	}
+
+	// ---- Tier selection ----
+	function bindTierSelectors() {
+		$('tier-grid').addEventListener('click', (e) => {
+			const card = e.target.closest('.tier-card');
+			if (!card) return;
+			tierGroup = card.dataset.tierGroup;
+			Array.from(document.querySelectorAll('#tier-grid .tier-card')).forEach((c) => {
+				c.classList.toggle('selected', c === card);
+			});
+			$('branch-contact-me').hidden = tierGroup !== 'contact_me';
+			$('branch-pre-order').hidden = tierGroup !== 'pre_order';
+			updateAllSubmitStates();
 		});
 
-		grid.addEventListener('click', (e) => {
+		$('subtier-grid').addEventListener('click', (e) => {
+			const card = e.target.closest('.tier-card');
+			if (!card) return;
+			subtier = card.dataset.subtier;
+			Array.from(document.querySelectorAll('#subtier-grid .tier-card')).forEach((c) => {
+				c.classList.toggle('selected', c === card);
+			});
+			$('pre-order-after-subtier').hidden = false;
+			$('form-row-company').hidden = subtier !== 'retailer_quote';
+			updateAllSubmitStates();
+		});
+	}
+
+	// ---- Render product checkboxes (contact_me branch) ----
+	function renderProductCheckboxes() {
+		const container = $('product-checkbox-list');
+		container.innerHTML = '';
+		catalog.products.forEach((p) => {
+			const id = `pc-${p.productLine}`;
+			const wrapper = document.createElement('label');
+			wrapper.className = 'product-checkbox';
+			wrapper.htmlFor = id;
+			wrapper.innerHTML = `
+				<input type="checkbox" id="${id}" value="${p.productLine}">
+				<div class="product-checkbox-text">
+					<div class="product-checkbox-name">${escapeHtml(p.displayName)}</div>
+					<div class="product-checkbox-blurb">${escapeHtml(p.blurb)}</div>
+				</div>
+				<div class="product-checkbox-mark"></div>
+			`;
+			container.appendChild(wrapper);
+		});
+		container.addEventListener('change', (e) => {
+			const target = e.target;
+			if (target.type !== 'checkbox') return;
+			if (target.checked) interestedIn.add(target.value); else interestedIn.delete(target.value);
+			target.closest('.product-checkbox').classList.toggle('selected', target.checked);
+			updateContactMeSubmitState();
+		});
+	}
+
+	// ---- Render pre-order product rows (one row per product) ----
+	function renderProductRows() {
+		const container = $('product-rows');
+		container.innerHTML = '';
+		const preorderableProducts = catalog.products.filter(p => p.preorderable);
+		preorderableProducts.forEach((p) => {
+			const variants = catalog.items
+				.filter(i => i.productLine === p.productLine)
+				.sort((a, b) => a.packSize - b.packSize);
+
+			const row = document.createElement('div');
+			row.className = 'product-row';
+			row.dataset.productLine = p.productLine;
+			row.innerHTML = `
+				<div class="product-row-header">
+					<h3 class="product-row-name">${escapeHtml(p.displayName)}</h3>
+					<p class="product-row-blurb">${escapeHtml(p.blurb)}</p>
+					${p.pricingTbd ? '<span class="badge tbd">Pricing provisional</span>' : ''}
+				</div>
+				<div class="product-row-variants">
+					${variants.map(v => `
+						<div class="sku-tile ${v.pricingTbd ? 'pricing-tbd' : ''}" data-sku="${v.sku}">
+							<div class="sku-tile-pack">${v.packSize}-pack</div>
+							<div class="sku-tile-price">${formatUSD(v.priceCents)}${v.pricingTbd ? '<small> TBD</small>' : ''}</div>
+							<div class="sku-tile-qty">
+								<button type="button" class="qty-btn" data-act="dec" aria-label="Decrease quantity">−</button>
+								<span class="qty-value" data-sku="${v.sku}">0</span>
+								<button type="button" class="qty-btn" data-act="inc" aria-label="Increase quantity">+</button>
+							</div>
+						</div>
+					`).join('')}
+				</div>
+			`;
+			container.appendChild(row);
+		});
+
+		container.addEventListener('click', (e) => {
 			const btn = e.target.closest('.qty-btn');
 			if (!btn) return;
 			const tile = btn.closest('.sku-tile');
@@ -133,106 +229,118 @@
 			const delta = btn.dataset.act === 'inc' ? 1 : -1;
 			const next = Math.max(0, Math.min(99, current + delta));
 			if (next === 0) cart.delete(sku); else cart.set(sku, next);
-			updateCart();
+			updatePreOrderCart();
 		});
 	}
 
-	function updateCart() {
+	function updatePreOrderCart() {
 		let subtotalCents = 0;
-		CATALOG.forEach((item) => {
-			const qty = cart.get(item.sku) || 0;
-			subtotalCents += qty * item.unitPriceCents;
-			const valueEl = document.querySelector(`.qty-value[data-sku="${item.sku}"]`);
+		catalog.items.forEach((v) => {
+			const qty = cart.get(v.sku) || 0;
+			subtotalCents += qty * v.priceCents;
+			const valueEl = document.querySelector(`.qty-value[data-sku="${v.sku}"]`);
 			if (valueEl) valueEl.textContent = String(qty);
-			const tile = document.querySelector(`.sku-tile[data-sku="${item.sku}"]`);
+			const tile = document.querySelector(`.sku-tile[data-sku="${v.sku}"]`);
 			if (tile) tile.classList.toggle('selected', qty > 0);
 		});
-
 		$('cart-subtotal').textContent = formatUSD(subtotalCents);
 		$('cart-deposit').textContent = formatUSD(Math.round(subtotalCents * 0.2));
 		$('cart-summary').hidden = subtotalCents === 0;
-
-		updateSubmitState();
-	}
-
-	// ---- Tier selection ----
-	function bindTiers() {
-		const grid = $('tier-grid');
-		grid.addEventListener('click', (e) => {
-			const card = e.target.closest('.tier-card');
-			if (!card) return;
-			selectedTier = card.dataset.tier;
-			Array.from(grid.querySelectorAll('.tier-card')).forEach((c) => {
-				c.classList.toggle('selected', c === card);
-			});
-			$('ship-fieldset').hidden = selectedTier === 'interest';
-			updateSubmitState();
-		});
+		updatePreOrderSubmitState();
 	}
 
 	// ---- Submit gating ----
-	function updateSubmitState() {
+	function updateContactMeSubmitState() {
+		const hasInterest = interestedIn.size > 0;
+		const btn = $('cm-submit');
+		const hint = $('cm-hint');
+		btn.disabled = !hasInterest;
+		hint.textContent = hasInterest
+			? 'We\'ll respond from Pete@9erSystems.com.'
+			: 'Pick at least one product above.';
+	}
+
+	function updatePreOrderSubmitState() {
 		const hasItems = Array.from(cart.values()).some((q) => q > 0);
-		const canSubmit = hasItems && selectedTier !== null;
-		const btn = $('submit-btn');
-		btn.disabled = !canSubmit;
-		const hint = $('form-hint');
-		if (!hasItems) {
+		const hasSubtier = subtier !== null;
+		const btn = $('po-submit');
+		const hint = $('po-hint');
+		btn.disabled = !(hasItems && hasSubtier);
+		if (!hasSubtier) {
+			hint.textContent = 'Pick retailer or direct customer above.';
+		} else if (!hasItems) {
 			hint.textContent = 'Pick at least one product above.';
-		} else if (!selectedTier) {
-			hint.textContent = 'Choose a commitment level.';
+		} else if (subtier === 'retailer_quote') {
+			hint.textContent = 'Submit — Pete will email a quote, then follow up with terms.';
 		} else {
-			hint.textContent = selectedTier === 'pay_now'
-				? 'Submit — then tap card on the Square Terminal.'
-				: selectedTier === 'invoice'
-					? 'Submit — we\'ll email a Square invoice with the 20% deposit.'
-					: 'Submit — we\'ll add you to the list and email when ready.';
+			hint.textContent = 'Submit — then tap card on the Square Terminal for the 20% deposit.';
 		}
 	}
 
-	// ---- Build submission from form ----
-	function buildSubmission() {
-		const items = [];
-		CATALOG.forEach((item) => {
-			const qty = cart.get(item.sku) || 0;
-			if (qty > 0) items.push({ sku: item.sku, qty });
-		});
+	function updateAllSubmitStates() {
+		updateContactMeSubmitState();
+		updatePreOrderSubmitState();
+	}
 
-		const shipNeeded = selectedTier === 'invoice' || selectedTier === 'pay_now';
-		const submission = {
+	// ---- Build submissions ----
+	function buildContactMeSubmission() {
+		return {
 			clientSubmissionId: uuid(),
-			tier: selectedTier,
-			items,
-			customerName: $('customerName').value.trim(),
-			email: $('email').value.trim(),
-			phone: $('phone').value.trim() || undefined,
-			notes: $('notes').value.trim() || undefined,
+			tier: 'contact_me',
+			interestedIn: Array.from(interestedIn),
+			customerName: $('cm-name').value.trim(),
+			email: $('cm-email').value.trim(),
+			notes: $('cm-notes').value.trim() || undefined,
 			source: isKiosk ? 'kiosk' : 'web',
 		};
-		if (shipNeeded) {
-			submission.shipAddress = {
+	}
+
+	function buildPreOrderSubmission() {
+		const items = [];
+		catalog.items.forEach((v) => {
+			const qty = cart.get(v.sku) || 0;
+			if (qty > 0) items.push({ sku: v.sku, qty });
+		});
+		const submission = {
+			clientSubmissionId: uuid(),
+			tier: subtier,
+			items,
+			customerName: $('po-name').value.trim(),
+			email: $('po-email').value.trim(),
+			notes: $('po-notes').value.trim() || undefined,
+			source: isKiosk ? 'kiosk' : 'web',
+			shipAddress: {
 				line1: $('ship-line1').value.trim(),
 				line2: $('ship-line2').value.trim() || undefined,
 				city: $('ship-city').value.trim(),
 				state: $('ship-state').value.trim().toUpperCase(),
 				zip: $('ship-zip').value.trim(),
-			};
+			},
+		};
+		if (subtier === 'retailer_quote') {
+			submission.retailerCompany = $('po-company').value.trim() || undefined;
 		}
 		return submission;
 	}
 
-	function validateForm(submission) {
-		if (!submission.customerName) return 'Name is required';
-		if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(submission.email)) return 'Valid email is required';
-		if (submission.shipAddress) {
-			const s = submission.shipAddress;
-			if (!s.line1 || !s.city || !s.state || !s.zip) return 'Complete shipping address is required';
-			if (s.state.length !== 2) return 'State must be the 2-letter code';
-		}
+	function validateContactMe(sub) {
+		if (!sub.customerName) return 'Name is required';
+		if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sub.email)) return 'Valid email is required';
+		if (!sub.interestedIn || sub.interestedIn.length === 0) return 'Pick at least one product';
 		return null;
 	}
 
-	// ---- Toast + UI feedback ----
+	function validatePreOrder(sub) {
+		if (subtier === 'retailer_quote' && !sub.retailerCompany) return 'Company name is required for retailer quotes';
+		if (!sub.customerName) return 'Name is required';
+		if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(sub.email)) return 'Valid email is required';
+		const s = sub.shipAddress;
+		if (!s.line1 || !s.city || !s.state || !s.zip) return 'Complete shipping address is required';
+		if (s.state.length !== 2) return 'State must be the 2-letter code';
+		return null;
+	}
+
+	// ---- UI feedback ----
 	let toastTimer = null;
 	function showToast(message, kind) {
 		const t = $('toast');
@@ -243,20 +351,65 @@
 		toastTimer = setTimeout(() => { t.hidden = true; }, 4500);
 	}
 
-	function resetForm() {
+	function resetAll() {
 		cart.clear();
-		selectedTier = null;
-		document.querySelectorAll('.tier-card').forEach((c) => c.classList.remove('selected'));
+		interestedIn.clear();
+		tierGroup = null;
+		subtier = null;
+		document.querySelectorAll('.tier-card.selected').forEach((c) => c.classList.remove('selected'));
+		document.querySelectorAll('.product-checkbox.selected').forEach((c) => c.classList.remove('selected'));
+		document.querySelectorAll('.product-checkbox input[type=checkbox]').forEach((cb) => { cb.checked = false; });
+		document.querySelectorAll('.sku-tile.selected').forEach((c) => c.classList.remove('selected'));
+		$('contact-form').reset();
 		$('preorder-form').reset();
-		$('ship-fieldset').hidden = true;
-		updateCart();
+		$('branch-contact-me').hidden = true;
+		$('branch-pre-order').hidden = true;
+		$('pre-order-after-subtier').hidden = true;
+		$('form-row-company').hidden = true;
+		updatePreOrderCart();
+		updateAllSubmitStates();
 	}
 
-	// ---- Sync queue to backend ----
+	// ---- Submit handlers ----
+	async function onContactMeSubmit(e) {
+		e.preventDefault();
+		const submission = buildContactMeSubmission();
+		const err = validateContactMe(submission);
+		if (err) { showToast(err, 'error'); return; }
+		await submitWithQueue(submission, 'Thanks — we\'ll be in touch.');
+	}
+
+	async function onPreOrderSubmit(e) {
+		e.preventDefault();
+		const submission = buildPreOrderSubmission();
+		const err = validatePreOrder(submission);
+		if (err) { showToast(err, 'error'); return; }
+		const successMsg = subtier === 'retailer_quote'
+			? 'Quote received — Pete will follow up shortly.'
+			: 'Submitted — tap your card on the Square Terminal.';
+		await submitWithQueue(submission, successMsg);
+	}
+
+	async function submitWithQueue(submission, successMessage) {
+		try {
+			await enqueue(submission);
+		} catch (qErr) {
+			console.error('enqueue failed', qErr);
+			showToast('Could not save locally — please try again', 'error');
+			return;
+		}
+		showToast(successMessage + (navigator.onLine ? '' : ' (will sync when online)'), 'success');
+		resetAll();
+		drainQueue();
+		if (isKiosk) {
+			setTimeout(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, 200);
+		}
+	}
+
+	// ---- Sync queue ----
 	let draining = false;
 	async function drainQueue() {
-		if (draining) return;
-		if (!navigator.onLine) { updateBadge(); return; }
+		if (draining || !navigator.onLine) { updateBadge(); return; }
 		draining = true;
 		try {
 			const items = await listQueue();
@@ -271,11 +424,10 @@
 					if (resp.ok) {
 						await removeFromQueue(payload.clientSubmissionId);
 					} else if (resp.status >= 400 && resp.status < 500) {
-						// Permanent failure (validation, etc) — drop it so we don't retry forever.
 						await removeFromQueue(payload.clientSubmissionId);
 						console.warn('Dropped invalid submission', payload.clientSubmissionId, resp.status);
 					} else {
-						break; // 5xx — stop draining, try again later
+						break;
 					}
 				} catch (err) {
 					console.warn('Network error draining queue', err);
@@ -292,62 +444,18 @@
 		const items = await listQueue();
 		const badge = $('sync-badge');
 		const count = items.length;
+		const label = badge.querySelector('.sync-label');
 		if (count === 0 && navigator.onLine) {
-			badge.dataset.state = 'synced';
-			badge.querySelector('.sync-label').textContent = 'Synced';
+			badge.dataset.state = 'synced'; label.textContent = 'Synced';
 		} else if (count === 0 && !navigator.onLine) {
-			badge.dataset.state = 'offline';
-			badge.querySelector('.sync-label').textContent = 'Offline';
+			badge.dataset.state = 'offline'; label.textContent = 'Offline';
 		} else {
-			badge.dataset.state = 'pending';
-			badge.querySelector('.sync-label').textContent = count + ' pending';
+			badge.dataset.state = 'pending'; label.textContent = count + ' pending';
 		}
 		badge.hidden = false;
 	}
 
-	// ---- Submit handler ----
-	async function onSubmit(e) {
-		e.preventDefault();
-		const submission = buildSubmission();
-		const err = validateForm(submission);
-		if (err) {
-			showToast(err, 'error');
-			return;
-		}
-
-		const btn = $('submit-btn');
-		btn.disabled = true;
-
-		// Always queue locally first — durability across reloads + offline.
-		try {
-			await enqueue(submission);
-		} catch (qErr) {
-			console.error('Failed to enqueue', qErr);
-			showToast('Could not save locally — please try again', 'error');
-			btn.disabled = false;
-			return;
-		}
-
-		// Show success immediately (even if we're offline — sync happens later).
-		const tierMsg = {
-			interest: 'Thanks! We\'ll be in touch.',
-			invoice: 'Thanks! Watch your email for the Square invoice.',
-			pay_now: 'Submitted — tap your card on the Square Terminal.',
-		}[submission.tier];
-		showToast(tierMsg + (navigator.onLine ? '' : ' (will sync when online)'), 'success');
-
-		resetForm();
-
-		// Try to drain right away.
-		drainQueue();
-
-		// In kiosk mode, briefly disable the form, then auto-reset for next person.
-		if (isKiosk) {
-			setTimeout(() => { $('customerName').focus(); }, 800);
-		}
-	}
-
-	// ---- Service worker registration (only for /preorder/) ----
+	// ---- Service worker ----
 	function registerSw() {
 		if (!('serviceWorker' in navigator)) return;
 		navigator.serviceWorker.register('/sw.js').catch((err) => {
@@ -355,29 +463,36 @@
 		});
 	}
 
-	// ---- Kiosk mode ----
 	function applyKiosk() {
-		if (!isKiosk) return;
-		document.body.classList.add('kiosk-mode');
+		if (isKiosk) document.body.classList.add('kiosk-mode');
+	}
+
+	function escapeHtml(s) {
+		return String(s)
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#39;');
 	}
 
 	// ---- Init ----
-	document.addEventListener('DOMContentLoaded', () => {
+	document.addEventListener('DOMContentLoaded', async () => {
 		applyKiosk();
-		renderTiles();
-		bindTiers();
-		updateCart();
-		$('preorder-form').addEventListener('submit', onSubmit);
+		await loadCatalog();
+		renderProductCheckboxes();
+		renderProductRows();
+		bindTierSelectors();
+		$('contact-form').addEventListener('submit', onContactMeSubmit);
+		$('preorder-form').addEventListener('submit', onPreOrderSubmit);
 		registerSw();
 		updateBadge();
-		// Try to drain the queue on load, online, and visibility return.
 		drainQueue();
-		window.addEventListener('online', () => { drainQueue(); });
-		window.addEventListener('offline', () => { updateBadge(); });
+		window.addEventListener('online', () => drainQueue());
+		window.addEventListener('offline', () => updateBadge());
 		document.addEventListener('visibilitychange', () => {
 			if (!document.hidden) drainQueue();
 		});
-		// Belt-and-suspenders periodic drain (every 30s while page is open).
-		setInterval(() => { drainQueue(); }, 30000);
+		setInterval(() => drainQueue(), 30000);
 	});
 })();
