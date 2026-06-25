@@ -3,7 +3,7 @@
  *
  * Top-level tier: Customer vs Retailer.
  *   Customer:
- *     - "Pre-Order Now"            → tier='direct_pay_now' (Terminal, FULL amount)
+ *     - "Pre-Order Now"            → tier='direct_pay_now' (Square invoice emailed to customer)
  *     - "Notify Me When Available" → tier='contact_me'     (product checkboxes)
  *   Retailer:                       → tier='retailer_quote' (cart at MSRP, no order)
  *
@@ -351,7 +351,7 @@
 		const has = Array.from(customerCart.values()).some((q) => q > 0);
 		$('cu-submit').disabled = !has;
 		$('cu-hint').textContent = has
-			? 'Submit — then tap your card on the Square Terminal.'
+			? 'Submit — we’ll email you a secure Square invoice to complete your order.'
 			: 'Pick at least one product above.';
 	}
 
@@ -492,6 +492,61 @@
 		updateAllSubmitStates();
 	}
 
+	// ---- Thank-you modal (customer pre-order) ----
+	const THANKS_AUTOCLOSE_MS = 30000;
+	let thanksAutocloseTimer = null;
+	let thanksCountdownTimer = null;
+
+	function openThanksModal() {
+		const modal = $('thanks-modal');
+		if (!modal) return;
+		modal.hidden = false;
+		document.body.classList.add('thanks-modal-open');
+		const closeBtn = $('thanks-modal-close');
+		if (closeBtn) closeBtn.focus();
+
+		let remaining = Math.round(THANKS_AUTOCLOSE_MS / 1000);
+		const note = $('thanks-modal-autoclose');
+		const renderNote = () => {
+			if (note) note.textContent = `Closing in ${remaining}s…`;
+		};
+		renderNote();
+
+		clearTimeout(thanksAutocloseTimer);
+		clearInterval(thanksCountdownTimer);
+		thanksCountdownTimer = setInterval(() => {
+			remaining -= 1;
+			if (remaining <= 0) {
+				clearInterval(thanksCountdownTimer);
+				return;
+			}
+			renderNote();
+		}, 1000);
+		thanksAutocloseTimer = setTimeout(closeThanksModal, THANKS_AUTOCLOSE_MS);
+	}
+
+	function closeThanksModal() {
+		const modal = $('thanks-modal');
+		if (!modal) return;
+		clearTimeout(thanksAutocloseTimer);
+		clearInterval(thanksCountdownTimer);
+		thanksAutocloseTimer = null;
+		thanksCountdownTimer = null;
+		modal.hidden = true;
+		document.body.classList.remove('thanks-modal-open');
+	}
+
+	function bindThanksModal() {
+		const modal = $('thanks-modal');
+		if (!modal) return;
+		modal.addEventListener('click', (e) => {
+			if (e.target.closest('[data-thanks-close]')) closeThanksModal();
+		});
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape' && !modal.hidden) closeThanksModal();
+		});
+	}
+
 	// ---- Submit handlers ----
 	async function onNotifyMeSubmit(e) {
 		e.preventDefault();
@@ -506,7 +561,16 @@
 		const submission = buildCustomerPreOrderSubmission();
 		const err = validateCustomerPreOrder(submission);
 		if (err) { showToast(err, 'error'); return; }
-		await submitWithQueue(submission, 'Submitted — tap your card on the Square Terminal.');
+		try {
+			await enqueue(submission);
+		} catch (qErr) {
+			console.error('enqueue failed', qErr);
+			showToast('Could not save locally — please try again', 'error');
+			return;
+		}
+		resetAll();
+		openThanksModal();
+		drainQueue();
 	}
 
 	async function onRetailerSubmit(e) {
@@ -607,6 +671,7 @@
 		renderProductRows('product-rows-customer', customerCart, true,  false);
 		renderProductRows('product-rows-retailer', retailerCart, false, true);
 		bindTierSelectors();
+		bindThanksModal();
 		$('notify-form').addEventListener('submit', onNotifyMeSubmit);
 		$('customer-form').addEventListener('submit', onCustomerPreOrderSubmit);
 		$('retailer-form').addEventListener('submit', onRetailerSubmit);

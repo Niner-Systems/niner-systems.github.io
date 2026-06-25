@@ -106,7 +106,7 @@ layout: default
 						</div>
 
 						<div class="preorder-submit-row">
-							<button type="submit" class="cta-button primary" id="cu-submit" disabled>Buy now</button>
+							<button type="submit" class="cta-button primary" id="cu-submit" disabled>Submit Order</button>
 							<p class="preorder-form-hint" id="cu-hint">Pick at least one product above.</p>
 						</div>
 					</form>
@@ -222,6 +222,16 @@ layout: default
 
 		</div>
 	</section>
+</div>
+
+<div class="preorder-thanks-modal" id="thanks-modal" hidden role="dialog" aria-modal="true" aria-labelledby="thanks-modal-title">
+	<div class="preorder-thanks-modal-backdrop" data-thanks-close></div>
+	<div class="preorder-thanks-modal-content">
+		<h3 id="thanks-modal-title">Thank you for your order!</h3>
+		<p>We've received your pre-order. You'll get a confirmation email shortly with a secure Square invoice to complete payment.</p>
+		<button type="button" class="cta-button primary" id="thanks-modal-close" data-thanks-close>Close</button>
+		<p class="preorder-thanks-modal-autoclose" id="thanks-modal-autoclose"></p>
+	</div>
 </div>
 
 <div class="sync-badge" id="sync-badge" data-state="synced" hidden>
