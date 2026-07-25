@@ -3,6 +3,8 @@
     link: /usb2ga/
   - name: USB2Lemo
     link: /usb2lemo/
+  - name: GA2DSub
+    link: /ga2dsub/
   - name: Toolbar App (Free)
     link: /downloads/toolbar/
 - links:

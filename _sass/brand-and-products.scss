@@ -17,6 +17,12 @@ $gray-light:   #ccc;
 // Generic CTA button used across product pages and the homepage
 // ----------------------------------------------------------------------------
 
+.cta-row.centered,
+.product-hero .cta-row.centered {
+	justify-content: center;
+	text-align: center;
+}
+
 .cta-row {
 	display: flex;
 	flex-wrap: wrap;
@@ -236,6 +242,38 @@ $gray-light:   #ccc;
 	}
 }
 
+.product-groups {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 40px;
+	align-items: start;
+
+	@media #{$mid-point} {
+		grid-template-columns: 1fr 1fr;
+	}
+}
+
+.product-group-title {
+	color: $sky-deep;
+	font-size: 1.15em;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	margin: 0 0 4px 0;
+}
+
+.product-group-sub {
+	color: $gray-mid;
+	margin: 0 0 20px 0;
+	font-size: 0.95em;
+}
+
+.product-group-cards {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 30px;
+}
+
 .product-card {
 	display: flex;
 	flex-direction: column;
@@ -427,6 +465,11 @@ $gray-light:   #ccc;
 	flex: 1;
 	display: flex;
 	justify-content: center;
+
+	img.bare {
+		background: none;
+		border-radius: 0;
+	}
 
 	img {
 		max-width: 380px;

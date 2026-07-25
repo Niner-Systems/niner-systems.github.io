@@ -78,6 +78,20 @@ section + section {
 	padding-top: 0;
 }
 
+.content.tight-sections section {
+	padding: 40px 0;
+}
+.content.tight-sections section + section {
+	padding-top: 0;
+}
+.content.tight-sections .flex .image img {
+	max-height: 400px;
+	width: auto;
+	max-width: 100%;
+	display: block;
+	margin: 0 auto;
+}
+
 .subtext {
 	margin-top: 10px;
 	text-align: center;

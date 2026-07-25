@@ -8,6 +8,9 @@
     - name: USB2Lemo
       sublabel: For 6-Pin Lemo Plugs
       link: /usb2lemo/
+    - name: GA2DSub
+      sublabel: For Real Aircraft &mdash; GA Dual-Plug to DE-9 (aka. "DB-9")
+      link: /ga2dsub/
     - name: Toolbar App (Free)
       sublabel: Sidetone &amp; VOX for Mac and Windows
       link: /downloads/toolbar/

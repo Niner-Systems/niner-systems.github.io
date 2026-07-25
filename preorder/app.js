@@ -49,6 +49,10 @@
 		],
 	};
 
+	// Product lines temporarily hidden from the public preorder page.
+	// Backend catalog may still contain them; frontend simply doesn't render them.
+	const HIDDEN_PRODUCT_LINES = new Set(['GA2Pigtail', 'JackSolderHolder']);
+
 	// ---- State ----
 	let catalog = FALLBACK_CATALOG;
 	// Separate carts for Customer Pre-Order vs Retailer so switching between
@@ -171,7 +175,9 @@
 	function renderProductCheckboxes() {
 		const container = $('product-checkbox-list');
 		container.innerHTML = '';
-		catalog.products.forEach((p) => {
+		catalog.products
+			.filter(p => p.preorderable && !p.retailerOnly && !HIDDEN_PRODUCT_LINES.has(p.productLine))
+			.forEach((p) => {
 			const id = `pc-${p.productLine}`;
 			const wrapper = document.createElement('label');
 			wrapper.className = 'product-checkbox';
@@ -205,7 +211,7 @@
 		const container = $(containerId);
 		container.innerHTML = '';
 		const discountPct = (applyDiscount && catalog.customerDiscountPct) ? catalog.customerDiscountPct : 0;
-		const preorderableProducts = catalog.products.filter(p => p.preorderable && (includeRetailerOnly || !p.retailerOnly));
+		const preorderableProducts = catalog.products.filter(p => p.preorderable && (includeRetailerOnly || !p.retailerOnly) && !HIDDEN_PRODUCT_LINES.has(p.productLine));
 		preorderableProducts.forEach((p) => {
 			const variants = catalog.items
 				.filter(i => i.productLine === p.productLine && (includeRetailerOnly || !i.retailerOnly))

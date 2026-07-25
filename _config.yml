@@ -83,6 +83,7 @@ exclude:
   - Gemfile.lock
   - README.md
   - LICENCE
+  - .claude
 
 # -----------
 # CloudCannon
