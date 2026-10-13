@@ -1,0 +1,103 @@
+---
+title: Order — GA2DSub, USB2GA & USB2Lemo
+description: Order GA2DSub aircraft PCB packages, USB2GA, and USB2Lemo adapters direct from 9er Systems.
+layout: default
+---
+<section class="preorder-hero">
+	<div class="preorder-hero-overlay"></div>
+	<div class="container preorder-hero-inner">
+		<p class="product-eyebrow">9er Systems</p>
+		<h1>Order <strong>Direct</strong></h1>
+		<p class="subtext">GA2DSub aircraft PCB packages, USB2GA and USB2Lemo adapters &mdash; shipped from Knoxville, TN.</p>
+	</div>
+</section>
+
+<div class="content">
+	<section class="preorder-section">
+		<div class="container">
+
+			<h2 class="preorder-section-title">Pick your products</h2>
+			<p class="preorder-section-sub">Tap + or &minus; to adjust quantity. Tap the number to type directly.</p>
+
+			<div class="product-rows" id="product-rows" aria-busy="true">
+				<!-- populated by app.js; loader is replaced on render -->
+				<div class="product-rows-loading" role="status">
+					<span class="product-rows-spinner" aria-hidden="true"></span>
+					<span>Loading products&hellip;</span>
+				</div>
+			</div>
+
+			<div class="cart-summary" id="cart-summary" hidden>
+				<div class="cart-summary-line cart-summary-total"><span>Total</span><span id="cart-total">$0.00</span></div>
+			</div>
+
+			<h2 class="preorder-section-title">Your info</h2>
+			<form id="order-form" class="preorder-form" novalidate>
+				<div class="form-row">
+					<label for="cu-name">Your name *</label>
+					<input type="text" id="cu-name" autocomplete="name" required>
+				</div>
+				<div class="form-row">
+					<label for="cu-email">Email *</label>
+					<input type="email" id="cu-email" autocomplete="email" inputmode="email" required>
+				</div>
+
+				<fieldset class="ship-fieldset">
+					<legend>Shipping address</legend>
+					<div class="form-row">
+						<label for="cu-ship-line1">Street address *</label>
+						<input type="text" id="cu-ship-line1" autocomplete="address-line1">
+					</div>
+					<div class="form-row">
+						<label for="cu-ship-line2">Apt / suite</label>
+						<input type="text" id="cu-ship-line2" autocomplete="address-line2">
+					</div>
+					<div class="form-row-grid">
+						<div class="form-row">
+							<label for="cu-ship-city">City *</label>
+							<input type="text" id="cu-ship-city" autocomplete="address-level2">
+						</div>
+						<div class="form-row">
+							<label for="cu-ship-state">State *</label>
+							<input type="text" id="cu-ship-state" autocomplete="address-level1" maxlength="2">
+						</div>
+						<div class="form-row">
+							<label for="cu-ship-zip">ZIP *</label>
+							<input type="text" id="cu-ship-zip" autocomplete="postal-code" inputmode="numeric">
+						</div>
+					</div>
+				</fieldset>
+
+				<div class="form-row">
+					<label for="cu-notes">Notes <span class="optional-label">(optional)</span></label>
+					<textarea id="cu-notes" rows="3" placeholder="Aircraft type, mounting plans, questions"></textarea>
+				</div>
+
+				<div class="preorder-submit-row">
+					<button type="submit" class="cta-button primary" id="cu-submit" disabled>Submit Order</button>
+					<p class="preorder-form-hint" id="cu-hint">Pick at least one product above.</p>
+				</div>
+			</form>
+
+			<div class="preorder-toast" id="toast" hidden></div>
+
+		</div>
+	</section>
+</div>
+
+<div class="preorder-thanks-modal" id="thanks-modal" hidden role="dialog" aria-modal="true" aria-labelledby="thanks-modal-title">
+	<div class="preorder-thanks-modal-backdrop" data-thanks-close></div>
+	<div class="preorder-thanks-modal-content">
+		<h3 id="thanks-modal-title">Thank you for your order!</h3>
+		<p>We've received your order. You'll get a confirmation email shortly with a secure Square invoice to complete payment.</p>
+		<button type="button" class="cta-button primary" id="thanks-modal-close" data-thanks-close>Close</button>
+		<p class="preorder-thanks-modal-autoclose" id="thanks-modal-autoclose"></p>
+	</div>
+</div>
+
+<div class="sync-badge" id="sync-badge" data-state="synced" hidden>
+	<span class="sync-dot"></span>
+	<span class="sync-label">Synced</span>
+</div>
+
+<script src="{{ site.baseurl }}/order/app.js" defer></script>

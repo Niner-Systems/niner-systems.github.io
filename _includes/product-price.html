@@ -1,0 +1,4 @@
+{% comment %}Visible price for product heroes; same numbers as the Product JSON-LD.{% endcomment %}
+<p class="product-price">
+	{% if page.product.price_note %}From {% endif %}${{ page.product.msrp }} <span class="product-price-label">{% if page.product.price_note %}&middot; {{ page.product.price_note }}{% else %}MSRP{% endif %}</span>
+</p>

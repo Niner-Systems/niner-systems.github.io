@@ -441,6 +441,19 @@ $gray-light:   #ccc;
 	}
 
 	.product-eyebrow { color: color.adjust($brand-orange, $lightness: 5%); }
+
+	.product-price {
+		color: #fff;
+		font-size: 1.6em;
+		font-weight: 700;
+		margin: 0 0 18px 0;
+	}
+
+	.product-price-label {
+		font-size: 0.55em;
+		font-weight: 400;
+		color: rgba(255, 255, 255, 0.85);
+	}
 }
 
 .product-hero-inner {

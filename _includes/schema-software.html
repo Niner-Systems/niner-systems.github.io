@@ -1,0 +1,21 @@
+{% comment %}SoftwareApplication JSON-LD for the USB2x Toolbar, driven by _data/toolbar.yml.{% endcomment %}
+{% assign toolbar = site.data.toolbar %}
+<script type="application/ld+json">
+{
+	"@context": "https://schema.org",
+	"@type": "SoftwareApplication",
+	"@id": "{{ page.url | absolute_url }}#software",
+	"name": "9er Systems USB2x Toolbar",
+	"description": {{ page.description | jsonify }},
+	"url": "{{ page.url | absolute_url }}",
+	"applicationCategory": "UtilitiesApplication",
+	"operatingSystem": "macOS, Windows 10, Windows 11",
+	"softwareVersion": {{ toolbar.version | jsonify }},
+	"releaseNotes": "{{ '/downloads/toolbar/changelog/' | absolute_url }}",
+	"downloadUrl": [{{ toolbar.mac.url | jsonify }}, {{ toolbar.windows.url | jsonify }}{% if toolbar.windows.store_url %}, {{ toolbar.windows.store_url | jsonify }}{% endif %}],
+	"screenshot": ["{{ '/images/toolbar/screenshot-mac.png' | absolute_url }}", "{{ '/images/toolbar/screenshot-windows.png' | absolute_url }}"],
+	"isAccessibleForFree": true,
+	"offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+	"publisher": { "@id": "{{ '/' | absolute_url }}#organization" }
+}
+</script>

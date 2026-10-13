@@ -1,7 +1,9 @@
 ---
 date: 2023-07-08
 title: USB2GA FAQ
+description: Headset compatibility, power, and setup questions about the 9er Systems USB2GA and USB2Lemo aviation headset to USB adapters.
 layout: page
+faq_schema: true
 ---
 
 [Does this adapter work with my headset?](#does-this-adapter-work-with-my-headset)  
@@ -35,7 +37,9 @@ Form factor is always an interesting choice. When looking at the existing produc
 We took a chance at being different in this case. We tested a few different size cases, and while we could fit it in a smaller case and of course we could have gone larger - we felt this size (2"x3"x1.5") was a great middle ground. It's small enough that you can take it with your laptop, but large enough that when mounted it provides a sturdy platform for plugging in and unplugging your headset where you do not have to hold the adapter at the same time. 
 
 ## Do you have one for helicopter (U174), Panel Power, or XLR (Airbus) plugs? ##
-Short answer, no. It is not that we don't love you all, we do, but - yes of course there's a but - we had to go with what we thought would have the most adoption. Maybe we are wrong here, but our thought is that the majority of purchasers will be those who are working on their ASEL PPL or Sport licenses and/or IFR who want more practice with [PilotEdge.net](https://pilotedge.net). We assume gamers will likely have computer specific headsets instead, so the market is not huge. You can still use us though, but you unfortunately need an adapter.
+**Panel Power (6-pin Lemo): yes** &mdash; that's our [USB2Lemo](/usb2lemo/) adapter. One thing to be clear about: USB2Lemo does **not** supply panel power to the headset the way an aircraft panel does. Panel power is what runs a headset's ANR (active noise reduction) and Bluetooth features, so those will still need the headset's own batteries. What USB2Lemo does supply is the +12V that aviation headset microphones require. The USB2Lemo adapter itself does not need batteries &mdash; it is powered by the USB port.
+
+**Helicopter (U174) and XLR (Airbus): no.** It is not that we don't love you all, we do, but - yes of course there's a but - we had to go with what we thought would have the most adoption. Maybe we are wrong here, but our thought is that the majority of purchasers will be those who are working on their ASEL PPL or Sport licenses and/or IFR who want more practice with [PilotEdge.net](https://pilotedge.net). We assume gamers will likely have computer specific headsets instead, so the market is not huge. You can still use us though, but you unfortunately need an adapter.
 
 ## Does this need batteries? ##
 No. It obtains all the power it needs via the USB port it is connected to.

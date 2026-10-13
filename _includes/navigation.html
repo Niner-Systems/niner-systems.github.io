@@ -1,6 +1,6 @@
 <nav>
 	<a class="nav-toggle" id="open-nav" href="#">&#9776;</a>
-	<a class="editor-link btn" href="_data/navigation.yml" class="btn"><strong>&#9998;</strong> Edit navigation</a>
+	{% unless site.hide_editor_links %}<a class="editor-link btn" href="_data/navigation.yml" class="btn"><strong>&#9998;</strong> Edit navigation</a>{% endunless %}
 	{% for link in site.data.navigation %}
 		{% assign class = "" %}
 		{% if link.highlight %}

@@ -1,0 +1,47 @@
+---
+layout: null
+sitemap: false
+permalink: /llms.txt
+---
+{%- assign company = site.data.company -%}
+{%- assign products = site.pages | where_exp: "p", "p.product" | sort: "url" -%}
+# {{ company.name }}
+
+> {{ company.name }} is {{ company.slogan | downcase }} based in {{ company.locality }}, {{ company.region }}, USA. It designs, assembles, and supports aviation headset adapters that connect general aviation (GA) pilot headsets to computers and tablets for flight simulation, a PCB for wiring headset jacks into real aircraft panels, and a free desktop app (USB2x Toolbar) for sidetone and VOX.
+
+- Founded by {{ company.founders | join: " and " }}; every adapter is assembled, tested, and packaged in {{ company.locality }}, {{ company.region }}.
+- Contact: {{ company.email }} or {{ "/contact/" | absolute_url }}
+
+## Products
+{% for p in products %}
+### {{ p.product.short_name }}
+
+{{ p.description }}
+
+- Product page: {{ p.url | absolute_url }}
+- What it connects: {{ p.product.connects }}
+- Who it's for: {{ p.product.audience }}
+- Price: {% if p.product.price_note %}from ${{ p.product.msrp }} ({{ p.product.price_note }}){% else %}${{ p.product.msrp }} MSRP{% endif %}
+- Where to buy: {% for offer in p.product.offers %}{% if offer.seller == company.name %}{% if forloop.first %}direct from {{ company.name }} at {{ offer.url | absolute_url }}{% endif %}{% else %}{{ offer.seller }} ({{ offer.url }}){% unless forloop.last %}, {% endunless %}{% endif %}{% endfor %}
+{% endfor %}
+### USB2x Toolbar (free app)
+
+Free desktop app for USB2GA and USB2Lemo: sidetone (hear your own voice), voice-activated VOX, and input/output level control. macOS (Universal) and Windows 10/11. Current version {{ site.data.toolbar.version }}.
+
+- Download page: {{ "/downloads/toolbar/" | absolute_url }}
+- Microsoft Store: {{ site.data.toolbar.windows.store_url }}
+- Release notes: {{ "/downloads/toolbar/changelog/" | absolute_url }}
+
+## Support
+
+- [USB2GA / USB2Lemo FAQ]({{ "/usb2ga/faq/" | absolute_url }}): headset compatibility, power (no batteries needed), and multi-adapter setups
+- [Contact]({{ "/contact/" | absolute_url }})
+- [Reseller support]({{ "/reseller_support/" | absolute_url }})
+
+## Optional
+
+- [About 9er Systems]({{ "/about/" | absolute_url }})
+- [Order direct]({{ "/order/" | absolute_url }})
+- [Privacy policy]({{ "/privacy/" | absolute_url }})
+{% for link in company.same_as %}- {{ link }}
+{% endfor %}

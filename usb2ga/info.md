@@ -2,6 +2,7 @@
 date: 2023-07-08
 title: USB2GA Information
 layout: page
+sitemap: false
 ---
 
 ## Getting Started

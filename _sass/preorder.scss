@@ -261,6 +261,34 @@ $gray-light:   #ccc;
 	gap: 28px;
 }
 
+.product-rows-loading {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 14px;
+	min-height: 220px;
+	color: $gray-mid;
+	font-size: 0.95em;
+}
+
+.product-rows-spinner {
+	width: 36px;
+	height: 36px;
+	border: 3px solid #e6e6e6;
+	border-top-color: $brand-orange;
+	border-radius: 50%;
+	animation: productRowsSpin 0.8s linear infinite;
+
+	@media (prefers-reduced-motion: reduce) {
+		animation-duration: 2.4s;
+	}
+}
+
+@keyframes productRowsSpin {
+	to { transform: rotate(360deg); }
+}
+
 .product-row {
 	background: #fff;
 	border: 1px solid #e6e6e6;

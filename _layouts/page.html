@@ -13,6 +13,7 @@ layout: default
 				<p class="subtext">{{ page.description }}</p>
 			{% endif %}
 			{{ content }}
+			{% if page.faq_schema %}{% include schema-faq.html content=content %}{% endif %}
 			{% if page.postcontent %}
 			<p class="subtext">{{ page.postcontent }}</p>
 			{% endif %}

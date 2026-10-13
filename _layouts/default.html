@@ -9,6 +9,9 @@
 
 		{% seo %}
 		{% feed_meta %}
+		{% include schema-organization.html %}
+		{% if page.product %}{% include schema-product.html %}{% endif %}
+		{% if page.software_schema %}{% include schema-software.html %}{% endif %}
 		<link rel="manifest" href="/site.webmanifest" crossorigin="use-credentials" />
 		<link rel="stylesheet" href="{{ site.baseurl }}/css/screen.css">
 		<link rel="icon" type="image/png" href="{{ site.baseurl }}/favicon.svg">
@@ -41,7 +44,7 @@
 		{{ content }}
 		<footer>
 			<div class="container">
-				<p class="editor-link"><a href="cloudcannon:collections/_data/footer.yml" class="btn"><strong>&#9998;</strong> Edit footer</a></p>
+				{% unless site.hide_editor_links %}<p class="editor-link"><a href="cloudcannon:collections/_data/footer.yml" class="btn"><strong>&#9998;</strong> Edit footer</a></p>{% endunless %}
 				<div class="footer-columns">
 					<ul >
 						<div class="company-name"><a href="{{ site.baseurl }}/"><img src="{{ site.baseurl }}/images/logo-aviation-audio-horizontal-white.svg" alt="9er Systems — An Aviation Audio Company" width="480" height="50" /></a></div>

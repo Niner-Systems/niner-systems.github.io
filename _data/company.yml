@@ -1,0 +1,18 @@
+# Company facts used by the Organization JSON-LD (every page) and /llms.txt.
+name: 9er Systems
+legal_name: 9er Systems
+slogan: An Aviation Audio Company
+email: info@9ersystems.com
+logo: /images/logo-aviation-audio-stacked-black.png
+locality: Knoxville
+region: TN
+country: US
+founders:
+  - Pete Laurina
+  - John Carlson
+same_as:
+  - https://facebook.com/9ersystems/
+  - https://www.youtube.com/@9erSystems
+  - https://www.youtube.com/@Pete_9erSystems
+  # TODO: replace with the Amazon brand store URL (amazon.com/stores/...) once one exists.
+  - https://www.amazon.com/s?k=9er+Systems
