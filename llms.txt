@@ -5,12 +5,14 @@ permalink: /llms.txt
 ---
 {%- assign company = site.data.company -%}
 {%- assign products = site.pages | where_exp: "p", "p.product" | sort: "url" -%}
+{%- assign questions = site.faq | sort: "order" -%}
 # {{ company.name }}
 
 > {{ company.name }} is {{ company.slogan | downcase }} based in {{ company.locality }}, {{ company.region }}, USA. It designs, assembles, and supports aviation headset adapters that connect general aviation (GA) pilot headsets to computers and tablets for flight simulation, a PCB for wiring headset jacks into real aircraft panels, and a free desktop app (USB2x Toolbar) for sidetone and VOX.
 
-- Founded by {{ company.founders | join: " and " }}; every adapter is assembled, tested, and packaged in {{ company.locality }}, {{ company.region }}.
+- Founded by {{ site.staff_members | map: "name" | join: " and " }}; every adapter is assembled, tested, and packaged in {{ company.locality }}, {{ company.region }}.
 - Contact: {{ company.email }} or {{ "/contact/" | absolute_url }}
+- Full details (specifications and every FAQ answer in one file): {{ "/llms-full.txt" | absolute_url }}
 
 ## Products
 {% for p in products %}
@@ -32,9 +34,13 @@ Free desktop app for USB2GA and USB2Lemo: sidetone (hear your own voice), voice-
 - Microsoft Store: {{ site.data.toolbar.windows.store_url }}
 - Release notes: {{ "/downloads/toolbar/changelog/" | absolute_url }}
 
+## FAQ
+
+- [All questions]({{ "/faq/" | absolute_url }})
+{% for q in questions %}- [{{ q.title }}]({{ q.url | absolute_url }}): {{ q.short_answer }}
+{% endfor %}
 ## Support
 
-- [USB2GA / USB2Lemo FAQ]({{ "/usb2ga/faq/" | absolute_url }}): headset compatibility, power (no batteries needed), and multi-adapter setups
 - [Contact]({{ "/contact/" | absolute_url }})
 - [Reseller support]({{ "/reseller_support/" | absolute_url }})
 

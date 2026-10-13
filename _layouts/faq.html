@@ -1,0 +1,32 @@
+---
+layout: default
+---
+{% assign questions = site.faq | sort: "order" %}
+<div class="content">
+	<section class="page faq-article">
+		<div class="text-container">
+			<p class="faq-back"><a href="{{ site.baseurl }}/faq/">&larr; All questions</a></p>
+			<h1>{{ page.title }}</h1>
+			<p class="faq-short-answer"><strong>Short answer:</strong> {{ page.short_answer }}</p>
+
+			{{ content }}
+
+			{% if page.products %}
+			<p class="faq-products">
+				Applies to:
+				{% for slug in page.products %}{% assign product_page = site.pages | where: "url", slug | first %}<a href="{{ site.baseurl }}{{ slug }}">{{ product_page.product.short_name | default: product_page.title }}</a>{% unless forloop.last %}, {% endunless %}{% endfor %}
+			</p>
+			{% endif %}
+
+			<div class="faq-more">
+				<h2>More questions</h2>
+				<ul>
+					{% for q in questions %}{% if q.url != page.url %}
+					<li><a href="{{ site.baseurl }}{{ q.url }}">{{ q.title }}</a></li>
+					{% endif %}{% endfor %}
+				</ul>
+				<p>Still have a question? <a href="{{ site.baseurl }}/contact/">Contact us</a> &mdash; it goes straight to both founders.</p>
+			</div>
+		</div>
+	</section>
+</div>

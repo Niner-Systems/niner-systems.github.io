@@ -1,0 +1,16 @@
+{% comment %}Specifications table from the page's `product.specs` front matter (also used in the Product JSON-LD and llms-full.txt).{% endcomment %}
+<section class="product-specs" id="specs">
+	<div class="container">
+		<h2 class="center-text"><strong>{{ page.product.short_name }}</strong> Specifications</h2>
+		<table class="spec-table">
+			<tbody>
+				{% for spec in page.product.specs %}
+				<tr>
+					<th scope="row">{{ spec.name }}</th>
+					<td>{{ spec.value }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+</section>

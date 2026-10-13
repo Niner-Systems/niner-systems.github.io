@@ -1,0 +1,29 @@
+---
+title: FAQ — USB2GA, USB2Lemo &amp; Aviation Headset Audio
+description: Answers about connecting aviation headsets to a computer — headset compatibility, why aviation mics need +12V phantom power (mic bias), Lemo panel power, batteries, sidetone, and simulator setup.
+layout: default
+breadcrumb: FAQ
+faq_index: true
+---
+{% assign questions = site.faq | sort: "order" %}
+<div class="content">
+	<section class="page faq-index">
+		<div class="text-container">
+			<h1>Frequently Asked <strong>Questions</strong></h1>
+			<p class="subtext">Connecting an aviation headset to a computer, tablet, or simulator &mdash; and what our USB2GA and USB2Lemo adapters do about it.</p>
+
+			{% for q in questions %}
+			{% comment %}Collapsed for people; the short answers are still in the HTML for crawlers and AI.{% endcomment %}
+			<details class="faq-item">
+				<summary><h2>{{ q.title }}</h2></summary>
+				<div class="faq-item-body">
+					<p>{{ q.short_answer }}</p>
+					<p class="faq-read-more"><a href="{{ site.baseurl }}{{ q.url }}">Read the full answer &rarr;</a></p>
+				</div>
+			</details>
+			{% endfor %}
+
+			<p class="faq-contact">Don&rsquo;t see your question? <a href="{{ site.baseurl }}/contact/">Contact us</a>.</p>
+		</div>
+	</section>
+</div>

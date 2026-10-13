@@ -1,0 +1,18 @@
+{% comment %}
+	BreadcrumbList JSON-LD: Home > [breadcrumb_parent] > breadcrumb.
+	Set `breadcrumb: <name>` in front matter (and optionally
+	`breadcrumb_parent: { name, url }`) to enable it on a page.
+	`breadcrumb: true` uses the page title.
+{% endcomment %}
+{% assign crumb = page.breadcrumb %}{% if crumb == true %}{% assign crumb = page.title %}{% endif %}
+<script type="application/ld+json">
+{
+	"@context": "https://schema.org",
+	"@type": "BreadcrumbList",
+	"itemListElement": [
+		{ "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ '/' | absolute_url }}" },{% if page.breadcrumb_parent %}
+		{ "@type": "ListItem", "position": 2, "name": {{ page.breadcrumb_parent.name | jsonify }}, "item": "{{ page.breadcrumb_parent.url | absolute_url }}" },{% endif %}
+		{ "@type": "ListItem", "position": {% if page.breadcrumb_parent %}3{% else %}2{% endif %}, "name": {{ crumb | jsonify }}, "item": "{{ page.url | absolute_url }}" }
+	]
+}
+</script>

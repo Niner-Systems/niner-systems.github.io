@@ -3,6 +3,7 @@ date: 2024-02-20
 title: Thank you for your order
 layout: page
 sitemap: false
+noindex: true
 ---
 
 <!-- Google tag (gtag.js) -->

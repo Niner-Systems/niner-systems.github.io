@@ -1,0 +1,30 @@
+---
+title: Redirecting…
+layout: null
+sitemap: false
+permalink: /usb2ga/faq/
+---
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="robots" content="noindex">
+	<link rel="canonical" href="{{ '/faq/' | absolute_url }}">
+	<title>Redirecting…</title>
+	<script>
+		// Old single-page FAQ anchors -> the new per-question pages.
+		var map = {
+			'does-this-adapter-work-with-my-headset': 'headset-compatibility',
+			'what-does-the-adapter-dowhy-do-i-need-one': 'aviation-headset-mic-not-working-on-computer',
+			'why-did-you-put-it-in-a-2x3x15-plastic-box': 'why-a-box',
+			'do-you-have-one-for-helicopter-u174-panel-power-or-xlr-airbus-plugs': 'helicopter-u174-xlr-headsets',
+			'does-this-need-batteries': 'batteries',
+			'can-i-have-two-of-them-connected-to-one-computer': 'multiple-adapters'
+		};
+		var slug = map[location.hash.slice(1)];
+		location.replace('{{ site.baseurl }}/faq/' + (slug ? slug + '/' : ''));
+	</script>
+	<meta http-equiv="refresh" content="0;url={{ site.baseurl }}/faq/">
+</head>
+<body><p><a href="{{ site.baseurl }}/faq/">The FAQ has moved here.</a></p></body>
+</html>

@@ -102,6 +102,11 @@ section + section {
 	margin: 60px 0;
 }
 
+.page h1 {
+	text-align: center;
+	margin: 0 0 30px 0;
+}
+
 .page h2 {
 	text-align: center;
 }
@@ -187,4 +192,84 @@ blockquote:before {
 		}
 	}
 
+}
+
+// ----------------------------------------------------------------------------
+// FAQ index (/faq/) and per-question pages (_layouts/faq.html)
+// ----------------------------------------------------------------------------
+
+.faq-index, .faq-article {
+	h1 { font-size: 2em; }
+	h2 { text-align: left; }
+}
+
+.faq-index {
+	.faq-item {
+		border-bottom: 1px solid #ddd;
+
+		summary {
+			display: flex;
+			align-items: baseline;
+			gap: 12px;
+			padding: 14px 0;
+			cursor: pointer;
+			list-style: none;
+
+			&::-webkit-details-marker { display: none; }
+
+			// Chevron: points right when closed, down when open
+			&::before {
+				content: "\203A";
+				flex: 0 0 auto;
+				width: 0.8em;
+				font-size: 1.4em;
+				line-height: 1;
+				color: #2a4a78;
+				transition: transform 0.15s ease;
+			}
+
+			&:hover h2 { text-decoration: underline; }
+		}
+
+		&[open] summary::before { transform: rotate(90deg); }
+
+		h2 {
+			font-size: 1.15em;
+			margin: 0;
+		}
+
+		.faq-item-body {
+			padding: 0 0 16px calc(0.8em * 1.4 + 12px);
+		}
+
+		p { margin: 0 0 8px 0; }
+	}
+
+	.faq-contact { margin-top: 30px; }
+}
+
+.faq-article {
+	h1 { text-align: left; }
+
+	h2 {
+		font-size: 1.5em;
+		margin: 36px 0 12px 0;
+	}
+
+	.faq-back { margin: 0 0 20px 0; }
+
+	.faq-short-answer {
+		padding: 16px 20px;
+		background: #f3f5f9;
+		border-left: 4px solid #2a4a78;
+		margin: 0 0 24px 0;
+	}
+
+	.faq-products { margin-top: 30px; }
+
+	.faq-more {
+		margin-top: 40px;
+		padding-top: 10px;
+		border-top: 1px solid #ddd;
+	}
 }

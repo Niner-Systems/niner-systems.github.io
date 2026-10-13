@@ -1055,3 +1055,39 @@ body.smartscreen-modal-open { overflow: hidden; }
 	.nav-open .nav-dropdown .nav-dropdown-toggle { display: block; }
 	.nav-open .nav-dropdown .nav-dropdown-menu   { display: block; }
 }
+
+// ----------------------------------------------------------------------------
+// Product specifications table (_includes/product-specs.html)
+// ----------------------------------------------------------------------------
+
+.product-specs {
+	padding: 50px 0;
+}
+
+.spec-table {
+	width: 100%;
+	max-width: 760px;
+	margin: 0 auto;
+	border-collapse: collapse;
+	font-size: 0.95em;
+
+	th, td {
+		padding: 12px 14px;
+		border-bottom: 1px solid $gray-light;
+		text-align: left;
+		vertical-align: top;
+	}
+
+	th {
+		width: 34%;
+		color: $sky-deep;
+		font-weight: 700;
+	}
+
+	td { color: $ink; }
+
+	@media not all and #{$tablet} {
+		th, td { display: block; width: auto; }
+		th { border-bottom: 0; padding-bottom: 2px; }
+	}
+}

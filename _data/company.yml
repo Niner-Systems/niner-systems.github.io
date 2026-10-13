@@ -7,9 +7,17 @@ logo: /images/logo-aviation-audio-stacked-black.png
 locality: Knoxville
 region: TN
 country: US
-founders:
-  - Pete Laurina
-  - John Carlson
+# Direct orders (/order/). Used by the Offer + Organization JSON-LD, /llms-full.txt,
+# and the shipping-and-returns FAQ.
+shipping:
+  country: US
+  cost: 0 # included in the price
+  handling_days: [1, 2] # business days
+  transit_days: [2, 7] # business days; USPS Ground Advantage or UPS Ground Saver
+  carriers: USPS Ground Advantage or UPS Ground Saver
+returns:
+  days: 30
+  free_return_shipping: true # we provide a prepaid label
 same_as:
   - https://facebook.com/9ersystems/
   - https://www.youtube.com/@9erSystems

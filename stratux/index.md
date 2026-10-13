@@ -4,7 +4,7 @@ title: How to build your own Stratux
 layout: page
 ---
 
-# You do not have to be an engineer to build your own
+## You do not have to be an engineer to build your own
 
 These are the components I used to build my own, then helped a friend build their own.
 

@@ -6,12 +6,15 @@
 
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
+		{% if page.noindex %}<meta name="robots" content="noindex">{% endif %}
 
 		{% seo %}
 		{% feed_meta %}
 		{% include schema-organization.html %}
 		{% if page.product %}{% include schema-product.html %}{% endif %}
 		{% if page.software_schema %}{% include schema-software.html %}{% endif %}
+		{% if page.breadcrumb %}{% include schema-breadcrumb.html %}{% endif %}
+		{% if page.faq_index %}{% include schema-faq.html %}{% endif %}
 		<link rel="manifest" href="/site.webmanifest" crossorigin="use-credentials" />
 		<link rel="stylesheet" href="{{ site.baseurl }}/css/screen.css">
 		<link rel="icon" type="image/png" href="{{ site.baseurl }}/favicon.svg">

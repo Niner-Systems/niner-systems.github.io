@@ -1,0 +1,12 @@
+{% comment %}
+	MerchantReturnPolicy object for direct orders, from _data/company.yml `returns:`.
+	Used by the Organization and by direct (9er Systems) Offers.
+{% endcomment %}{% assign returns = site.data.company.returns %}{
+		"@type": "MerchantReturnPolicy",
+		"applicableCountry": {{ site.data.company.shipping.country | jsonify }},
+		"returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+		"merchantReturnDays": {{ returns.days }},
+		"returnMethod": "https://schema.org/ReturnByMail",
+		"returnFees": "https://schema.org/{% if returns.free_return_shipping %}FreeReturn{% else %}ReturnShippingFees{% endif %}",
+		"merchantReturnLink": "{{ '/faq/shipping-and-returns/' | absolute_url }}"
+	}

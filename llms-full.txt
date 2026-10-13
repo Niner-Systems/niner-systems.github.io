@@ -1,0 +1,62 @@
+---
+layout: null
+sitemap: false
+permalink: /llms-full.txt
+---
+{%- assign company = site.data.company -%}
+{%- assign products = site.pages | where_exp: "p", "p.product" | sort: "url" -%}
+{%- assign questions = site.faq | sort: "order" -%}
+# {{ company.name }} — full reference
+
+> {{ company.name }} is {{ company.slogan | downcase }} based in {{ company.locality }}, {{ company.region }}, USA. It designs, assembles, and supports aviation headset adapters that connect general aviation (GA) pilot headsets to computers and tablets for flight simulation, a PCB for wiring headset jacks into real aircraft panels, and a free desktop app (USB2x Toolbar) for sidetone and VOX. Summary version: {{ "/llms.txt" | absolute_url }}
+
+## Company
+
+- Name: {{ company.name }}
+- Location: {{ company.locality }}, {{ company.region }}, USA
+- Website: {{ "/" | absolute_url }}
+- Contact: {{ company.email }} or {{ "/contact/" | absolute_url }}
+{% for person in site.staff_members %}- Founder: {{ person.name }} — {{ person.position }}{% if person.linkedin %} ({{ person.linkedin }}){% endif %}
+{% endfor %}{% for link in company.same_as %}- Elsewhere: {{ link }}
+{% endfor %}
+## Products
+{% for p in products %}
+### {{ p.product.name }}
+
+{{ p.description }}
+
+- Product page: {{ p.url | absolute_url }}
+- SKU: {{ p.product.sku }}{% if p.product.gtin12 %} · UPC: {{ p.product.gtin12 }}{% endif %}
+- What it connects: {{ p.product.connects }}
+- Who it's for: {{ p.product.audience }}
+- Price: {% if p.product.price_note %}from ${{ p.product.msrp }} ({{ p.product.price_note }}){% else %}${{ p.product.msrp }} MSRP{% endif %}
+- Where to buy: {% for offer in p.product.offers %}{% if offer.seller == company.name %}{% if forloop.first %}direct from {{ company.name }} at {{ offer.url | absolute_url }}{% endif %}{% else %}{{ offer.seller }} ({{ offer.url }}){% unless forloop.last %}, {% endunless %}{% endif %}{% endfor %}
+
+Specifications:
+{% for spec in p.product.specs %}
+- {{ spec.name }}: {{ spec.value }}{% endfor %}
+{% endfor %}
+### 9er Systems USB2x Toolbar (free app)
+
+Free desktop app for the USB2GA and USB2Lemo adapters.
+
+- Features: one-click sidetone on/off; Smart VOX (sidetone follows your voice, with adjustable squelch); sidetone volume (Windows); separate microphone and speaker levels
+- Platforms: macOS (Apple Silicon and Intel) and Windows 10 / 11
+- Current version: {{ site.data.toolbar.version }}
+- Price: free
+- Download page: {{ "/downloads/toolbar/" | absolute_url }}
+- Microsoft Store: {{ site.data.toolbar.windows.store_url }}
+- Release notes: {{ "/downloads/toolbar/changelog/" | absolute_url }}
+- Note: adapters sold before May 1, 2026 may not be compatible with sidetone support.
+
+## Frequently asked questions
+{% for q in questions %}
+### {{ q.title }}
+
+Source: {{ q.url | absolute_url }}
+
+{{ q.short_answer }}
+
+{{ q.content | replace: "<h2", "
+#### <h2" | replace: "<li>", "- <li>" | strip_html | replace: "&mdash;", "—" | replace: "&ndash;", "–" | replace: "&rsquo;", "’" | replace: "&lsquo;", "‘" | replace: "&ldquo;", "“" | replace: "&rdquo;", "”" | replace: "&hellip;", "…" | replace: '&quot;', '"' | replace: "&amp;", "&" | strip }}
+{% endfor %}

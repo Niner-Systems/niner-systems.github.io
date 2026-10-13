@@ -11,7 +11,24 @@
 	"url": "{{ '/' | absolute_url }}",
 	"logo": "{{ company.logo | absolute_url }}",
 	"email": {{ company.email | jsonify }},
-	"founder": [{% for founder in company.founders %}{ "@type": "Person", "name": {{ founder | jsonify }} }{% unless forloop.last %}, {% endunless %}{% endfor %}],
+	"founder": [{% for person in site.staff_members %}
+		{
+			"@type": "Person",
+			"name": {{ person.name | jsonify }},
+			"jobTitle": {{ person.position | jsonify }},
+			"url": "{{ '/about/' | absolute_url }}"{% if person.linkedin %},
+			"sameAs": [{{ person.linkedin | jsonify }}]{% endif %}
+		}{% unless forloop.last %},{% endunless %}{% endfor %}
+	],
+	"contactPoint": {
+		"@type": "ContactPoint",
+		"contactType": "customer support",
+		"email": {{ company.email | jsonify }},
+		"url": "{{ '/contact/' | absolute_url }}",
+		"areaServed": "US",
+		"availableLanguage": "English"
+	},
+	"hasMerchantReturnPolicy": {% include schema-return-policy.html %},
 	"address": {
 		"@type": "PostalAddress",
 		"addressLocality": {{ company.locality | jsonify }},

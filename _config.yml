@@ -28,6 +28,9 @@ timezone: US/Eastern
 collections:
   staff_members:
     _hide_content: true
+  faq:
+    output: true
+    permalink: /faq/:name/
 
 paginate: 10
 paginate_path: "/blog/:num/"
@@ -56,6 +59,17 @@ defaults:
     values:
       layout: "page"
       image: /images/og-default.jpg
+  - scope:
+      path: ""
+      type: "faq"
+    values:
+      layout: "faq"
+      seo:
+        type: Article
+      breadcrumb: true
+      breadcrumb_parent:
+        name: FAQ
+        url: /faq/
   - scope:
       path: "business"
     values:

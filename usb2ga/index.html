@@ -2,6 +2,7 @@
 title: USB2GA — GA Headset to USB Adapter
 description: Connect your standard general aviation headset (PJ-068 / PJ-055 twin plugs) to a PC, Mac, iPad, or Android device over USB.
 layout: default
+breadcrumb: USB2GA
 image: /images/usb2ga/floating/front_view.png
 product:
   name: 9er Systems USB2GA Aviation Headset to USB Adapter
@@ -12,6 +13,31 @@ product:
   msrp: 89.99
   connects: General aviation headsets with standard twin plugs (PJ-055 headphone + PJ-068 mic) to a PC, Mac, Linux, iPad, iPhone, or Android device over USB-C (USB-A adapter included). Steps the USB 5V up to the +12V phantom voltage aviation electret mics need; no batteries.
   audience: Student and private pilots and flight-sim users (X-Plane, MSFS, PilotEdge) who want to practice with the headset they fly with.
+  specs:
+    - name: Headset connector
+      value: GA dual plug — PJ-055 (0.25") headphone and PJ-068 (0.206") microphone jacks
+    - name: Computer connection
+      value: USB-C (USB-A via the included adapter)
+    - name: Microphone power
+      value: +12V phantom power (mic bias) for aviation electret microphones, generated from USB
+    - name: Power
+      value: USB bus-powered — no batteries or wall adapter
+    - name: Compatible devices
+      value: Windows 7 / 10 / 11, macOS, Linux (tested with Ubuntu and Raspberry Pi), iPhone / iPad with USB-C, Android with USB-C
+    - name: Drivers
+      value: None — plug-and-play USB audio device
+    - name: Works with
+      value: Microsoft Flight Simulator (MSFS), X-Plane, PilotEdge, VATSIM, IVAO, ForeFlight
+    - name: Dimensions
+      value: 2 × 4 × 1.5 in
+    - name: Weight
+      value: 4.5 oz
+    - name: In the box
+      value: USB2GA adapter, 6 ft USB-C cable, USB-C to USB-A adapter, 3M VHB adhesive mounting pad
+    - name: Warranty
+      value: 1 year
+    - name: Origin
+      value: Designed, assembled, and supported in Knoxville, TN, USA — Buy American Act and TAA compliant
   offers:
     - seller: Amazon
       url: https://www.amazon.com/dp/B0CW3GLDM1
@@ -31,7 +57,7 @@ product:
 				   target="_blank" rel="noopener noreferrer">
 					<img src="{{ site.baseurl }}/images/amazon-button9.png" alt="Buy on Amazon" />
 				</a>
-				<a class="cta-button secondary" href="{{ site.baseurl }}/usb2ga/faq">FAQ &amp; Compatibility</a>
+				<a class="cta-button secondary" href="{{ site.baseurl }}/faq/">FAQ &amp; Compatibility</a>
 			</div>
 			<p class="buy-alt-line">
 				<a class="buy-link-alt"
@@ -100,7 +126,7 @@ product:
 			<div class="text editable">
 				<h2><strong>Powered</strong> by USB	</h2>
 				<p>General Aviation headsets require power for the microphone to work. 9er Systems' USB2GA uses power from
-					the USB port to enable the microphone without the need for batteries.</p>
+					the USB port to supply the +12V phantom power (mic bias) aviation microphones need &mdash; without the need for batteries.</p>
 			</div>
 		</div>
 	</section>
@@ -149,6 +175,8 @@ product:
 			</div>
 		</div>
 	</section>
+
+	{% include product-specs.html %}
 
 	<section class="companion-app-callout">
 		<div class="container flex">

@@ -1,18 +1,19 @@
 {% comment %}
-	FAQPage JSON-LD built from the rendered page: every <h2> is a question and
-	the content up to the next <h2> is its answer. Pass the layout's `content`.
+	FAQPage JSON-LD for the /faq/ index, built from the `_faq` collection:
+	each question's title and short_answer (the full answer lives on its own page).
 {% endcomment %}
-{% assign sections = include.content | split: "<h2" %}
+{% assign questions = site.faq | sort: "order" %}
 <script type="application/ld+json">
 {
 	"@context": "https://schema.org",
 	"@type": "FAQPage",
 	"@id": "{{ page.url | absolute_url }}#faq",
-	"mainEntity": [{% for section in sections offset: 1 %}{% assign parts = section | split: "</h2>" %}{% assign question = parts[0] | split: ">" | last | strip_html | strip %}{% assign answer = parts[1] | strip_html | strip_newlines | normalize_whitespace | strip %}
+	"mainEntity": [{% for q in questions %}
 		{
 			"@type": "Question",
-			"name": {{ question | jsonify }},
-			"acceptedAnswer": { "@type": "Answer", "text": {{ answer | jsonify }} }
+			"name": {{ q.title | jsonify }},
+			"url": "{{ q.url | absolute_url }}",
+			"acceptedAnswer": { "@type": "Answer", "text": {{ q.short_answer | jsonify }}, "url": "{{ q.url | absolute_url }}" }
 		}{% unless forloop.last %},{% endunless %}{% endfor %}
 	]
 }
