@@ -28,6 +28,13 @@ product:
       value: 1 year
     - name: Origin
       value: Designed, assembled, and supported in Knoxville, TN, USA
+  # Review platform links for the CRED widget; review data lives in _data/reviews/ga2dsub/<year>.json.
+  reviews:
+    write_platform: direct
+    platforms:
+      direct:
+        write_url: /contact/
+        page_url: /ga2dsub/
   offers:
     - seller: 9er Systems
       name: GA2DSub (1-pack)
@@ -137,6 +144,8 @@ product:
 	</section>
 
 	{% include product-specs.html %}
+
+	{% include product-reviews.html %}
 
 	<div class="bottom-buy">
 		<a class="cta-button primary" href="{{ site.baseurl }}/order/">Order GA2DSub</a>

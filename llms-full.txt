@@ -35,7 +35,13 @@ permalink: /llms-full.txt
 Specifications:
 {% for spec in p.product.specs %}
 - {{ spec.name }}: {{ spec.value }}{% endfor %}
-{% endfor %}
+{% if p.reviews %}
+{% for e in p.reviews.elsewhere %}{% if e.rating %}- {{ e.name }} rating: {{ e.rating }} out of 5 from {{ e.rating_count }} ratings ({{ e.url }})
+{% endif %}{% endfor %}
+{% if p.reviews.selected %}Selected {{ p.reviews.min_rating }}-star customer reviews (all reviews: {% for e in p.reviews.elsewhere %}{{ e.name }} {{ e.url }}{% unless forloop.last %}; {% endunless %}{% endfor %}):{% else %}Customer reviews{% if p.reviews.count > 0 %} ({{ p.reviews.average }} out of 5 from {{ p.reviews.count }}){% endif %}:{% endif %}
+{% for r in p.reviews.items %}
+- {% if r.rating %}{{ r.rating }}/5 — {% endif %}{{ r.display_name }}, {{ r.date | date: "%B %Y" }}{% if r.platform_name %} ({{ r.platform_name }}){% endif %}: {% if r.title %}{{ r.title }} — {% endif %}"{{ r.text | strip_newlines }}"{% endfor %}
+{% endif %}{% endfor %}
 ### 9er Systems USB2x Toolbar (free app)
 
 Free desktop app for the USB2GA and USB2Lemo adapters.

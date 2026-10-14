@@ -1091,3 +1091,73 @@ body.smartscreen-modal-open { overflow: hidden; }
 		th { border-bottom: 0; padding-bottom: 2px; }
 	}
 }
+
+// ----------------------------------------------------------------------------
+// Product reviews (_includes/product-reviews.html). This is the server-rendered
+// fallback; the CRED widget replaces it in the browser.
+// ----------------------------------------------------------------------------
+
+.product-reviews {
+	padding: 50px 0;
+}
+
+.reviews-static {
+	max-width: 760px;
+	margin: 0 auto;
+
+	.reviews-summary { text-align: center; }
+
+	.review-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.review-card {
+		padding: 16px 0;
+		border-bottom: 1px solid $gray-light;
+
+		p { margin: 0 0 6px 0; }
+	}
+
+	.review-meta { font-size: 0.9em; color: $sky-deep; }
+	.review-stars { color: #e3a008; letter-spacing: 1px; margin-right: 6px; }
+	.review-text { color: $ink; }
+	.review-reply { font-size: 0.9em; padding-left: 14px; border-left: 3px solid $gray-light; }
+}
+
+// The widget mounts here as .rw-host; let it use the full container width.
+#cred-reviews.rw-host { max-width: none; }
+
+// The widget's summary bar is a <header>, so the site-wide `header { color: #fff }` and
+// `header a { color: #fff }` rules (layout.scss, meant for the page header) turn its text white.
+#cred-reviews header.rw-header {
+	color: var(--rw-ink, #111);
+
+	a:not(.rw-write) { color: inherit; }
+}
+
+// Filtered to a selection: the widget's score would average only the shown reviews. With a retailer's overall
+// rating (data-overall-rating) the include's script rewrites the score to that; without one, hide it.
+// Its filter tabs and Write button stay.
+#cred-reviews.reviews-selected:not([data-overall-rating]) .rw-summary { display: none; }
+
+// No platform filter tabs (All / Amazon / Aircraft Spruce and their counts): always show every selected review.
+#cred-reviews .rw-tabs { display: none; }
+// The tabs filled the middle of the header and pushed Write a review right; keep it there without them.
+#cred-reviews .rw-write { margin-left: auto; }
+
+// Fractional header star (e.g. the .3 of 4.3), added by the include's script: a gold copy clipped to --rw-fill.
+#cred-reviews .rw-stars i.rw-partial {
+	position: relative;
+
+	svg + svg {
+		position: absolute;
+		inset: 0;
+		fill: var(--rw-star, #f5b301);
+		clip-path: inset(0 calc(100% - var(--rw-fill)) 0 0);
+	}
+}
+
+.product-reviews > .container > .reviews-summary { text-align: center; }
+.product-reviews > .container > .reviews-all-link { margin-top: 1rem; }

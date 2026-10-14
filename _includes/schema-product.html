@@ -20,6 +20,22 @@
 	"manufacturer": { "@id": "{{ '/' | absolute_url }}#organization" },{% if product.specs %}
 	"additionalProperty": [{% for spec in product.specs %}
 		{ "@type": "PropertyValue", "name": {{ spec.name | jsonify }}, "value": {{ spec.value | jsonify }} }{% unless forloop.last %},{% endunless %}{% endfor %}
+	],{% endif %}{% comment %}Only first-party reviews: Google forbids marking up reviews copied from other sites (e.g. Amazon).{% endcomment %}{% if page.reviews.schema_count > 0 %}
+	"aggregateRating": {
+		"@type": "AggregateRating",
+		"ratingValue": "{{ page.reviews.schema_average }}",
+		"reviewCount": {{ page.reviews.schema_count }},
+		"bestRating": "5",
+		"worstRating": "1"
+	},
+	"review": [{% for r in page.reviews.schema_items %}
+		{
+			"@type": "Review",
+			"author": { "@type": "Person", "name": {{ r.display_name | jsonify }} },
+			"datePublished": "{{ r.date | date: '%Y-%m-%d' }}",
+			"reviewBody": {{ r.text | jsonify }},
+			"reviewRating": { "@type": "Rating", "ratingValue": "{{ r.rating }}", "bestRating": "5", "worstRating": "1" }
+		}{% unless forloop.last %},{% endunless %}{% endfor %}
 	],{% endif %}
 	"offers": [{% for offer in product.offers %}
 		{

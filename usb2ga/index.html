@@ -38,6 +38,25 @@ product:
       value: 1 year
     - name: Origin
       value: Designed, assembled, and supported in Knoxville, TN, USA — Buy American Act and TAA compliant
+  # Review platform links for the CRED widget; review data lives in _data/reviews/usb2ga/<year>.json.
+  reviews:
+    write_platform: amazon
+    min_rating: 5 # publish only 5-star reviews; all reviews stay in _data/reviews/usb2ga/
+    platforms:
+      amazon:
+        write_url: https://www.amazon.com/review/create-review?asin=B0CW3GLDM1
+        page_url: https://www.amazon.com/product-reviews/B0CW3GLDM1
+        # Overall rating shown on the Amazon product page (update by hand); displayed, never in schema markup.
+        rating: 4.3
+        rating_count: 41
+      aircraftspruce:
+        write_url: https://www.aircraftspruce.com/catalog/pspages/9ersystems_usb2ga.php#prReviews
+        page_url: https://www.aircraftspruce.com/catalog/pspages/9ersystems_usb2ga.php#prReviews
+        rating: 5
+        rating_count: 2
+      direct:
+        write_url: /contact/
+        page_url: /usb2ga/
   offers:
     - seller: Amazon
       url: https://www.amazon.com/dp/B0CW3GLDM1
@@ -177,6 +196,8 @@ product:
 	</section>
 
 	{% include product-specs.html %}
+
+	{% include product-reviews.html %}
 
 	<section class="companion-app-callout">
 		<div class="container flex">

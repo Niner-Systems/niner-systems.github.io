@@ -1,0 +1,24 @@
+# Review platforms for the CRED reviews widget (_plugins/cred_reviews.rb).
+# Keyed by the `platform` value in _data/reviews/<product>/<year>.json.
+# Per-product URLs (write_url, page_url) go in the product page's `product.reviews.platforms`.
+#
+# first_party: true  -> reviews collected directly by 9er Systems; included in the Product JSON-LD
+#                       (aggregateRating / review). Google forbids marking up reviews copied from
+#                       other sites, so Amazon and other retailers stay false: shown on the page only.
+direct:
+  name: 9er Systems
+  icon: /images/reviews/direct.svg
+  card_link: page
+  first_party: true
+amazon:
+  name: Amazon
+  icon: /images/reviews/retailer.svg
+  card_link: review
+  nofollow: true
+  first_party: false
+aircraftspruce:
+  name: Aircraft Spruce
+  icon: /images/reviews/retailer.svg
+  card_link: page
+  nofollow: true
+  first_party: false

@@ -38,6 +38,16 @@ product:
       value: 1 year
     - name: Origin
       value: Designed, assembled, and supported in Knoxville, TN, USA
+  # Review platform links for the CRED widget; review data lives in _data/reviews/usb2lemo/<year>.json.
+  reviews:
+    write_platform: amazon
+    platforms:
+      amazon:
+        write_url: https://www.amazon.com/review/create-review?asin=B0GY5SY8QZ
+        page_url: https://www.amazon.com/product-reviews/B0GY5SY8QZ
+      direct:
+        write_url: /contact/
+        page_url: /usb2lemo/
   offers:
     - seller: Amazon
       url: https://www.amazon.com/dp/B0GY5SY8QZ
@@ -153,6 +163,8 @@ product:
 	</section>
 
 	{% include product-specs.html %}
+
+	{% include product-reviews.html %}
 
 	<section class="companion-app-callout">
 		<div class="container flex">

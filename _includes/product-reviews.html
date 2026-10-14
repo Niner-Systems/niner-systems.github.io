@@ -1,0 +1,77 @@
+{% comment %}
+	Product reviews, from _data/reviews/<slug>/ via _plugins/cred_reviews.rb (sets page.reviews).
+	The static list is server-rendered so crawlers and AI assistants can read it; in the browser the
+	CRED widget (https://github.com/bristweb/reviews-widget) mounts into the same element and replaces it.
+{% endcomment %}{% assign reviews = page.reviews %}{% if reviews %}
+<section class="product-reviews" id="reviews">
+	<div class="container">
+		<h2 class="center-text"><strong>{{ page.product.short_name }}</strong> Reviews</h2>
+		{% comment %} Retailers' overall ratings (product.reviews.platforms.<key>.rating / rating_count), combined as a weighted average. {% endcomment %}
+		{% assign rated = reviews.elsewhere | where_exp: "p", "p.rating" | sort: "rating_count" | reverse %}{% assign overall = false %}
+		{% if rated.size > 0 %}{% assign overall = true %}{% assign overall_total = 0.0 %}{% assign overall_count = 0 %}{% capture overall_names %}{% for p in rated %}{{ p.name }}{% unless forloop.last %}{% if forloop.rindex0 == 1 %} and {% else %}, {% endif %}{% endunless %}{% endfor %}{% endcapture %}
+		{% for p in rated %}{% assign weighted = p.rating | times: p.rating_count %}{% assign overall_total = overall_total | plus: weighted %}{% assign overall_count = overall_count | plus: p.rating_count %}{% endfor %}
+		{% assign overall_rating = overall_total | divided_by: overall_count | round: 1 %}{% endif %}
+		<div id="cred-reviews" class="reviews-static{% if reviews.selected %} reviews-selected{% endif %}"{% if overall %} data-overall-rating="{{ overall_rating }}" data-overall-count="{{ overall_count }}" data-overall-platforms="{{ overall_names }}"{% endif %}>
+			{% if overall %}<p class="reviews-summary">Rated <strong>{{ overall_rating }} out of 5</strong> from {{ overall_count }} reviews on {% for p in rated %}<a href="{{ p.url }}" rel="noopener nofollow">{{ p.name }}</a>{% unless forloop.last %}{% if forloop.rindex0 == 1 %} and {% else %}, {% endif %}{% endunless %}{% endfor %}.</p>
+			{% elsif reviews.count > 0 and reviews.selected != true %}<p class="reviews-summary">Rated <strong>{{ reviews.average }} out of 5</strong> from {{ reviews.count }} review{% if reviews.count != 1 %}s{% endif %}.</p>{% endif %}
+			<ul class="review-list">
+				{% for r in reviews.items %}
+				<li class="review-card">
+					<p class="review-meta">
+						{% if r.rating %}<span class="review-stars" aria-label="{{ r.rating }} out of 5 stars">{% for i in (1..5) %}{% if i <= r.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}</span>{% endif %}
+						<strong>{{ r.display_name }}</strong>
+						&middot; <time datetime="{{ r.date }}">{{ r.date | date: "%b %-d, %Y" }}</time>
+						{% if r.platform_name %}&middot; {% if r.review_url %}<a href="{{ r.review_url }}" rel="noopener nofollow">{{ r.platform_name }}</a>{% else %}{{ r.platform_name }}{% endif %}{% endif %}
+					</p>
+					{% if r.title %}<p class="review-title"><strong>{{ r.title | escape }}</strong></p>{% endif %}
+					<p class="review-text">{{ r.text | escape | newline_to_br }}</p>
+					{% if r.owner_reply %}<p class="review-reply"><strong>Reply from {{ site.data.company.name }}:</strong> {{ r.owner_reply.text | escape }}</p>{% endif %}
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
+		{% if reviews.selected %}<p class="reviews-summary reviews-all-link">Read all reviews on {% for p in reviews.elsewhere %}<a href="{{ p.url }}" rel="noopener nofollow">{{ p.name }}</a>{% unless forloop.last %}{% if forloop.rindex0 == 1 %} and {% else %}, {% endif %}{% endunless %}{% endfor %}.</p>{% endif %}
+		{% comment %}
+			The widget needs an absolute data-source, but it must be this page's own origin (localhost vs 127.0.0.1,
+			www vs bare domain) or the browser blocks it as cross-origin. Set it at runtime, before the deferred widget runs.
+		{% endcomment %}
+		<script>document.getElementById('cred-reviews').dataset.source = new URL('{{ reviews.source | relative_url }}', location.href).href;</script>
+		{% comment %}
+			The widget's header averages only the reviews it shows (5-star picks, written reviews only). When a retailer's
+			overall ratings are set (product.reviews.platforms.<key>.rating / rating_count), rewrite the header to their combined average
+			whenever the widget renders it (it re-renders on tab changes and resizes).
+		{% endcomment %}{% if overall %}
+		<script>
+		(function () {
+			var host = document.getElementById('cred-reviews'), d = host.dataset, rating = parseFloat(d.overallRating);
+			var label = rating >= 4.75 ? 'Excellent' : rating >= 4.25 ? 'Great' : rating >= 3.5 ? 'Good' : 'Reviews';
+			function patch() {
+				var score = host.querySelector('.rw-header .rw-score');
+				if (!score || score.textContent === d.overallRating) return;
+				score.textContent = d.overallRating;
+				var summary = score.parentNode;
+				var labelEl = summary.querySelector('.rw-label'); if (labelEl) labelEl.textContent = label;
+				var stars = summary.querySelector('.rw-stars');
+				if (stars) {
+					stars.setAttribute('aria-label', d.overallRating + ' out of 5 stars');
+					// Whole stars on; the fractional one gets a gold copy clipped to the fraction (the star spans 1.5–18.5 of its 20-unit box).
+					stars.querySelectorAll('i').forEach(function (s, i) {
+						var frac = Math.max(0, Math.min(1, rating - i));
+						s.className = frac >= 1 ? 'on' : '';
+						if (frac > 0 && frac < 1) {
+							s.classList.add('rw-partial');
+							s.style.setProperty('--rw-fill', (7.5 + 85 * frac) + '%');
+							s.appendChild(s.querySelector('svg').cloneNode(true));
+						}
+					});
+				}
+				var based = summary.querySelector('.rw-based');
+				if (based) based.innerHTML = '<span class="rw-based-pre">Based on </span><strong>' + d.overallCount + '</strong> reviews<span class="rw-based-pre"> from ' + d.overallPlatforms + '</span>';
+			}
+			new MutationObserver(patch).observe(host, { childList: true, subtree: true });
+		})();
+		</script>{% endif %}
+		<script src="https://cred.bristleconeweb.com/assets/js/cred.js" data-target="#cred-reviews" data-schema="off" data-theme="light" defer></script>
+	</div>
+</section>
+{% endif %}
