@@ -2,16 +2,16 @@
 # Bump `version` on each release and the download page (and any other
 # Jekyll page that references this data) will update automatically.
 
-version: 1.0.15
+version: 1.0.16
 
 mac:
-  filename: NinerSystemsToolbar-1.0.15.dmg
-  url: https://downloads.9ersystems.com/toolbar/NinerSystemsToolbar-1.0.15.dmg
+  filename: NinerSystemsToolbar-1.0.16.dmg
+  url: https://downloads.9ersystems.com/toolbar/NinerSystemsToolbar-1.0.16.dmg
   details: Universal (Apple Silicon &amp; Intel)
 
 windows:
-  filename: NinerSystemsToolbar-1.0.15.msi
-  url: https://downloads.9ersystems.com/toolbar/NinerSystemsToolbar-1.0.15.msi
+  filename: NinerSystemsToolbar-1.0.16.msi
+  url: https://downloads.9ersystems.com/toolbar/NinerSystemsToolbar-1.0.16.msi
   details: Windows 10 &amp; 11 (64-bit)
   # Fill in after Microsoft Store submission is approved. Until this is set,
   # the download page shows the direct .msi link only (page reads as today).
