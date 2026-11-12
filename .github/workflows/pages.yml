@@ -27,7 +27,9 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3.5'
+          # Minor series only: newer runner images build just the latest 3.3.x patch,
+          # so an exact pin (e.g. 3.3.5) stops resolving when the image is upgraded.
+          ruby-version: '3.3'
           bundler-cache: true
 
       - name: Setup Pages
