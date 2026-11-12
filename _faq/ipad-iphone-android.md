@@ -2,6 +2,7 @@
 title: Does it work with an iPad, iPhone, or Android device?
 description: The 9er Systems USB2GA and USB2Lemo work with iPads, iPhones, and Android devices that have a USB-C port, as well as Windows, Mac, and Linux computers.
 short_answer: Yes — with any iPhone, iPad, or Android device that has a USB-C port, plus Windows, macOS, and Linux computers. It's a plug-and-play USB audio device, so there's nothing to install.
+date: 2026-10-13
 order: 6
 products: [/usb2ga/, /usb2lemo/]
 ---

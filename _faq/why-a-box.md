@@ -2,6 +2,7 @@
 title: Why is the adapter a mountable box instead of a cable?
 description: Why 9er Systems built the USB2GA and USB2Lemo as a small mountable enclosure instead of a dangling cable adapter.
 short_answer: So you can mount it — under your desk or on the side of a yoke — and plug your headset in and out without holding the adapter or chasing wires. It's small enough to travel with a laptop, but big enough to be a sturdy mounting point. A 3M adhesive pad is included.
+date: 2026-10-13
 order: 10
 products: [/usb2ga/, /usb2lemo/]
 ---

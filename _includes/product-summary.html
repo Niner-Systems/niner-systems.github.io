@@ -1,0 +1,24 @@
+{% comment %}
+	"At a glance" block for product pages, from the page's `product:` front matter
+	(the same facts as the Product JSON-LD and /llms.txt). States plainly what the
+	product is, who it's for, the price, and where to buy, so a search engine or
+	AI assistant can quote the page without piecing it together from marketing copy.
+{% endcomment %}
+{% assign product = page.product %}
+{% assign company = site.data.company %}
+<section class="product-summary" id="at-a-glance">
+	<div class="text-container">
+		<h2 class="center-text"><strong>{{ product.short_name }}</strong> at a Glance</h2>
+		<p><strong>{{ product.name }}</strong> &mdash; {{ page.description }} Designed, assembled, and supported by {{ company.name }} in {{ company.locality }}, {{ company.region }}.</p>
+		<dl class="product-summary-list">
+			<dt>What it connects</dt>
+			<dd>{{ product.connects }}</dd>
+			<dt>Who it&rsquo;s for</dt>
+			<dd>{{ product.audience }}</dd>
+			<dt>Price</dt>
+			<dd>{% if product.price_note %}From ${{ product.msrp }} ({{ product.price_note }}){% else %}${{ product.msrp }} MSRP{% endif %}</dd>
+			<dt>Where to buy</dt>
+			<dd>{% assign direct_shown = false %}{% for offer in product.offers %}{% if offer.seller == company.name %}{% unless direct_shown %}<a href="{{ site.baseurl }}{{ offer.url }}">Direct from {{ company.name }}</a>{% assign direct_shown = true %}{% endunless %}{% else %}<a href="{{ offer.url }}" target="_blank" rel="noopener noreferrer">{{ offer.seller }}</a>{% unless forloop.last %}, {% endunless %}{% endif %}{% endfor %}</dd>
+		</dl>
+	</div>
+</section>

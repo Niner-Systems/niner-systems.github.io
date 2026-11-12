@@ -9,16 +9,22 @@ google_analytics_key: "G-H9H1DLX2S9"
 disqus_shortname:
 
 # Values for the jekyll-seo-tag gem (https://github.com/jekyll/jekyll-seo-tag)
-logo: /images/logo-aviation-audio-horizontal-white.svg
+# `logo` is the publisher logo in each page's JSON-LD: a raster, dark-on-light image (not the white header SVG).
+logo: /images/logo-aviation-audio-stacked-black.png
 description: An Aviation Audio Company — aviation headset to USB adapters (USB2GA, USB2Lemo) and the free USB2x Toolbar app for sidetone and VOX on Mac and Windows.
 author:
   name: 9er Systems
+  type: Organization # so page JSON-LD credits the company, not a Person named "9er Systems"
+  url: https://9ersystems.com/
   email: info@9ersystems.com
   twitter: # twitter username without the @ symbol
-social:
-  name: 9er Systems
-  links:
-    - https://9ersystems.com
+
+# Search-engine ownership verification (Google Search Console, Bing Webmaster Tools).
+# Paste the codes from each console; jekyll-seo-tag emits the meta tags.
+# Bing matters for AI search too: ChatGPT search and Copilot draw on Bing's index.
+# webmaster_verifications:
+#   google:
+#   bing:
 
 # -----
 # Build
@@ -105,8 +111,9 @@ include:
 exclude:
   - Gemfile
   - Gemfile.lock
-  - README.md
-  - LICENCE
+  - readme.md
+  - LICENSE
+  - "*.iml"
   - .claude
   - _config.production.yml
 

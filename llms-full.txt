@@ -8,7 +8,7 @@ permalink: /llms-full.txt
 {%- assign questions = site.faq | sort: "order" -%}
 # {{ company.name }} — full reference
 
-> {{ company.name }} is {{ company.slogan | downcase }} based in {{ company.locality }}, {{ company.region }}, USA. It designs, assembles, and supports aviation headset adapters that connect general aviation (GA) pilot headsets to computers and tablets for flight simulation, a PCB for wiring headset jacks into real aircraft panels, and a free desktop app (USB2x Toolbar) for sidetone and VOX. Summary version: {{ "/llms.txt" | absolute_url }}
+> {{ company.name }} (pronounced "{{ company.alternate_names | first }}") is {{ company.slogan | downcase }} based in {{ company.locality }}, {{ company.region }}, USA. It designs, assembles, and supports aviation headset adapters that connect general aviation (GA) pilot headsets to computers and tablets for flight simulation, a PCB for wiring headset jacks into real aircraft panels, and a free desktop app (USB2x Toolbar) for sidetone and VOX. Summary version: {{ "/llms.txt" | absolute_url }}
 
 ## Company
 

@@ -17,6 +17,8 @@ layout: default
 				{% for slug in page.products %}{% assign product_page = site.pages | where: "url", slug | first %}<a href="{{ site.baseurl }}{{ slug }}">{{ product_page.product.short_name | default: product_page.title }}</a>{% unless forloop.last %}, {% endunless %}{% endfor %}
 			</p>
 			{% endif %}
+			{% comment %}Visible freshness signal; matches dateModified in the page's JSON-LD.{% endcomment %}
+			<p class="faq-updated">Answered by the 9er Systems founders &middot; Last updated <time datetime="{{ page.last_modified_at | date: '%Y-%m-%d' }}">{{ page.last_modified_at | date: "%B %-d, %Y" }}</time></p>
 
 			<div class="faq-more">
 				<h2>More questions</h2>

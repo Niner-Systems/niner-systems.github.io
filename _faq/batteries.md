@@ -2,6 +2,7 @@
 title: Does the adapter need batteries?
 description: The 9er Systems USB2GA and USB2Lemo adapters are powered entirely by the USB port — no batteries or wall adapter. ANR headsets still use their own batteries for noise cancelling.
 short_answer: No. The USB2GA and USB2Lemo get all the power they need from the USB port they're plugged into, including the +12V phantom power for your headset's microphone. If your headset has ANR or Bluetooth, those features still run on the headset's own batteries.
+date: 2026-10-13
 order: 5
 products: [/usb2ga/, /usb2lemo/]
 ---

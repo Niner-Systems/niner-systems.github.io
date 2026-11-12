@@ -2,6 +2,7 @@
 title: Which flight simulators and apps does it work with?
 description: The USB2GA and USB2Lemo work as a standard USB audio device with Microsoft Flight Simulator (MSFS), X-Plane, PilotEdge, VATSIM, IVAO, ForeFlight, and any app that uses your computer's audio.
 short_answer: Any simulator or app that can use a USB headset — including Microsoft Flight Simulator (MSFS), X-Plane, PilotEdge, VATSIM, IVAO, and ForeFlight. The adapter appears as a standard USB audio device, so you select it as your speaker and microphone like any other headset.
+date: 2026-10-13
 order: 7
 products: [/usb2ga/, /usb2lemo/]
 ---

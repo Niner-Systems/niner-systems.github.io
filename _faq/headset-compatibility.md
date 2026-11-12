@@ -2,6 +2,7 @@
 title: Will the USB2GA or USB2Lemo work with my aviation headset?
 description: Headset compatibility for the 9er Systems USB2GA and USB2Lemo — ANR and passive general aviation headsets, speaker and microphone impedance, and military headsets.
 short_answer: Almost certainly, if it's a modern general aviation headset with GA dual plugs (USB2GA) or a 6-pin Lemo plug (USB2Lemo). We test against a wide range of GA headsets — old and new, ANR and passive — including the Bose A20, Lightspeed Delta Zulu, Lightspeed Zulu 3, and 1990s-era FlightCom headsets. Military headsets have very different specifications and are untested.
+date: 2026-10-13
 order: 2
 products: [/usb2ga/, /usb2lemo/]
 ---

@@ -3,14 +3,14 @@ title: GA2DSub — GA Dual-Plug to DE-9 Aircraft PCB
 description: Wire aviation headset jacks into your aircraft panel — a shielded PCB with Switchcraft jacks and easy DE-9 (DB-9) termination. No hand-soldering required.
 layout: default
 breadcrumb: GA2DSub
-image: /images/ga2dsub/ga2dsub-right.png
+image: /images/ga2dsub/ga2dsub-right.webp
 product:
   name: 9er Systems GA2DSub GA Dual-Plug to DE-9 Aircraft PCB
   short_name: GA2DSub
   sku: GA2DSUB-1
   category: Aircraft headset jack PCB
   msrp: 49.95
-  price_note: 2-pack $89.95 · 4-pack $169.95
+  price_note: 2-pack $94.95 · 4-pack $179.95
   connects: A GA dual-plug headset station (board-mount Switchcraft aviation jacks) in a real aircraft panel to a standard DE-9 ("DB-9") connector on a shielded PCB, so the harness terminates on a connector instead of hand-soldered jacks.
   audience: Aircraft owners, homebuilders (experimental/E-AB), and avionics installers wiring headset stations.
   specs:
@@ -45,12 +45,12 @@ product:
       name: GA2DSub (2-pack)
       sku: GA2DSUB-2
       url: /order/
-      price: 89.95
+      price: 94.95
     - seller: 9er Systems
       name: GA2DSub (4-pack)
       sku: GA2DSUB-4
       url: /order/
-      price: 169.95
+      price: 179.95
 ---
 <section class="product-hero">
 	<div class="container product-hero-inner">
@@ -64,7 +64,7 @@ product:
 			</div>
 		</div>
 		<div class="product-hero-image">
-			<img class="bare" src="{{ site.baseurl }}/images/ga2dsub/ga2dsub-right.png" alt="9er Systems GA2DSub aircraft PCB, right view" />
+			<img class="bare" src="{{ site.baseurl }}/images/ga2dsub/ga2dsub-right.webp" alt="9er Systems GA2DSub aircraft PCB, right view" />
 		</div>
 	</div>
 </section>
@@ -74,7 +74,7 @@ product:
 	<section>
 		<div class="container flex">
 			<div class="image">
-				<img src="{{ site.baseurl }}/images/ga2dsub/ga2dsub-left.png" alt="GA2DSub PCB left view showing Switchcraft jacks" />
+				<img loading="lazy" src="{{ site.baseurl }}/images/ga2dsub/ga2dsub-left.webp" alt="GA2DSub PCB left view showing Switchcraft jacks" />
 			</div>
 			<div class="text editable">
 				<h2><strong>Switchcraft</strong> aviation jacks</h2>
@@ -86,7 +86,7 @@ product:
 	<section>
 		<div class="container flex">
 			<div class="image">
-				<img src="{{ site.baseurl }}/images/ga2dsub/ga2dsub-downright.png" alt="GA2DSub PCB angled view" />
+				<img loading="lazy" src="{{ site.baseurl }}/images/ga2dsub/ga2dsub-downright.webp" alt="GA2DSub PCB angled view" />
 			</div>
 			<div class="text editable">
 				<h2><strong>No hand-soldering</strong> required</h2>
@@ -98,7 +98,7 @@ product:
 	<section>
 		<div class="container flex">
 			<div class="image">
-				<img src="{{ site.baseurl }}/images/ga2dsub/ga2dsub-right.png" alt="GA2DSub PCB with DE-9 termination" />
+				<img loading="lazy" src="{{ site.baseurl }}/images/ga2dsub/ga2dsub-right.webp" alt="GA2DSub PCB with DE-9 termination" />
 			</div>
 			<div class="text editable">
 				<h2>Easy <strong>DE-9 (&ldquo;DB-9&rdquo;)</strong> termination</h2>
@@ -110,7 +110,7 @@ product:
 	<section>
 		<div class="container flex">
 			<div class="image">
-				<img src="{{ site.baseurl }}/images/ga2dsub/ga2dsub-left.png" alt="GA2DSub shielded PCB" />
+				<img loading="lazy" src="{{ site.baseurl }}/images/ga2dsub/ga2dsub-left.webp" alt="GA2DSub shielded PCB" />
 			</div>
 			<div class="text editable">
 				<h2><strong>Shielded</strong> PCB</h2>
@@ -122,7 +122,7 @@ product:
 	<section>
 		<div class="container flex">
 			<div class="image">
-				<img src="{{ site.baseurl }}/images/ga2dsub/ga2dsub-downright.png" alt="GA2DSub with conformal coating" />
+				<img loading="lazy" src="{{ site.baseurl }}/images/ga2dsub/ga2dsub-downright.webp" alt="GA2DSub with conformal coating" />
 			</div>
 			<div class="text editable">
 				<h2><strong>Conformal coating</strong> for the long haul</h2>
@@ -134,7 +134,7 @@ product:
 	<section>
 		<div class="container flex">
 			<div class="image">
-				<img src="{{ site.baseurl }}/images/maps/KLEX-KTYS-KAVL2sml.jpg" alt="Map: Lexington to Knoxville to Asheville" class="screenshot" />
+				<img loading="lazy" src="{{ site.baseurl }}/images/maps/KLEX-KTYS-KAVL2sml.jpg" alt="Map: Lexington to Knoxville to Asheville" class="screenshot" />
 			</div>
 			<div class="text editable">
 				<h2><strong>Engineered, Produced, and Supported</strong> in the USA</h2>
@@ -143,9 +143,13 @@ product:
 		</div>
 	</section>
 
+	{% include product-summary.html %}
+
 	{% include product-specs.html %}
 
 	{% include product-reviews.html %}
+
+	{% include faq-list.html product=page.url heading="GA2DSub <strong>Questions</strong>" %}
 
 	<div class="bottom-buy">
 		<a class="cta-button primary" href="{{ site.baseurl }}/order/">Order GA2DSub</a>

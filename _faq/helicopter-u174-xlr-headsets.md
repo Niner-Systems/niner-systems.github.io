@@ -2,6 +2,7 @@
 title: Do you make an adapter for helicopter (U-174) or XLR (Airbus) headsets?
 description: 9er Systems does not currently make a USB adapter for helicopter U-174/U or XLR (Airbus) aviation headsets — only GA dual plug (USB2GA) and 6-pin Lemo (USB2Lemo).
 short_answer: Not currently. We make adapters for GA dual-plug headsets (USB2GA) and 6-pin Lemo headsets (USB2Lemo). Helicopter U-174 and XLR (Airbus) headsets would need a separate plug adapter to GA dual plugs.
+date: 2026-10-13
 order: 4
 products: [/usb2ga/, /usb2lemo/]
 ---

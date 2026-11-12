@@ -2,6 +2,7 @@
 title: Can I connect two adapters to one computer?
 description: Using two 9er Systems USB2GA adapters on one computer works like having two sound cards — it depends on whether your simulator supports multiple audio devices.
 short_answer: Maybe. Each adapter shows up as its own sound card ("9er Systems USB2GA Adapter"), and computers handle multiple sound cards fine — but most programs only use one at a time. If your simulator supports multiple audio devices, it should work.
+date: 2026-10-13
 order: 9
 products: [/usb2ga/, /usb2lemo/]
 ---

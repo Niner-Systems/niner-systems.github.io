@@ -6,6 +6,7 @@
 	"@id": "{{ '/' | absolute_url }}#organization",
 	"name": {{ company.name | jsonify }},
 	"legalName": {{ company.legal_name | jsonify }},
+	"alternateName": {{ company.alternate_names | jsonify }},
 	"slogan": {{ company.slogan | jsonify }},
 	"description": {{ site.description | jsonify }},
 	"url": "{{ '/' | absolute_url }}",
@@ -38,3 +39,17 @@
 	"sameAs": {{ company.same_as | jsonify }}
 }
 </script>
+{% if page.url == "/" %}
+<script type="application/ld+json">
+{
+	"@context": "https://schema.org",
+	"@type": "WebSite",
+	"@id": "{{ '/' | absolute_url }}#website",
+	"name": {{ company.name | jsonify }},
+	"alternateName": {{ company.alternate_names | jsonify }},
+	"url": "{{ '/' | absolute_url }}",
+	"inLanguage": "en-US",
+	"publisher": { "@id": "{{ '/' | absolute_url }}#organization" }
+}
+</script>
+{% endif %}

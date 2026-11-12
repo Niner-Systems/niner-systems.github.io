@@ -2,6 +2,7 @@
 title: Do you make an adapter for Lemo (panel-power) headsets?
 description: The 9er Systems USB2Lemo connects 6-pin Lemo (panel-power plug) aviation headsets to a computer over USB. It supplies +12V mic power but not panel power — ANR and Bluetooth run on the headset's batteries.
 short_answer: Yes — the USB2Lemo connects headsets with a 6-pin Lemo (panel-power) plug to a computer, tablet, or phone over USB-C. It supplies the +12V phantom power (mic bias) the microphone needs, but it does not provide panel power, so a headset's ANR and Bluetooth features run on the headset's own batteries. The adapter itself needs no batteries.
+date: 2026-10-13
 order: 3
 products: [/usb2lemo/]
 ---

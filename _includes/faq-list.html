@@ -1,0 +1,25 @@
+{% comment %}
+	Question + short-answer list from the `_faq` collection, for pages outside /faq/.
+	  product: "/usb2ga/"  -> only questions whose `products` front matter lists that URL
+	  limit:   4           -> at most this many (by `order`)
+	  heading: "..."       -> section heading (HTML allowed)
+	Answers are plain HTML (not collapsed) so search engines and AI crawlers read them in place.
+	The FAQPage JSON-LD stays on /faq/ only, so the same questions aren't marked up twice.
+{% endcomment %}
+{% assign faq_questions = site.faq | sort: "order" %}
+{% if include.product %}{% assign faq_questions = faq_questions | where_exp: "q", "q.products contains include.product" %}{% endif %}
+{% assign faq_limit = include.limit | default: 100 %}
+{% if faq_questions.size > 0 %}
+<section class="faq-list-section" id="faq">
+	<div class="text-container">
+		<h2 class="center-text">{{ include.heading | default: "Common <strong>Questions</strong>" }}</h2>
+		<dl class="faq-list">
+			{% for q in faq_questions limit: faq_limit %}
+			<dt><a href="{{ site.baseurl }}{{ q.url }}">{{ q.title }}</a></dt>
+			<dd>{{ q.short_answer }}</dd>
+			{% endfor %}
+		</dl>
+		<p class="center-text"><a href="{{ site.baseurl }}/faq/">See all questions &rarr;</a></p>
+	</div>
+</section>
+{% endif %}

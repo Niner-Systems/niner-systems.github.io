@@ -2,6 +2,7 @@
 title: How do I hear my own voice (sidetone) in my headset?
 description: Enable sidetone and voice-activated VOX on the 9er Systems USB2GA and USB2Lemo with the free USB2x Toolbar app for Mac and Windows.
 short_answer: Install the free USB2x Toolbar app for Mac or Windows. It turns on sidetone in one click, can use voice-activated VOX so the headset stays silent until you speak, and lets you set mic and speaker levels separately. Adapters sold before May 1, 2026 may not support sidetone.
+date: 2026-10-13
 order: 8
 products: [/usb2ga/, /usb2lemo/, /downloads/toolbar/]
 ---

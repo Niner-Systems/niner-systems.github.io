@@ -2,6 +2,7 @@
 title: Why won't my aviation headset microphone work on my computer?
 description: GA aviation headset mics need +12V phantom power (mic bias) that a computer's mic jack can't supply. Here's why, and how a USB adapter like the USB2GA fixes it.
 short_answer: General aviation headset microphones are electret mics that need roughly 8–16V of phantom power (often called mic bias) — the aircraft's audio panel normally supplies it. A computer's mic input only provides about 5V, so the mic stays silent or barely works even with a plug adapter. A powered USB adapter such as the 9er Systems USB2GA or USB2Lemo generates +12V from the USB port and feeds it to the mic.
+date: 2026-10-13
 order: 1
 products: [/usb2ga/, /usb2lemo/]
 ---
